@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>BIEL DIAMONDS</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+
+  <header class="topo">
+    <h1>BIEL DIAMONDS</h1>
+    <p>Recargas rápidas e seguras</p>
+  </header>
+
+  <main class="container">
+
+    <div class="card">
+      <img src="https://i.imgur.com/V7lQO6N.png" alt="">
+      <h2>Semanal</h2>
+      <span>R$ 12</span>
+
+      <button onclick="selecionarProduto('Semanal', 12)">
+        Comprar
+      </button>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/IpP0YqM.png" alt="">
+      <h2>Mensal</h2>
+      <span>R$ 47</span>
+
+      <button onclick="selecionarProduto('Mensal', 50)">
+        Comprar
+      </button>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/TH6mP0D.png" alt="">
+      <h2>100 Diamantes</h2>
+      <span>R$ 4</span>
+
+      <button onclick="selecionarProduto('100 Diamantes', 4)">
+        Comprar
+      </button>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/Nd8Qx8G.png" alt="">
+      <h2>310 Diamantes</h2>
+      <span>R$ 12</span>
+
+      <button onclick="selecionarProduto('310 Diamantes', 12)">
+        Comprar
+      </button>
+    </div>
+
+  </main>
+
+  <div class="modal" id="modal">
+
+    <div class="modal-box">
+
+      <h2>Finalizar Pedido</h2>
+
+      <input type="text" id="nome" placeholder="Seu nome">
+
+      <input type="text" id="uid" placeholder="UID do jogador">
+
+      <input type="email" id="email" placeholder="Seu e-mail">
+
+      <button onclick="criarPedido()">
+        Gerar PIX
+      </button>
+
+    </div>
+
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+</body>
+</html>
