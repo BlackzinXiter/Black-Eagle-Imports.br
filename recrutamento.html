@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Recrutamento</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Recrutamento NEXA</h1>
+
+<form id="form">
+
+<input placeholder="Nick" id="nick">
+
+<br><br>
+
+<input placeholder="UID" id="uid">
+
+<br><br>
+
+<input placeholder="Idade" id="idade">
+
+<br><br>
+
+<button type="submit">
+Enviar
+</button>
+
+</form>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+
+collection,
+addDoc
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+document
+.getElementById("form")
+.addEventListener("submit", async(e)=>{
+
+e.preventDefault();
+
+await addDoc(
+collection(db,"recrutamentos"),
+{
+nick:nick.value,
+uid:uid.value,
+idade:idade.value
+}
+);
+
+alert("Enviado!");
+
+});
+
+</script>
+
+</body>
+</html>
