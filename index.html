@@ -24,16 +24,26 @@
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>JAGUARARA V23 - Galeria Premium Só Setinha</title>
+<title>JAGUARARA V24 - Designer Premium Profissional</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{font-family:Inter,sans-serif}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.animate-fadeIn{animation:fadeIn 0.6s ease-out forwards}
-/* Galeria premium - sem swipe */
-#galleryImg{touch-action: pinch-zoom; user-select:none; -webkit-user-drag:none}
-.gallery-arrow{backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);}
+.mono{font-family:"JetBrains Mono",monospace}
+.gallery-img{user-select:none; -webkit-user-drag:none; touch-action: pinch-zoom;}
+/* Glass arrows */
+.glass-arrow{
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.glass-arrow:hover{
+  background: rgba(255,255,255,0.95);
+  border-color: rgba(255,255,255,0.95);
+  color: #000;
+  transform: translateY(-50%) scale(1.05);
+}
 </style>
 <script type="importmap">
 {
@@ -47,52 +57,77 @@
 <body class="bg-[#F6F5F1]">
 <div id="app"></div>
 
-<!-- GALERIA PREMIUM PROFISSIONAL - SÓ SETINHA -->
-<div id="galleryModal" class="hidden fixed inset-0 z-[200] bg-[#0A0A0A] flex flex-col">
-  <!-- Header Premium -->
-  <div class="h-[64px] flex justify-between items-center px-6 border-b border-white/[0.08] bg-[#0A0A0A]">
-    <div class="flex items-center gap-4">
-      <div class="w-9 h-9 rounded-[12px] bg-white text-black grid place-items-center font-black text-[14px]">J</div>
+<!-- GALERIA PREMIUM V24 - DESIGNER PROFISSIONAL -->
+<div id="galleryModal" class="hidden fixed inset-0 z-[200] bg-[#080808] flex flex-col">
+  <!-- Header Premium Profissional -->
+  <div class="h-[76px] flex items-center justify-between px-5 md:px-8 bg-[#0F0F0F] border-b border-white/[0.06] shrink-0">
+    <div class="flex items-center gap-5">
+      <div class="w-10 h-10 rounded-[12px] bg-white text-black grid place-items-center font-black text-[16px] tracking-tighter">J</div>
+      <div class="hidden md:block w-px h-8 bg-white/[0.08]"></div>
       <div>
-        <div class="text-white font-bold text-[13px] tracking-wide">INSPEÇÃO QC • FOTOS REAIS</div>
-        <div id="galleryCounter" class="text-white/40 text-[11px] font-medium">1 de 10 • Toque na seta para navegar</div>
+        <div class="flex items-center gap-3">
+          <span class="text-white font-bold text-[13px] tracking-[0.02em]">INSPEÇÃO QC</span>
+          <span class="w-1 h-1 bg-white/20 rounded-full"></span>
+          <span class="text-white/50 text-[11px] font-medium tracking-widest">FOTOS REAIS • SHENZHEN</span>
+        </div>
+        <div class="flex items-center gap-2 mt-1">
+          <div class="w-2 h-2 bg-[#00FF88] rounded-full animate-pulse"></div>
+          <span class="text-white/30 text-[10px] tracking-[0.14em] mono">GALPÃO OFICIAL • FOTO ORIGINAL • SEM FILTRO</span>
+        </div>
       </div>
     </div>
-    <button onclick="closeGallery()" class="w-10 h-10 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.08] text-white grid place-items-center transition-all">
-      <span class="text-[18px]">✕</span>
-    </button>
-  </div>
-  
-  <!-- Área da imagem - sem swipe, só zoom livre -->
-  <div class="flex-1 relative flex items-center justify-center bg-[#0A0A0A] overflow-hidden p-0 md:p-8">
-    <!-- Imagem principal - pode dar zoom livre, não troca ao arrastar -->
-    <div class="relative w-full h-full flex items-center justify-center overflow-auto">
-      <img id="galleryImg" src="" class="max-w-[95vw] md:max-w-[85vw] max-h-[70vh] md:max-h-[78vh] object-contain rounded-[4px] md:rounded-[12px] shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_20px_80px_rgba(0,0,0,0.8)] select-none">
-    </div>
     
-    <!-- Setas Premium - SÓ ELAS MUDAM FOTO -->
-    <button onclick="prevPhoto()" class="gallery-arrow absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-[48px] h-[48px] md:w-[56px] md:h-[56px] rounded-full bg-white text-black grid place-items-center shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:scale-105 hover:shadow-[0_12px_32px_rgba(0,0,0,0.5)] active:scale-95 transition-all duration-200 z-20">
-      <span class="text-[22px] font-light -mt-[2px]">‹</span>
-    </button>
-    <button onclick="nextPhoto()" class="gallery-arrow absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-[48px] h-[48px] md:w-[56px] md:h-[56px] rounded-full bg-white text-black grid place-items-center shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:scale-105 hover:shadow-[0_12px_32px_rgba(0,0,0,0.5)] active:scale-95 transition-all duration-200 z-20">
-      <span class="text-[22px] font-light -mt-[2px]">›</span>
-    </button>
-    
-    <!-- Dica sutil -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/[0.08] backdrop-blur-xl border border-white/[0.08] text-white/60 text-[10px] tracking-widest px-4 py-2 rounded-full hidden md:flex items-center gap-2">
-      <span>USE AS SETAS PARA NAVEGAR</span>
-      <span class="w-px h-3 bg-white/20"></span>
-      <span>ESC PARA FECHAR</span>
+    <div class="flex items-center gap-3">
+      <div class="hidden md:flex items-center gap-3 h-9 px-4 rounded-full bg-white/[0.06] border border-white/[0.08]">
+        <span id="galleryCounterTop" class="text-white font-bold text-[13px] mono">01</span>
+        <span class="text-white/20">/</span>
+        <span id="galleryTotalTop" class="text-white/50 text-[13px] mono">05</span>
+      </div>
+      <button onclick="closeGallery()" class="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] text-white/70 hover:text-white grid place-items-center transition-all">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2L14 14M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
     </div>
   </div>
-  
+
+  <!-- Imagem Central -->
+  <div class="flex-1 relative flex items-center justify-center bg-[#080808] overflow-hidden">
+    <!-- Background sutil -->
+    <div class="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
+    
+    <!-- Imagem -->
+    <div class="relative w-full h-full flex items-center justify-center p-4 md:p-10">
+      <img id="galleryImg" src="" class="gallery-img max-w-full max-h-[68vh] md:max-h-[72vh] w-auto h-auto object-contain rounded-[8px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_24px_80px_rgba(0,0,0,0.9)]">
+    </div>
+
+    <!-- Setas Premium Glass - Só elas mudam -->
+    <button onclick="prevPhoto()" class="glass-arrow absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 rounded-full text-white grid place-items-center transition-all duration-200 z-20 group">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="group-hover:-translate-x-[1px] transition-transform"><path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button onclick="nextPhoto()" class="glass-arrow absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 rounded-full text-white grid place-items-center transition-all duration-200 z-20 group">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="group-hover:translate-x-[1px] transition-transform"><path d="M8 4L14 10L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <!-- Contador mobile -->
+    <div class="md:hidden absolute top-4 left-1/2 -translate-x-1/2 h-8 px-4 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 text-white text-[12px] mono font-medium flex items-center gap-2">
+      <span id="galleryCounterMobile">1 / 5</span>
+    </div>
+  </div>
+
   <!-- Thumbs Premium -->
-  <div class="bg-[#111111] border-t border-white/[0.06] p-4">
-    <div class="max-w-[720px] mx-auto">
-      <div id="galleryThumbs" class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide"></div>
-      <div class="mt-3 flex justify-between items-center">
-        <div class="text-white/30 text-[10px] tracking-widest">SHENZHEN • GALPÃO OFICIAL • FOTO REAL</div>
-        <div class="text-white/30 text-[10px]">ZOOM LIVRE • SÓ SETA MUDA FOTO</div>
+  <div class="bg-[#0F0F0F] border-t border-white/[0.06] shrink-0">
+    <div class="px-5 md:px-8 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="hidden md:flex items-center gap-2 text-white/20 text-[10px] tracking-[0.16em] mono shrink-0">
+          <span>NAVEGUE</span>
+          <span class="w-4 h-px bg-white/10"></span>
+        </div>
+        <div id="galleryThumbs" class="flex gap-2.5 overflow-x-auto scrollbar-hide"></div>
+      </div>
+      
+      <div class="hidden md:flex items-center gap-3 shrink-0">
+        <div class="text-white/20 text-[10px] tracking-widest mono">ZOOM LIVRE</div>
+        <div class="w-px h-4 bg-white/10"></div>
+        <div class="text-white/20 text-[10px] tracking-widest mono">SETA MUDA FOTO</div>
       </div>
     </div>
   </div>
@@ -290,7 +325,7 @@ if(!o.fotos || o.fotos.length===0){grid.innerHTML=""; empty.classList.remove("hi
 }
 
 async function renderClientPageLive(trackId){
-document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-8 text-center animate-fadeIn"><div class="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div><div class="font-bold mt-4">Carregando pedido ao vivo...</div></div></div>`;
+document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-8 text-center"><div class="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div><div class="font-bold mt-4">Carregando ao vivo...</div></div></div>`;
   if(clientUnsub) clientUnsub();
   clientUnsub = onSnapshot(doc(db,"pedidos",trackId), (snap)=>{
     if(!snap.exists()){
@@ -332,7 +367,7 @@ ${o.fotos && o.fotos.length>0?`
 <div class="mt-8">
 <div class="flex justify-between items-center"><div class="text-[11px] font-black tracking-widest">FOTOS REAIS QC (${o.fotos.length})</div><div class="text-[10px] text-zinc-400">Toque para ampliar</div></div>
 <div class="mt-3 grid grid-cols-3 gap-3">
-${o.fotos.map((f,i)=>`<div class="aspect-square rounded-[16px] overflow-hidden border group cursor-pointer relative bg-[#F6F5F1]" onclick="openGallery(${i})"><img src="${f}" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div></div>`).join("")}
+${o.fotos.map((f,i)=>`<div class="aspect-square rounded-[16px] overflow-hidden border group cursor-pointer relative bg-[#F6F5F1]" onclick="openGallery(${i})"><img src="${f}" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"></div>`).join("")}
 </div>
 </div>`:`<div class="mt-8 border border-dashed rounded-[20px] p-8 text-center bg-[#FBFAF7]"><div class="font-bold text-[14px]">Fotos em produção</div><div class="text-[12px] text-zinc-500 mt-2">Assim que chegar ao galpão nossa equipe irá colocar as fotos aqui</div></div>`}
 </div></div>
@@ -341,7 +376,7 @@ ${o.fotos.map((f,i)=>`<div class="aspect-square rounded-[16px] overflow-hidden b
 `;
 }
 
-// GALERIA PREMIUM - SÓ SETINHA MUDA, SEM SWIPE
+// GALERIA V24 - SÓ SETINHA
 function openGallery(index){
   galleryIndex=index;
   document.getElementById("galleryModal").classList.remove("hidden");
@@ -355,9 +390,17 @@ function closeGallery(){
 function updateGallery(){
   if(galleryPhotos.length===0) return;
   document.getElementById("galleryImg").src=galleryPhotos[galleryIndex];
-  document.getElementById("galleryCounter").textContent=`${galleryIndex+1} de ${galleryPhotos.length} • Só seta muda foto`;
+  let num = String(galleryIndex+1).padStart(2,'0');
+  let total = String(galleryPhotos.length).padStart(2,'0');
+  document.getElementById("galleryCounterTop").textContent=num;
+  document.getElementById("galleryTotalTop").textContent=total;
+  document.getElementById("galleryCounterMobile").textContent=`${galleryIndex+1} / ${galleryPhotos.length}`;
   let thumbs=document.getElementById("galleryThumbs");
-  thumbs.innerHTML=galleryPhotos.map((f,i)=>`<div onclick="goToPhoto(${i})" class="w-[64px] h-[64px] rounded-[10px] overflow-hidden border-2 cursor-pointer flex-shrink-0 transition-all ${i===galleryIndex?'border-white scale-105 shadow-lg':'border-white/10 opacity-50 hover:opacity-90'}"><img src="${f}" class="w-full h-full object-cover"></div>`).join("");
+  thumbs.innerHTML=galleryPhotos.map((f,i)=>`
+    <div onclick="goToPhoto(${i})" class="relative w-[64px] h-[64px] rounded-[12px] overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-300 ${i===galleryIndex?'ring-2 ring-white ring-offset-2 ring-offset-[#0F0F0F] scale-[1.05] opacity-100':'opacity-50 hover:opacity-90 border border-white/10'}">
+      <img src="${f}" class="w-full h-full object-cover">
+      ${i===galleryIndex?'<div class="absolute inset-0 bg-white/10"></div>':''}
+    </div>`).join("");
 }
 function nextPhoto(){ galleryIndex=(galleryIndex+1)%galleryPhotos.length; updateGallery(); }
 function prevPhoto(){ galleryIndex=(galleryIndex-1+galleryPhotos.length)%galleryPhotos.length; updateGallery(); }
