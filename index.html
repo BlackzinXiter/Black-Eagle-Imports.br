@@ -24,7 +24,7 @@
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>JAGUARARA V26 - Data/Hora Status + Sem Ao Vivo</title>
+<title>JAGUARARA V27 - Fix Data/Hora Só Avançando</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -58,7 +58,6 @@
 <body class="bg-[#F6F5F1]">
 <div id="app"></div>
 
-<!-- GALERIA PREMIUM -->
 <div id="galleryModal" class="hidden fixed inset-0 z-[200] bg-[#080808] flex flex-col">
   <div class="h-[76px] flex items-center justify-between px-5 md:px-8 bg-[#0F0F0F] border-b border-white/[0.06] shrink-0">
     <div class="flex items-center gap-5">
@@ -143,7 +142,7 @@ let galleryPhotos=[], galleryIndex=0, galleryPhotosDates=[];
 let clientUnsub=null;
 const genId=()=>"JG-"+Math.floor(100000+Math.random()*999999);
 const fmt=(n)=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-const toast=(m)=>{let t=document.getElementById("toast"); document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),3500);};
+const toast=(m)=>{let t=document.getElementById("toast"); document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),4000);};
 function nowBR(){
   let d=new Date();
   return d.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
@@ -194,13 +193,13 @@ function listenOrders(){
 }
 function renderAdminShell(){
 document.getElementById("app").innerHTML=`
-<header class="sticky top-0 z-30 bg-white border-b"><div class="max-w-[1280px] mx-auto px-6 h-[68px] flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br><span class="text-[10px] tracking-widest text-zinc-400">11 STATUS • SHENZHEN</span></div></div><div class="flex gap-2"><button onclick="openNew()" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold">+ Novo Pedido</button><button onclick="logout()" class="h-10 w-10 rounded-full border bg-white">↗</button></div></div></header>
-<main class="max-w-[1280px] mx-auto p-6"><input id="search" placeholder="Buscar JG-, cliente, produto..." class="w-full h-[48px] rounded-full bg-white border px-6 text-[14px] outline-none"><div class="mt-6 bg-white rounded-[24px] border shadow-sm overflow-hidden"><div class="px-6 h-[56px] flex items-center justify-between border-b"><span class="font-bold text-[11px] tracking-widest">PEDIDOS • 11 ETAPAS COM DATA/HORA</span><span id="cnt" class="text-[11px] bg-[#F6F5F1] border px-3 py-1 rounded-full">0 pedidos</span></div><div id="list"></div><div id="empty" class="hidden py-16 text-center"><div>📦</div><div class="font-bold mt-2">Nenhum pedido</div></div></div></main>
+<header class="sticky top-0 z-30 bg-white border-b"><div class="max-w-[1280px] mx-auto px-6 h-[68px] flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br><span class="text-[10px] tracking-widest text-zinc-400">11 STATUS • FIX DATA</span></div></div><div class="flex gap-2"><button onclick="openNew()" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold">+ Novo Pedido</button><button onclick="logout()" class="h-10 w-10 rounded-full border bg-white">↗</button></div></div></header>
+<main class="max-w-[1280px] mx-auto p-6"><input id="search" placeholder="Buscar JG-, cliente, produto..." class="w-full h-[48px] rounded-full bg-white border px-6 text-[14px] outline-none"><div class="mt-6 bg-white rounded-[24px] border shadow-sm overflow-hidden"><div class="px-6 h-[56px] flex items-center justify-between border-b"><span class="font-bold text-[11px] tracking-widest">PEDIDOS • 11 ETAPAS • SÓ AVANÇA SALVA</span><span id="cnt" class="text-[11px] bg-[#F6F5F1] border px-3 py-1 rounded-full">0 pedidos</span></div><div id="list"></div><div id="empty" class="hidden py-16 text-center"><div>📦</div><div class="font-bold mt-2">Nenhum pedido</div></div></div></main>
 <div id="drawerBg" class="fixed inset-0 bg-black/20 hidden z-40"></div>
 <div id="drawer" class="fixed top-0 right-0 h-full w-full max-w-[560px] bg-[#FCFBF8] border-l shadow-2xl hidden z-50 overflow-y-auto">
 <div class="bg-[#FCFBF8] border-b p-6"><div class="flex justify-between gap-3"><div class="flex gap-3 min-w-0 flex-1"><img id="dCapa" class="w-[72px] h-[72px] rounded-[16px] object-cover border hidden shrink-0"><div id="dCapaPh" class="w-[72px] h-[72px] rounded-[16px] bg-[#F6F5F1] border border-dashed grid place-items-center shrink-0">📦</div><div class="min-w-0 flex-1"><div id="dId" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black text-white inline-block"></div><div id="dProd" class="font-bold text-[16px] leading-tight mt-2 break-words"></div><div id="dCli" class="text-[12px] text-zinc-500 mt-1 truncate"></div></div></div><button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-white border shrink-0">✕</button></div><div class="mt-4 grid grid-cols-2 gap-2"><button onclick="copyLink()" class="h-10 px-3 rounded-full bg-black text-white text-[12px] font-bold">🔗 Copiar Link Cliente</button><button onclick="openClientTest()" class="h-10 px-3 rounded-full bg-white border text-[12px] font-bold">👁️ Ver como cliente</button></div></div>
 <div class="p-5 space-y-4">
-<div class="bg-black text-white rounded-[20px] p-4"><div class="text-[10px] tracking-widest text-white/50 font-bold">STATUS • 11 ETAPAS • SALVA DATA/HORA AUTOMÁTICO</div><select id="selStatus" onchange="changeStatus(this.value)" class="mt-3 w-full h-[48px] rounded-[12px] bg-white text-black px-4 font-bold text-[13px] outline-none">${STEPS.map(s=>`<option value="${s.id}">${s.label}</option>`).join("")}</select><div id="statusDates" class="mt-3 text-[10px] text-white/40 mono"></div></div>
+<div class="bg-black text-white rounded-[20px] p-4"><div class="text-[10px] tracking-widest text-white/50 font-bold">STATUS • SÓ AVANÇA SALVA • VOLTAR APAGA FUTURO</div><select id="selStatus" onchange="changeStatus(this.value)" class="mt-3 w-full h-[48px] rounded-[12px] bg-white text-black px-4 font-bold text-[13px] outline-none">${STEPS.map(s=>`<option value="${s.id}">${s.label}</option>`).join("")}</select><div id="statusDates" class="mt-3 text-[10px] text-white/40 mono space-y-1"></div></div>
 <div class="grid grid-cols-1 gap-3">
 <div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">CLIENTE</div><input id="eCli" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">PRODUTO</div><input id="eProd" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div></div>
 <div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">VALOR R$</div><input id="eVal" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3 min-w-0 overflow-hidden"><div class="text-[10px] font-bold text-zinc-400">PESO REAL</div><div class="mt-1 flex items-center gap-2 w-full"><input id="ePeso" type="number" inputmode="decimal" class="flex-1 min-w-0 bg-transparent font-medium text-[14px] outline-none" placeholder="380"><select id="ePesoUn" class="shrink-0 w-[64px] h-[32px] rounded-full bg-[#F6F5F1] border text-[12px] font-bold px-2"><option value="g">g</option><option value="kg">kg</option></select></div></div></div>
@@ -225,7 +224,7 @@ document.getElementById("app").innerHTML=`
 <div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">VALOR R$</div><input id="nVal" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div><div><div class="text-[10px] font-bold text-zinc-400">PESO</div><div class="flex gap-2 mt-1"><input id="nPeso" type="number" inputmode="decimal" class="flex-1 min-w-0 h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="—"><select id="nPesoUn" class="shrink-0 w-[68px] h-[46px] rounded-[14px] bg-[#FBFAF7] border text-[12px] font-bold px-2"><option value="g" selected>g</option><option value="kg">kg</option></select></div></div></div>
 <div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO ¥</div><input id="nFreteInt" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div><div><div class="text-[10px] font-bold text-zinc-400">RASTREIO</div><input id="nRast" type="text" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div></div>
 </div>
-<button onclick="createOrder()" class="w-full h-[52px] rounded-full bg-black text-white font-bold mt-4">Criar Pedido com Data/Hora</button>
+<button onclick="createOrder()" class="w-full h-[52px] rounded-full bg-black text-white font-bold mt-4">Criar Pedido</button>
 </div>
 </div>
 </div>
@@ -249,7 +248,7 @@ document.getElementById("inpQc")?.addEventListener("change", async e=>{
   try{ 
     let dataHora = nowBR();
     await updateDoc(doc(db,"pedidos",o.id), {fotos:[...o.fotos, ...newFotos], fotosAtualizadasEm: dataHora});
-    toast(`✅ ${newFotos.length} fotos salvas em ${dataHora}`);
+    toast(`✅ ${newFotos.length} fotos em ${dataHora}`);
   }catch(err){ toast("Erro: "+err.message); }
   e.target.value="";
 });
@@ -261,7 +260,7 @@ if(!listEl) return;
 let filtered=orders.filter(o=>(o.id+" "+o.cliente+" "+o.produto).toLowerCase().includes(q.toLowerCase())).sort((a,b)=>b.id.localeCompare(a.id));
 if(cntEl) cntEl.textContent=filtered.length+" pedidos";
 if(filtered.length===0){listEl.innerHTML=""; emptyEl.classList.remove("hidden");} else {emptyEl.classList.add("hidden");
-listEl.innerHTML=filtered.map(o=>{let idx=STEPS.findIndex(s=>s.id===o.status); let pct=(idx/(STEPS.length-1))*100; return `<div onclick="openDrawer('${o.id}')" class="px-6 py-5 flex gap-4 items-center hover:bg-[#FBFAF7] cursor-pointer border-b last:border-0"><div class="w-[64px] h-[64px] rounded-[16px] bg-[#F6F5F1] border overflow-hidden grid place-items-center shrink-0">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`📦`}</div><div class="flex-1 min-w-0"><div class="flex gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black text-white">${o.id}</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FFF7CC] border truncate max-w-[150px]">${o.status}</span></div><div class="font-bold text-[14px] truncate mt-1">${o.produto}</div><div class="text-[12px] text-zinc-500 truncate">${o.cliente} • ${o.fotos?.length||0}/10 fotos • ${o.statusHistory?.[o.status]||''}</div></div><div class="text-right"><div class="font-bold text-[13px]">${fmt(o.valor)}</div><div class="w-[80px] h-[6px] bg-[#F0EFEB] rounded-full mt-2 overflow-hidden"><div class="h-full bg-black rounded-full transition-all duration-700" style="width:${pct}%"></div></div></div></div>`;}).join("");}
+listEl.innerHTML=filtered.map(o=>{let idx=STEPS.findIndex(s=>s.id===o.status); let pct=(idx/(STEPS.length-1))*100; return `<div onclick="openDrawer('${o.id}')" class="px-6 py-5 flex gap-4 items-center hover:bg-[#FBFAF7] cursor-pointer border-b last:border-0"><div class="w-[64px] h-[64px] rounded-[16px] bg-[#F6F5F1] border overflow-hidden grid place-items-center shrink-0">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`📦`}</div><div class="flex-1 min-w-0"><div class="flex gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black text-white">${o.id}</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FFF7CC] border truncate max-w-[150px]">${o.status}</span></div><div class="font-bold text-[14px] truncate mt-1">${o.produto}</div><div class="text-[12px] text-zinc-500 truncate">${o.cliente} • ${o.fotos?.length||0}/10 fotos</div></div><div class="text-right"><div class="font-bold text-[13px]">${fmt(o.valor)}</div><div class="w-[80px] h-[6px] bg-[#F0EFEB] rounded-full mt-2 overflow-hidden"><div class="h-full bg-black rounded-full transition-all duration-700" style="width:${pct}%"></div></div></div></div>`;}).join("");}
 }
 async function createOrder(){
 let cliente=document.getElementById("nCli").value.trim();
@@ -303,7 +302,7 @@ document.getElementById("eRast").value=o.rastreio;
 document.getElementById("selStatus").value=o.status;
 let histHtml="";
 if(o.statusHistory){
-  histHtml = Object.entries(o.statusHistory).map(([k,v])=>`<div>${k}: ${v}</div>`).join("");
+  histHtml = STEPS.filter(s=>o.statusHistory[s.id]).map(s=>`<div class="flex justify-between"><span>${s.label}</span><span>${o.statusHistory[s.id]}</span></div>`).join("");
 }
 document.getElementById("statusDates").innerHTML=histHtml;
 if(o.capa){document.getElementById("dCapa").src=o.capa; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden"); document.getElementById("prevCapa").innerHTML=`<img src="${o.capa}" class="w-full h-full object-cover">`;} else {document.getElementById("dCapa").classList.add("hidden"); document.getElementById("dCapaPh").classList.remove("hidden"); document.getElementById("prevCapa").textContent="sem capa";}
@@ -434,10 +433,27 @@ window.openClientTest=()=>{ let url=location.origin+location.pathname+"?track="+
 window.changeStatus=async(val)=>{
   let o=orders.find(x=>x.id===sel); if(!o) return;
   let dataHora = nowBR();
-  let newHistory = {...(o.statusHistory||{}), [val]: dataHora};
+  let newIdx = STEPS.findIndex(s=>s.id===val);
+  let oldIdx = STEPS.findIndex(s=>s.id===o.status);
+  let newHistory = {...(o.statusHistory||{})};
+  
+  if(newIdx < oldIdx){
+    // VOLTOU STATUS: apaga tudo que for futuro
+    STEPS.forEach((s,i)=>{
+      if(i > newIdx){
+        delete newHistory[s.id];
+      }
+    });
+    newHistory[val] = dataHora;
+    toast(`Voltou para ${val} • Futuro apagado • ${dataHora}`);
+  } else {
+    // AVANÇOU: só salva se for pra frente
+    newHistory[val] = dataHora;
+    toast(`Avançou para ${val} em ${dataHora}`);
+  }
+  
   try{
     await updateDoc(doc(db,"pedidos",o.id), {status:val, statusHistory: newHistory});
-    toast(`Status → ${val} em ${dataHora}`);
   }catch(e){ toast("Erro: "+e.message); }
 };
 window.saveCurrentOrder=async()=>{
