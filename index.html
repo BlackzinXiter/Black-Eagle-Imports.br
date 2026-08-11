@@ -24,17 +24,26 @@
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAGUARARA V17 - Fix Final Definitivo</title>
+<title>JAGUARARA V20 - FIREBASE CONFIGURADO</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>*{font-family:Inter,sans-serif} body{overflow-x:hidden}</style>
+<script type="importmap">
+{
+  "imports": {
+    "firebase-app": "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js",
+    "firebase-firestore": "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"
+  }
+}
+</script>
 </head>
 <body class="bg-[#F6F5F1]">
-<div id="app"></div>
-<script>
-// KEY FIXO - NUNCA MAIS MUDA PRA NÃO SUMIR PEDIDOS NO GITHUB
+<div id="app"><div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-8 text-center"><div class="w-12 h-12 rounded-full bg-black text-white grid place-items-center mx-auto">🐆</div><div class="font-black text-[18px] mt-4">Conectando Firebase Black Eagle Imports...</div><div class="text-[12px] text-zinc-500 mt-2">black-eagle-imports.firebaseapp.com</div></div></div></div>
+<script type="module">
+import { initializeApp } from "firebase-app";
+import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot, deleteDoc, updateDoc } from "firebase-firestore";
+
 const PASS="sazgir-gaxxoh-0mIdno";
-const KEY="jaguarara_orders"; 
 const AUTH_KEY="jg_auth_persistente";
 const STEPS=[
 {id:"PEDIDO CONFIRMADO",label:"PEDIDO CONFIRMADO",desc:"Pedido confirmado no sistema • Shenzhen"},
@@ -49,23 +58,22 @@ const STEPS=[
 {id:"ENTREGUE",label:"ENTREGUE",desc:"Entregue ao cliente"}
 ];
 
-// MIGRAÇÃO AUTOMÁTICA DE TODAS AS VERSÕES ANTIGAS
-let orders=[];
-try{
-  let allKeys=["jaguarara_orders","jaguarara_v16_nodup","jaguarara_v15_preview","jaguarara_v14_fix","jaguarara_v13_dinamico","jaguarara_v12_final_fix","jaguarara_v11_final","jaguarara_final_v10","jaguarara_final_v1","jaguarara_orders_final_v1"];
-  for(let k of allKeys){
-    let r=localStorage.getItem(k);
-    if(r){ try{ let arr=JSON.parse(r); if(Array.isArray(arr) && arr.length>0){ orders=arr; if(k!==KEY) localStorage.setItem(KEY, JSON.stringify(arr)); break; } }catch(e){} }
-  }
-}catch(e){ orders=[]; }
+const firebaseConfig = {
+  apiKey: "AIzaSyDtnHkeROHVz3zKhpxCbP1q_UiQFh1RF0E",
+  authDomain: "black-eagle-imports.firebaseapp.com",
+  projectId: "black-eagle-imports",
+  storageBucket: "black-eagle-imports.firebasestorage.app",
+  messagingSenderId: "576822763640",
+  appId: "1:576822763640:web:b2df13324133eca0b94d8d",
+  measurementId: "G-51S6E7DY4T"
+};
 
-let sel=null; let tempCapa=null; let q=""; let pendingDel=null;
-let pendingQc=[];
+let db, orders=[], sel=null, tempCapa=null, q="", pendingDel=null;
 const genId=()=>"JG-"+Math.floor(100000+Math.random()*999999);
 const fmt=(n)=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const fmtYen=(n)=>`¥ ${n||0}`;
-const toast=(m)=>{let t=document.getElementById("toast"); if(!t) return; document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),3000);}
-function compressImage(file, maxW=1280, quality=0.7){
+const toast=(m)=>{let t=document.getElementById("toast"); if(!t){let d=document.createElement("div"); d.id="toast"; d.className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-black text-white rounded-full px-5 py-3 text-[13px] z-[100]"; d.innerHTML=`<span id="toastMsg"></span>`; document.body.appendChild(d); t=d;} document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),3500);};
+function compressImage(file, maxW=1024, quality=0.6){
 return new Promise((resolve,reject)=>{
   let reader=new FileReader();
   reader.onload=e=>{
@@ -76,8 +84,7 @@ return new Promise((resolve,reject)=>{
       if(w>maxW){h=(maxW/w)*h; w=maxW;}
       if(h>maxW){w=(maxW/h)*w; h=maxW;}
       canvas.width=w; canvas.height=h;
-      let ctx=canvas.getContext("2d");
-      ctx.drawImage(img,0,0,w,h);
+      canvas.getContext("2d").drawImage(img,0,0,w,h);
       resolve(canvas.toDataURL("image/jpeg", quality));
     };
     img.onerror=reject;
@@ -88,49 +95,47 @@ return new Promise((resolve,reject)=>{
 });
 }
 
-function renderLogin(){
-document.getElementById("app").innerHTML=`<div class="min-h-screen flex items-center justify-center p-5 bg-[#0A0A0A]"><div class="w-full max-w-[400px] bg-white rounded-[28px] p-8"><div class="w-10 h-10 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><h1 class="font-black text-[28px] leading-none mt-6">Jaguarara<br>Imports</h1><p class="text-[12px] text-zinc-500 mt-2">Login agora fica salvo, não precisa digitar toda hora</p><input id="pw" type="password" placeholder="Senha" class="mt-6 w-full h-[52px] rounded-full bg-[#F6F5F1] border px-6 outline-none"><button id="btnLogin" class="mt-4 w-full h-[52px] rounded-full bg-black text-white font-bold">Entrar</button></div></div>`;
-document.getElementById("btnLogin").onclick=()=>{
-  if(document.getElementById("pw").value===PASS){
-    localStorage.setItem(AUTH_KEY,"1");
-    location.reload();
-  }
-};
+try{
+  const app=initializeApp(firebaseConfig);
+  db=getFirestore(app);
+  let track=new URLSearchParams(location.search).get("track");
+  if(track){ renderClientPage(track); }
+  else { if(localStorage.getItem(AUTH_KEY)!=="1"){ renderLogin(); } else { renderAdminShell(); listenOrders(); } }
+}catch(e){
+  document.getElementById("app").innerHTML=`<div class="p-8">Erro Firebase: ${e.message}</div>`;
 }
-function isLogged(){ return localStorage.getItem(AUTH_KEY)==="1"; }
 
-function renderAdminPage(){
-if(new URLSearchParams(location.search).get("track")){renderClientPage(new URLSearchParams(location.search).get("track")); return;}
-if(!isLogged()){renderLogin(); return;}
-renderAdminShell();
+function renderLogin(){
+document.getElementById("app").innerHTML=`<div class="min-h-screen flex items-center justify-center p-5 bg-[#0A0A0A]"><div class="w-full max-w-[400px] bg-white rounded-[28px] p-8"><div class="w-10 h-10 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><h1 class="font-black text-[28px] leading-none mt-6">Jaguarara<br>Imports</h1><p class="text-[11px] text-zinc-500 mt-2">Firebase Black Eagle Imports conectado</p><input id="pw" type="password" placeholder="Senha" class="mt-6 w-full h-[52px] rounded-full bg-[#F6F5F1] border px-6 outline-none"><button id="btnLogin" class="mt-4 w-full h-[52px] rounded-full bg-black text-white font-bold">Entrar</button></div></div>`;
+document.getElementById("btnLogin").onclick=()=>{if(document.getElementById("pw").value===PASS){localStorage.setItem(AUTH_KEY,"1"); location.reload();}};
+}
+function listenOrders(){
+  onSnapshot(collection(db, "pedidos"), (snap)=>{
+    orders=[];
+    snap.forEach(d=>orders.push({id:d.id, ...d.data()}));
+    renderAdminList();
+    if(sel){ let o=orders.find(x=>x.id===sel); if(o) renderQcGrid(o); }
+  });
 }
 function renderAdminShell(){
 document.getElementById("app").innerHTML=`
-<header class="sticky top-0 z-30 bg-white border-b"><div class="max-w-[1280px] mx-auto px-6 h-[68px] flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br><span class="text-[10px] tracking-widest text-zinc-400">SHENZHEN</span></div></div><div class="flex gap-2"><button onclick="openNew()" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold">+ Novo Pedido</button><button onclick="logout()" class="h-10 w-10 rounded-full border bg-white" title="Sair">↗</button></div></div></header>
-<main class="max-w-[1280px] mx-auto p-6"><input id="search" placeholder="Buscar JG-, cliente, produto..." class="w-full h-[48px] rounded-full bg-white border px-6 text-[14px] outline-none"><div class="mt-6 bg-white rounded-[24px] border shadow-sm overflow-hidden"><div class="px-6 h-[56px] flex items-center justify-between border-b"><span class="font-bold text-[12px] tracking-widest">PEDIDOS • SHENZHEN • NÃO SOME MAIS NO GITHUB</span><span id="cnt" class="text-[11px] bg-[#F6F5F1] border px-3 py-1 rounded-full">0 pedidos</span></div><div id="list"></div><div id="empty" class="hidden py-16 text-center"><div>📦</div><div class="font-bold mt-2">Nenhum pedido</div></div></div><div class="mt-4 text-[11px] text-zinc-400 text-center">Pedidos salvos em localStorage fixo "jaguarara_orders" • Não somem mais ao atualizar o GitHub • Login salvo</div></main>
+<header class="sticky top-0 z-30 bg-white border-b"><div class="max-w-[1280px] mx-auto px-6 h-[68px] flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br><span class="text-[10px] tracking-widest text-[#009739]">FIREBASE CONECTADO • SHENZHEN</span></div></div><div class="flex gap-2"><button onclick="openNew()" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold">+ Novo Pedido</button><button onclick="logout()" class="h-10 w-10 rounded-full border bg-white">↗</button></div></div></header>
+<main class="max-w-[1280px] mx-auto p-6"><input id="search" placeholder="Buscar JG-, cliente, produto..." class="w-full h-[48px] rounded-full bg-white border px-6 text-[14px] outline-none"><div class="mt-6 bg-white rounded-[24px] border shadow-sm overflow-hidden"><div class="px-6 h-[56px] flex items-center justify-between border-b bg-[#F6FFFB]"><span class="font-bold text-[11px] tracking-widest">PEDIDOS • FIREBASE BLACK-EAGLE-IMPORTS • CLIENTE VÊ DE QUALQUER CELULAR</span><span id="cnt" class="text-[11px] bg-[#009739] text-white px-3 py-1 rounded-full">Conectado</span></div><div id="list"></div><div id="empty" class="hidden py-16 text-center"><div>📦</div><div class="font-bold mt-2">Nenhum pedido no Firebase ainda</div><div class="text-[12px] text-zinc-500 mt-1">Crie o primeiro, já vai pro Firebase e cliente vê</div></div></div></main>
 <div id="drawerBg" class="fixed inset-0 bg-black/20 hidden z-40"></div>
 <div id="drawer" class="fixed top-0 right-0 h-full w-full max-w-[560px] bg-[#FCFBF8] border-l shadow-2xl hidden z-50 overflow-y-auto">
-<div class="bg-[#FCFBF8] border-b p-6"><div class="flex justify-between gap-3"><div class="flex gap-3 min-w-0 flex-1"><img id="dCapa" class="w-[72px] h-[72px] rounded-[16px] object-cover border hidden shrink-0"><div id="dCapaPh" class="w-[72px] h-[72px] rounded-[16px] bg-[#F6F5F1] border border-dashed grid place-items-center shrink-0">📦</div><div class="min-w-0 flex-1"><div id="dId" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black text-white inline-block"></div><div id="dProd" class="font-bold text-[16px] leading-tight mt-2 break-words"></div><div id="dCli" class="text-[12px] text-zinc-500 mt-1 truncate"></div></div></div><button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-white border shrink-0">✕</button></div><div class="mt-4"><button onclick="copyLink()" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold w-full">🔗 Copiar Link do Cliente</button></div></div>
+<div class="bg-[#FCFBF8] border-b p-6"><div class="flex justify-between gap-3"><div class="flex gap-3 min-w-0 flex-1"><img id="dCapa" class="w-[72px] h-[72px] rounded-[16px] object-cover border hidden shrink-0"><div id="dCapaPh" class="w-[72px] h-[72px] rounded-[16px] bg-[#F6F5F1] border border-dashed grid place-items-center shrink-0">📦</div><div class="min-w-0 flex-1"><div id="dId" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black text-white inline-block"></div><div id="dProd" class="font-bold text-[16px] leading-tight mt-2 break-words"></div><div id="dCli" class="text-[12px] text-zinc-500 mt-1 truncate"></div></div></div><button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-white border shrink-0">✕</button></div><div class="mt-4 grid grid-cols-2 gap-2"><button onclick="copyLink()" class="h-10 px-3 rounded-full bg-black text-white text-[12px] font-bold">🔗 Copiar Link</button><button onclick="openClientTest()" class="h-10 px-3 rounded-full bg-white border text-[12px] font-bold">👁️ Ver como cliente</button></div></div>
 <div class="p-5 space-y-4">
-<div class="bg-black text-white rounded-[20px] p-4"><div class="text-[10px] tracking-widest text-white/50 font-bold">STATUS • ESCOLHA LIVRE</div><select id="selStatus" onchange="changeStatus(this.value)" class="mt-3 w-full h-[48px] rounded-[12px] bg-white text-black px-4 font-bold text-[13px] outline-none">${STEPS.map(s=>`<option value="${s.id}">${s.label}</option>`).join("")}</select><div class="text-[11px] text-white/60 mt-2">Mudar status já salva automático, não precisa clicar em Salvar</div></div>
+<div class="bg-black text-white rounded-[20px] p-4"><div class="text-[10px] tracking-widest text-white/50 font-bold">STATUS • SALVA AUTOMÁTICO NO FIREBASE</div><select id="selStatus" onchange="changeStatus(this.value)" class="mt-3 w-full h-[48px] rounded-[12px] bg-white text-black px-4 font-bold text-[13px] outline-none">${STEPS.map(s=>`<option value="${s.id}">${s.label}</option>`).join("")}</select></div>
 <div class="grid grid-cols-1 gap-3">
 <div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">CLIENTE</div><input id="eCli" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">PRODUTO</div><input id="eProd" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div></div>
-<div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">VALOR PRODUTO R$</div><input id="eVal" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3 min-w-0 overflow-hidden"><div class="text-[10px] font-bold text-zinc-400">PESO REAL</div><div class="mt-1 flex items-center gap-2 w-full"><input id="ePeso" type="number" inputmode="decimal" class="flex-1 min-w-0 bg-transparent font-medium text-[14px] outline-none" placeholder="380"><select id="ePesoUn" class="shrink-0 w-[64px] h-[32px] rounded-full bg-[#F6F5F1] border text-[12px] font-bold px-2"><option value="g">g</option><option value="kg">kg</option></select></div></div></div>
-<div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO ¥</div><input id="eFreteInt" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">FRETE CHINA-BRASIL R$</div><input id="eFreteBR" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none" placeholder="Só em Aguardando Envio"></div></div>
-<div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">RASTREIO - CÓDIGO</div><input id="eRast" type="text" class="mt-1 w-full bg-transparent font-medium text-[13px] outline-none" placeholder="JT123456"></div>
+<div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">VALOR R$</div><input id="eVal" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3 min-w-0 overflow-hidden"><div class="text-[10px] font-bold text-zinc-400">PESO REAL</div><div class="mt-1 flex items-center gap-2 w-full"><input id="ePeso" type="number" inputmode="decimal" class="flex-1 min-w-0 bg-transparent font-medium text-[14px] outline-none" placeholder="380"><select id="ePesoUn" class="shrink-0 w-[64px] h-[32px] rounded-full bg-[#F6F5F1] border text-[12px] font-bold px-2"><option value="g">g</option><option value="kg">kg</option></select></div></div></div>
+<div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO ¥</div><input id="eFreteInt" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">FRETE CHINA-BRASIL R$</div><input id="eFreteBR" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div></div>
+<div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">RASTREIO - CÓDIGO</div><input id="eRast" type="text" class="mt-1 w-full bg-transparent font-medium text-[13px] outline-none"></div>
 </div>
 <div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between"><div class="text-[11px] font-bold">CAPA</div><button onclick="document.getElementById('inpCapa').click()" class="text-[11px] font-bold px-3 h-7 rounded-full bg-[#F6F5F1] border">Trocar</button></div><div id="prevCapa" class="mt-3 w-[96px] h-[96px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[11px] overflow-hidden">sem capa</div><input id="inpCapa" type="file" accept="image/*" class="hidden"></div>
-
-<div class="bg-white rounded-[16px] border p-4">
-<div class="flex justify-between items-center"><div class="text-[11px] font-bold">FOTOS QC (<span id="qcC">0</span>/10)</div><button onclick="document.getElementById('inpQc').click()" class="h-7 px-3 rounded-full bg-black text-white text-[11px] font-bold">+ Adicionar</button></div>
-<div id="qcGrid" class="mt-3 grid grid-cols-3 gap-2"></div>
-<div id="qcEmpty" class="mt-3 border border-dashed rounded-[14px] p-5 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto • Limite 10 (5 Sugargoo + 5 extras)</div>
-<div id="qcPendingWrap" class="hidden mt-4 p-3 rounded-[14px] bg-[#FFFBEB] border border-[#FFD60A]/40"><div class="flex justify-between items-center"><div class="text-[11px] font-bold text-[#92400E]">📸 Prévia (<span id="pendingCount">0</span> novas)</div><button onclick="clearPending()" class="text-[11px] text-zinc-500 underline">Limpar prévia</button></div><div id="qcPendingGrid" class="mt-2 grid grid-cols-3 gap-2"></div><div class="text-[11px] text-[#92400E] mt-2">Prévia NÃO aparece pro cliente ainda. Clique em <b>Salvar</b> pra confirmar.</div></div>
-<input id="inpQc" type="file" multiple accept="image/*" class="hidden">
-</div>
-
-<button onclick="saveCurrentOrder()" class="w-full h-[52px] rounded-[16px] bg-black text-white font-bold text-[15px]">💾 Salvar (fotos + dados)</button>
-<button onclick="openDelete()" class="w-full h-11 rounded-full border border-red-200 text-red-500 font-bold text-[13px]">🗑️ Excluir pedido</button>
+<div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between items-center"><div class="text-[11px] font-bold">FOTOS QC (<span id="qcC">0</span>/10) • FIREBASE</div><button onclick="document.getElementById('inpQc').click()" class="h-7 px-3 rounded-full bg-black text-white text-[11px] font-bold">+ Adicionar</button></div><div class="text-[10px] text-zinc-500 mt-1">Adicionou = sobe pro Firebase e cliente vê em qualquer celular na hora</div><div id="qcGrid" class="mt-3 grid grid-cols-3 gap-2"></div><div id="qcEmpty" class="mt-3 border border-dashed rounded-[14px] p-5 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto • Limite 10</div><input id="inpQc" type="file" multiple accept="image/*" class="hidden"></div>
+<button onclick="saveCurrentOrder()" class="w-full h-[52px] rounded-[16px] bg-black text-white font-bold text-[15px]">💾 Salvar dados no Firebase</button>
+<button onclick="openDelete()" class="w-full h-11 rounded-full border border-red-200 text-red-500 font-bold text-[13px]">🗑️ Excluir do Firebase</button>
 </div>
 </div>
 <div id="newBg" class="fixed inset-0 bg-black/30 hidden z-40"></div>
@@ -138,64 +143,55 @@ document.getElementById("app").innerHTML=`
 <div class="w-full max-w-[520px] bg-white rounded-[28px] border shadow-2xl max-h-[90vh] overflow-y-auto">
 <div class="h-[4px] bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
 <div class="p-7">
-<div class="flex justify-between"><div class="font-bold text-[18px]">Novo Pedido • Shenzhen</div><button onclick="closeNew()" class="w-8 h-8 rounded-full bg-[#F6F5F1] border">✕</button></div>
+<div class="flex justify-between"><div class="font-bold text-[18px]">Novo Pedido • Firebase</div><button onclick="closeNew()" class="w-8 h-8 rounded-full bg-[#F6F5F1] border">✕</button></div>
 <div class="mt-6 space-y-4">
 <div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">CLIENTE</div><input id="nCli" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div><div><div class="text-[10px] font-bold text-zinc-400">PRODUTO</div><input id="nProd" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div></div>
-<div><div class="text-[10px] font-bold text-zinc-400">CAPA</div><div class="mt-2 flex gap-3 items-center"><div id="nPrev" class="w-[64px] h-[64px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[10px] overflow-hidden">sem capa</div><button type="button" onclick="document.getElementById('nCapaInp').click()" class="h-10 px-4 rounded-full bg-white border text-[12px] font-bold">Escolher imagem</button></div><input id="nCapaInp" type="file" accept="image/*" class="hidden"></div>
-<div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">VALOR R$</div><input id="nVal" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="45,04"></div><div><div class="text-[10px] font-bold text-zinc-400">PESO (opcional)</div><div class="flex gap-2 mt-1"><input id="nPeso" type="number" inputmode="decimal" class="flex-1 min-w-0 h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="—"><select id="nPesoUn" class="shrink-0 w-[68px] h-[46px] rounded-[14px] bg-[#FBFAF7] border text-[12px] font-bold px-2"><option value="g" selected>g</option><option value="kg">kg</option></select></div></div></div>
-<div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO ¥</div><input id="nFreteInt" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="6"></div><div><div class="text-[10px] font-bold text-zinc-400">RASTREIO</div><input id="nRast" type="text" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="JT123456"></div></div>
+<div><div class="text-[10px] font-bold text-zinc-400">CAPA</div><div class="mt-2 flex gap-3 items-center"><div id="nPrev" class="w-[64px] h-[64px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[10px] overflow-hidden">sem capa</div><button type="button" onclick="document.getElementById('nCapaInp').click()" class="h-10 px-4 rounded-full bg-white border text-[12px] font-bold">Escolher</button></div><input id="nCapaInp" type="file" accept="image/*" class="hidden"></div>
+<div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">VALOR R$</div><input id="nVal" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div><div><div class="text-[10px] font-bold text-zinc-400">PESO</div><div class="flex gap-2 mt-1"><input id="nPeso" type="number" inputmode="decimal" class="flex-1 min-w-0 h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="—"><select id="nPesoUn" class="shrink-0 w-[68px] h-[46px] rounded-[14px] bg-[#FBFAF7] border text-[12px] font-bold px-2"><option value="g" selected>g</option><option value="kg">kg</option></select></div></div></div>
+<div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO ¥</div><input id="nFreteInt" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div><div><div class="text-[10px] font-bold text-zinc-400">RASTREIO</div><input id="nRast" type="text" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div></div>
 </div>
-<button onclick="createOrder()" class="w-full h-[52px] rounded-full bg-black text-white font-bold mt-4">Criar Pedido</button>
+<button onclick="createOrder()" class="w-full h-[52px] rounded-full bg-black text-white font-bold mt-4">Criar no Firebase</button>
 </div>
 </div>
 </div>
 </div>
 <div id="delBg" class="fixed inset-0 bg-black/40 hidden z-[60]"></div>
-<div id="delModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4"><div class="w-full max-w-[360px] bg-white rounded-[24px] border p-7 text-center"><div class="font-bold">Excluir?</div><div class="text-[13px] text-zinc-500 mt-2">Excluir <b id="delId"></b>?</div><div class="grid grid-cols-2 gap-3 mt-6"><button onclick="closeDel()" class="h-11 rounded-full border font-bold">Cancelar</button><button onclick="confirmDelete()" class="h-11 rounded-full bg-[#FF3B30] text-white font-bold">Excluir</button></div></div></div>
+<div id="delModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4"><div class="w-full max-w-[360px] bg-white rounded-[24px] border p-7 text-center"><div class="font-bold">Excluir do Firebase?</div><div class="text-[13px] text-zinc-500 mt-2">Excluir <b id="delId"></b> permanentemente?</div><div class="grid grid-cols-2 gap-3 mt-6"><button onclick="closeDel()" class="h-11 rounded-full border font-bold">Cancelar</button><button onclick="confirmDelete()" class="h-11 rounded-full bg-[#FF3B30] text-white font-bold">Excluir</button></div></div></div>
 <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-black text-white rounded-full px-5 py-3 text-[13px] z-[100]"><span id="toastMsg"></span></div>
 <div id="qcFull" class="hidden fixed inset-0 z-[80] bg-black/80 flex items-center justify-center p-6"><img id="qcFullImg" class="max-w-[90vw] max-h-[85vh] rounded-[20px]"><button onclick="document.getElementById('qcFull').classList.add('hidden')" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white">✕</button></div>
 `;
 document.getElementById("search")?.addEventListener("input",e=>{q=e.target.value; renderAdminList();});
-document.getElementById("nCapaInp")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await compressImage(f,800,0.8); tempCapa=b; document.getElementById("nPrev").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`;});
-document.getElementById("inpCapa")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await compressImage(f,800,0.8); document.getElementById("prevCapa").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`; document.getElementById("dCapa").src=b; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden"); window.tempEditCapa=b;});
+document.getElementById("nCapaInp")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await compressImage(f,800,0.7); tempCapa=b; document.getElementById("nPrev").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`;});
+document.getElementById("inpCapa")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await compressImage(f,800,0.7); document.getElementById("prevCapa").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`; document.getElementById("dCapa").src=b; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden"); window.tempEditCapa=b;});
 document.getElementById("inpQc")?.addEventListener("change", async e=>{
   let o=orders.find(x=>x.id===sel); if(!o) return;
-  let totalAtual = o.fotos.length + pendingQc.length;
-  if(totalAtual>=10){toast("Limite 10 fotos atingido"); return;}
-  let files=Array.from(e.target.files).slice(0, 10-totalAtual);
-  if(files.length===0) return;
-  let pendingWrap=document.getElementById("qcPendingWrap");
-  let pendingGrid=document.getElementById("qcPendingGrid");
-  pendingWrap.classList.remove("hidden");
-  // Prévia instantânea
-  let tempUrls=files.map(f=>URL.createObjectURL(f));
-  pendingGrid.innerHTML = tempUrls.map(url=>`<div class="aspect-square rounded-[14px] overflow-hidden border-2 border-dashed border-[#FFD60A] bg-[#FFFBEB] relative"><img src="${url}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-[9px] text-center py-0.5">prévia</div></div>`).join("");
-  document.getElementById("pendingCount").textContent = files.length;
-  toast(`Prévia de ${files.length} fotos - clique em Salvar`);
-  pendingQc=[];
-  for(let f of files){
-    try{
-      let b=await compressImage(f,1280,0.7);
-      pendingQc.push(b);
-    }catch(err){}
+  if(o.fotos.length>=10){toast("Limite 10 fotos"); return;}
+  let files=Array.from(e.target.files).slice(0, 10-o.fotos.length);
+  let grid=document.getElementById("qcGrid");
+  document.getElementById("qcEmpty").classList.add("hidden");
+  for(let i=0;i<files.length;i++){
+    grid.innerHTML+=`<div class="aspect-square rounded-[14px] overflow-hidden border border-dashed bg-[#FFFBEB] grid place-items-center"><span class="text-[10px]">comprimindo ${i+1}/${files.length}...</span></div>`;
   }
-  tempUrls.forEach(url=>URL.revokeObjectURL(url));
-  pendingGrid.innerHTML = pendingQc.map(b=>`<div class="aspect-square rounded-[14px] overflow-hidden border-2 border-dashed border-[#FFD60A] relative"><img src="${b}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-[#FFD60A] text-black text-[9px] font-bold text-center py-0.5">pronta pra salvar</div></div>`).join("");
+  for(let f of files){
+    let b=await compressImage(f,1024,0.6);
+    o.fotos.push(b);
+  }
+  await updateDoc(doc(db,"pedidos",o.id), {fotos:o.fotos});
+  toast(`✅ ${files.length} fotos no Firebase • Cliente vê agora`);
   e.target.value="";
 });
-renderAdminList();
 }
+
 function renderAdminList(){
 let listEl=document.getElementById("list"); let emptyEl=document.getElementById("empty"); let cntEl=document.getElementById("cnt");
 if(!listEl) return;
 let filtered=orders.filter(o=>(o.id+" "+o.cliente+" "+o.produto).toLowerCase().includes(q.toLowerCase())).sort((a,b)=>b.id.localeCompare(a.id));
-if(cntEl) cntEl.textContent=filtered.length+" pedidos";
+if(cntEl) cntEl.textContent=filtered.length+" pedidos • Firebase";
 if(filtered.length===0){listEl.innerHTML=""; emptyEl.classList.remove("hidden");} else {emptyEl.classList.add("hidden");
-listEl.innerHTML=filtered.map(o=>{let idx=STEPS.findIndex(s=>s.id===o.status); let pct=(idx/(STEPS.length-1))*100; return `<div onclick="openDrawer('${o.id}')" class="px-6 py-5 flex gap-4 items-center hover:bg-[#FBFAF7] cursor-pointer border-b last:border-0"><div class="w-[64px] h-[64px] rounded-[16px] bg-[#F6F5F1] border overflow-hidden grid place-items-center shrink-0">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`📦`}</div><div class="flex-1 min-w-0"><div class="flex gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black text-white">${o.id}</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FFF7CC] border truncate max-w-[150px]">${o.status}</span></div><div class="font-bold text-[14px] truncate mt-1">${o.produto}</div><div class="text-[12px] text-zinc-500 truncate">${o.cliente} • ${o.fotos.length}/10 fotos QC</div></div><div class="text-right"><div class="font-bold text-[13px]">${fmt(o.valor)}</div><div class="w-[80px] h-[6px] bg-[#F0EFEB] rounded-full mt-2 overflow-hidden"><div class="h-full bg-black rounded-full" style="width:${pct}%"></div></div></div></div>`;}).join("");}
+listEl.innerHTML=filtered.map(o=>{let idx=STEPS.findIndex(s=>s.id===o.status); let pct=(idx/(STEPS.length-1))*100; return `<div onclick="openDrawer('${o.id}')" class="px-6 py-5 flex gap-4 items-center hover:bg-[#FBFAF7] cursor-pointer border-b last:border-0"><div class="w-[64px] h-[64px] rounded-[16px] bg-[#F6F5F1] border overflow-hidden grid place-items-center shrink-0">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`📦`}</div><div class="flex-1 min-w-0"><div class="flex gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black text-white">${o.id}</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FFF7CC] border truncate max-w-[150px]">${o.status}</span></div><div class="font-bold text-[14px] truncate mt-1">${o.produto}</div><div class="text-[12px] text-zinc-500 truncate">${o.cliente} • ${o.fotos?.length||0}/10 fotos</div></div><div class="text-right"><div class="font-bold text-[13px]">${fmt(o.valor)}</div><div class="w-[80px] h-[6px] bg-[#F0EFEB] rounded-full mt-2 overflow-hidden"><div class="h-full bg-black rounded-full" style="width:${pct}%"></div></div></div></div>`;}).join("");}
 }
-function openNew(){document.getElementById("newBg").classList.remove("hidden"); document.getElementById("newModal").classList.remove("hidden");}
-function closeNew(){document.getElementById("newBg").classList.add("hidden"); document.getElementById("newModal").classList.add("hidden");}
-function createOrder(){
+
+async function createOrder(){
 let cliente=document.getElementById("nCli").value.trim();
 let produto=document.getElementById("nProd").value.trim();
 let valor=parseFloat(document.getElementById("nVal").value)||0;
@@ -204,15 +200,17 @@ let pesoUn=document.getElementById("nPesoUn").value;
 let freteInterno=document.getElementById("nFreteInt").value.trim();
 let rastreio=document.getElementById("nRast").value.trim();
 if(!cliente||!produto){toast("Preencha cliente e produto"); return;}
-let novo={id:genId(),cliente,produto,valor,peso,pesoUn,freteInterno,freteBR:"",rastreio,status:"PEDIDO CONFIRMADO",capa:tempCapa,fotos:[],criadoEm:new Date().toLocaleDateString("pt-BR")};
-orders.push(novo);
-localStorage.setItem(KEY,JSON.stringify(orders));
-closeNew(); renderAdminList(); toast("Pedido criado");
+let id=genId();
+let novo={cliente,produto,valor,peso,pesoUn,freteInterno,freteBR:"",rastreio,status:"PEDIDO CONFIRMADO",capa:tempCapa||"",fotos:[],criadoEm:new Date().toLocaleDateString("pt-BR")};
+await setDoc(doc(db,"pedidos",id), novo);
+closeNew();
+toast("Pedido criado no Firebase");
 tempCapa=null; document.getElementById("nPrev").innerHTML="sem capa";
 document.getElementById("nCli").value=""; document.getElementById("nProd").value=""; document.getElementById("nVal").value=""; document.getElementById("nPeso").value=""; document.getElementById("nFreteInt").value=""; document.getElementById("nRast").value="";
 }
+
 function openDrawer(id){
-let o=orders.find(x=>x.id===id); if(!o) return; sel=o.id; pendingQc=[];
+let o=orders.find(x=>x.id===id); if(!o) return; sel=o.id;
 document.getElementById("dId").textContent=o.id;
 document.getElementById("dProd").textContent=o.produto;
 document.getElementById("dCli").textContent=o.cliente+" • "+o.criadoEm;
@@ -230,113 +228,69 @@ renderQcGrid(o);
 document.getElementById("drawerBg").classList.remove("hidden");
 document.getElementById("drawer").classList.remove("hidden");
 }
-function closeDrawer(){document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null; pendingQc=[];}
+function closeDrawer(){document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null;}
 function renderQcGrid(o){
 let grid=document.getElementById("qcGrid"); let empty=document.getElementById("qcEmpty");
-document.getElementById("qcC").textContent=o.fotos.length;
-if(o.fotos.length===0){grid.innerHTML=""; empty.classList.remove("hidden");} else {empty.classList.add("hidden"); grid.innerHTML=o.fotos.map((f,i)=>`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover cursor-pointer" onclick="openQcFull('${f}')"><button onclick="removeQc(${i})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white text-[10px]">✕</button></div>`).join("");}
-document.getElementById("qcPendingWrap").classList.add("hidden");
-document.getElementById("qcPendingGrid").innerHTML="";
-document.getElementById("pendingCount").textContent="0";
+document.getElementById("qcC").textContent=o.fotos?.length||0;
+if(!o.fotos || o.fotos.length===0){grid.innerHTML=""; empty.classList.remove("hidden");} else {empty.classList.add("hidden"); grid.innerHTML=o.fotos.map((f,i)=>`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover cursor-pointer" onclick="openQcFull('${f}')"><button onclick="removeQc(${i})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white text-[10px]">✕</button></div>`).join("");}
 }
-function renderClientPage(trackId){
-let o=orders.find(x=>x.id===trackId);
-let app=document.getElementById("app");
-if(!o){app.innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-12 text-center">Pedido ${trackId} não encontrado</div></div>`; return;}
-let idx=STEPS.findIndex(s=>s.id===o.status);
-let idxChegou=STEPS.findIndex(s=>s.id.includes("CHEGOU NO GALPÃO"));
-let idxAguardando=STEPS.findIndex(s=>s.id.includes("AGUARDANDO ENVIO"));
-let hasWeight = idx >= idxChegou && o.peso;
-let hasFreteBR = idx >= idxAguardando && o.freteBR;
-let boxesHtml = '';
-boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Valor Pago</div><div class="font-black text-[18px] mt-2">${fmt(o.valor)}</div><div class="text-[11px] text-zinc-500 mt-1">BRL</div></div>`;
-if(o.freteInterno){ boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Frete Interno</div><div class="font-black text-[18px] mt-2">¥ ${o.freteInterno}</div><div class="text-[11px] text-zinc-500 mt-1">China</div></div>`; }
-if(hasWeight){ boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Peso Real</div><div class="font-black text-[18px] mt-2">${o.peso}${o.pesoUn||"g"}</div><div class="text-[11px] text-zinc-500 mt-1">conferido</div></div>`; }
-if(hasFreteBR){ boxesHtml += `<div class="bg-[#0A0A0A] rounded-[20px] p-5 text-white"><div class="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">Frete Internacional</div><div class="font-black text-[18px] mt-2">R$ ${o.freteBR}</div><div class="text-[11px] text-white/60 mt-1">China → Brasil</div></div>`; }
-app.innerHTML=`
+async function renderClientPage(trackId){
+document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-8 text-center"><div class="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div><div class="font-bold mt-4">Carregando do Firebase...</div><div class="text-[12px] text-zinc-500 mt-1">${trackId} • Black Eagle Imports</div></div></div>`;
+try{
+  let snap=await getDoc(doc(db,"pedidos",trackId));
+  if(!snap.exists()){ document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-8 text-center">Pedido ${trackId} não encontrado no Firebase</div></div>`; return; }
+  let o={id:snap.id, ...snap.data()};
+  let idx=STEPS.findIndex(s=>s.id===o.status);
+  let idxChegou=STEPS.findIndex(s=>s.id.includes("CHEGOU NO GALPÃO"));
+  let idxAguardando=STEPS.findIndex(s=>s.id.includes("AGUARDANDO ENVIO"));
+  let hasWeight = idx >= idxChegou && o.peso;
+  let hasFreteBR = idx >= idxAguardando && o.freteBR;
+  let boxesHtml = '';
+  boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Valor Pago</div><div class="font-black text-[18px] mt-2">${fmt(o.valor)}</div><div class="text-[11px] text-zinc-500 mt-1">BRL</div></div>`;
+  if(o.freteInterno){ boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Frete Interno</div><div class="font-black text-[18px] mt-2">¥ ${o.freteInterno}</div><div class="text-[11px] text-zinc-500 mt-1">China</div></div>`; }
+  if(hasWeight){ boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Peso Real</div><div class="font-black text-[18px] mt-2">${o.peso}${o.pesoUn||"g"}</div><div class="text-[11px] text-zinc-500 mt-1">conferido</div></div>`; }
+  if(hasFreteBR){ boxesHtml += `<div class="bg-[#0A0A0A] rounded-[20px] p-5 text-white"><div class="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">Frete Internacional</div><div class="font-black text-[18px] mt-2">R$ ${o.freteBR}</div><div class="text-[11px] text-white/60 mt-1">China → Brasil</div></div>`; }
+  document.getElementById("app").innerHTML=`
 <div class="min-h-screen bg-[#F6F5F1] py-6 px-4">
 <div class="max-w-[720px] mx-auto">
-<div class="flex justify-between items-center mb-6"><div class="flex items-center gap-2"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br>IMPORTS</div></div><div class="text-[11px] px-3 py-1 rounded-full bg-black text-white font-bold">SHENZHEN • PREMIUM</div></div>
+<div class="flex justify-between items-center mb-6"><div class="flex items-center gap-2"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br>IMPORTS</div></div><div class="text-[11px] px-3 py-1 rounded-full bg-[#009739] text-white font-bold">FIREBASE AO VIVO</div></div>
 <div class="bg-white rounded-[32px] border shadow-[0_16px_48px_rgba(0,0,0,0.08)] overflow-hidden">
 <div class="h-[4px] bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
 <div class="p-6 md:p-8">
-<div class="flex items-center gap-4 mb-6"><div class="w-14 h-14 rounded-full bg-black text-white grid place-items-center font-bold text-[18px]">${o.cliente[0]?.toUpperCase()||"C"}</div><div><div class="text-[11px] tracking-widest text-zinc-400 font-bold uppercase">Cliente Premium</div><div class="font-black text-[22px] leading-none mt-1">Olá, ${o.cliente} 👋</div><div class="text-[13px] text-zinc-500 mt-1">Galpão Shenzhen, Guangdong, China</div></div></div>
+<div class="flex items-center gap-4 mb-6"><div class="w-14 h-14 rounded-full bg-black text-white grid place-items-center font-bold text-[18px]">${o.cliente[0]?.toUpperCase()||"C"}</div><div><div class="text-[11px] tracking-widest text-zinc-400 font-bold uppercase">Cliente Premium</div><div class="font-black text-[22px] leading-none mt-1">Olá, ${o.cliente} 👋</div><div class="text-[13px] text-zinc-500 mt-1">Galpão Shenzhen • Firebase</div></div></div>
 <div class="w-full aspect-[4/3] rounded-[24px] overflow-hidden bg-[#F6F5F1] border">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`<div class="w-full h-full grid place-items-center text-[40px]">📦</div>`}</div>
-<div class="mt-5"><div class="flex gap-2"><span class="px-3 py-1 rounded-full bg-black text-white text-[11px] font-bold">${o.id}</span><span class="text-[11px] text-zinc-500">${o.criadoEm}</span></div><div class="font-black text-[22px] leading-[1.15] mt-3 break-words">${o.produto}</div><div class="text-[12px] text-zinc-500 mt-2">Cód: ${o.rastreio||"—"}</div></div>
+<div class="mt-5"><div class="flex gap-2"><span class="px-3 py-1 rounded-full bg-black text-white text-[11px] font-bold">${o.id}</span><span class="text-[11px] text-zinc-500">${o.criadoEm}</span></div><div class="font-black text-[22px] leading-[1.15] mt-3 break-words">${o.produto}</div></div>
 <div class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">${boxesHtml}</div>
-<div class="mt-8"><div class="flex items-center justify-between"><div class="text-[11px] font-black tracking-widest uppercase">Progressão Vertical</div><div class="text-[11px] px-2.5 py-1 rounded-full bg-[#F6F5F1] border font-bold">${idx+1} de ${STEPS.length}</div></div>
+<div class="mt-8"><div class="flex items-center justify-between"><div class="text-[11px] font-black tracking-widest uppercase">Progressão</div><div class="text-[11px] px-2.5 py-1 rounded-full bg-[#F6F5F1] border font-bold">${idx+1} de ${STEPS.length}</div></div>
 <div class="mt-6 relative"><div class="absolute left-[15px] top-2 bottom-2 w-[2px] bg-[#F0EFEB]"></div><div class="absolute left-[15px] top-2 w-[2px] bg-black" style="height:${(idx/(STEPS.length-1))*100}%"></div><div class="space-y-0">${STEPS.map((s,i)=>{let done=i<=idx; let curr=i===idx; return `<div class="flex gap-4"><div class="flex flex-col items-center"><div class="w-[32px] h-[32px] rounded-full border-2 grid place-items-center text-[12px] font-bold ${done?'bg-black border-black text-white':'bg-white border-[#EDEBE6] text-zinc-300'} ${curr?'ring-4 ring-[#FFD60A]/30':''}">${done?'✓':''}</div>${i<STEPS.length-1?`<div class="w-[2px] flex-1 mt-2 ${i<idx?'bg-black':'bg-[#F0EFEB]'} min-h-[28px]"></div>`:''}</div><div class="flex-1 pb-8 -mt-1"><div class="flex gap-2 items-center"><span class="font-bold text-[13px] ${curr?'text-black':done?'text-black':'text-zinc-400'}">${s.label}</span>${curr?'<span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-[#FFD60A]">AGORA</span>':''}</div>${s.sub?`<div class="text-[10px] text-zinc-400 mt-0.5">${s.sub}</div>`:''}<div class="text-[12px] text-zinc-600 mt-1">${s.desc}</div></div></div>`;}).join("")}</div></div></div>
-${o.fotos.length>0?`<div class="mt-8"><div class="text-[11px] font-black tracking-widest">FOTOS REAIS QC (${o.fotos.length}/10)</div><div class="mt-3 grid grid-cols-3 gap-3">${o.fotos.map(f=>`<div class="aspect-square rounded-[16px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"></div>`).join("")}</div></div>`:`<div class="mt-8 border border-dashed rounded-[20px] p-8 text-center bg-[#FBFAF7]"><div class="font-bold text-[14px]">Fotos em produção</div><div class="text-[12px] text-zinc-500 mt-2">Assim que chegar ao galpão nossa equipe irá colocar as fotos aqui</div></div>`}
+${o.fotos && o.fotos.length>0?`<div class="mt-8"><div class="text-[11px] font-black tracking-widest">FOTOS REAIS QC (${o.fotos.length}/10) • FIREBASE</div><div class="mt-3 grid grid-cols-3 gap-3">${o.fotos.map(f=>`<div class="aspect-square rounded-[16px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"></div>`).join("")}</div></div>`:`<div class="mt-8 border border-dashed rounded-[20px] p-8 text-center bg-[#FBFAF7]"><div class="font-bold text-[14px]">Fotos em produção</div><div class="text-[12px] text-zinc-500 mt-2">Assim que chegar ao galpão nossa equipe irá colocar as fotos aqui</div></div>`}
 </div></div>
-<div class="mt-6 text-center text-[11px] tracking-widest text-zinc-400 uppercase">© 2026 Jaguarara Imports • Shenzhen, Guangdong, China</div>
+<div class="mt-6 text-center text-[11px] tracking-widest text-zinc-400 uppercase">© 2026 Jaguarara Imports • Firebase • Shenzhen</div>
 </div></div>
 `;
+}catch(e){ document.getElementById("app").innerHTML=`Erro Firebase: ${e.message}`; }
 }
 
-// FUNÇÕES GLOBAIS - NÃO PERDEM MAIS O EVENTO
-function logout(){ localStorage.removeItem(AUTH_KEY); location.reload(); }
-function openDel(){ pendingDel=sel; document.getElementById("delId").textContent=sel; document.getElementById("delBg").classList.remove("hidden"); document.getElementById("delModal").classList.remove("hidden"); }
-function closeDel(){document.getElementById("delBg").classList.add("hidden"); document.getElementById("delModal").classList.add("hidden"); pendingDel=null;}
-function confirmDelete(){ if(!pendingDel) return; orders=orders.filter(x=>x.id!==pendingDel); localStorage.setItem(KEY,JSON.stringify(orders)); closeDel(); closeDrawer(); renderAdminList(); toast("Excluído"); }
-function copyLink(){ let url=location.origin+location.pathname+"?track="+sel; navigator.clipboard.writeText(url); toast("Link copiado: "+sel); }
-function clearPending(){ pendingQc=[]; document.getElementById("qcPendingWrap").classList.add("hidden"); document.getElementById("qcPendingGrid").innerHTML=""; }
-function changeStatus(val){
-  let o=orders.find(x=>x.id===sel); if(!o) return;
-  o.status=val;
-  localStorage.setItem(KEY,JSON.stringify(orders));
-  toast("Status → "+val+" • Salvo automático");
-  renderAdminList();
-}
-function saveCurrentOrder(){
-  let o=orders.find(x=>x.id===sel); if(!o) { toast("Erro: pedido não encontrado"); return; }
-  o.cliente=document.getElementById("eCli").value;
-  o.produto=document.getElementById("eProd").value;
-  o.valor=parseFloat(document.getElementById("eVal").value)||0;
-  o.peso=document.getElementById("ePeso").value;
-  o.pesoUn=document.getElementById("ePesoUn").value;
-  o.freteInterno=document.getElementById("eFreteInt").value;
-  o.freteBR=document.getElementById("eFreteBR").value;
-  o.rastreio=document.getElementById("eRast").value;
-  if(window.tempEditCapa) o.capa=window.tempEditCapa;
-
-  if(pendingQc.length>0){
-    let espaco=10-o.fotos.length;
-    let paraAdd=pendingQc.slice(0,espaco);
-    o.fotos.push(...paraAdd);
-    pendingQc=[];
-    document.getElementById("qcPendingWrap").classList.add("hidden");
-    document.getElementById("qcPendingGrid").innerHTML="";
-    toast(`✅ ${paraAdd.length} fotos QC salvas • Total ${o.fotos.length}/10 • Cliente já vê`);
-  } else {
-    toast("✅ Pedido salvo • Cliente já vê atualizado");
-  }
-
-  localStorage.setItem(KEY,JSON.stringify(orders));
-  renderQcGrid(o);
-  renderAdminList();
-}
-function removeQc(i){ let o=orders.find(x=>x.id===sel); if(!o) return; o.fotos.splice(i,1); localStorage.setItem(KEY,JSON.stringify(orders)); renderQcGrid(o); renderAdminList(); toast("Foto removida"); }
-function openQcFull(src){ document.getElementById("qcFullImg").src=src; document.getElementById("qcFull").classList.remove("hidden"); }
-
-(function(){
-let track=new URLSearchParams(location.search).get("track");
-if(track){renderClientPage(track); return;}
-if(isLogged()){renderAdminPage();} else {renderLogin();}
-})();
-window.openNew=openNew;
-window.closeNew=closeNew;
+window.openNew=()=>{document.getElementById("newBg").classList.remove("hidden"); document.getElementById("newModal").classList.remove("hidden");};
+window.closeNew=()=>{document.getElementById("newBg").classList.add("hidden"); document.getElementById("newModal").classList.add("hidden");};
 window.openDrawer=openDrawer;
-window.closeDrawer=closeDrawer;
-window.logout=logout;
-window.openDel=openDel;
-window.closeDel=closeDel;
-window.confirmDelete=confirmDelete;
-window.copyLink=copyLink;
-window.clearPending=clearPending;
-window.changeStatus=changeStatus;
-window.saveCurrentOrder=saveCurrentOrder;
-window.removeQc=removeQc;
-window.openQcFull=openQcFull;
+window.closeDrawer=()=>{document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null;};
+window.logout=()=>{localStorage.removeItem(AUTH_KEY); location.reload();};
+window.openDelete=()=>{ pendingDel=sel; document.getElementById("delId").textContent=sel; document.getElementById("delBg").classList.remove("hidden"); document.getElementById("delModal").classList.remove("hidden");};
+window.closeDel=()=>{document.getElementById("delBg").classList.add("hidden"); document.getElementById("delModal").classList.add("hidden"); pendingDel=null;};
+window.confirmDelete=async()=>{ if(!pendingDel) return; await deleteDoc(doc(db,"pedidos",pendingDel)); closeDel(); closeDrawer(); toast("Excluído do Firebase"); };
+window.copyLink=()=>{ let url=location.origin+location.pathname+"?track="+sel; navigator.clipboard.writeText(url); toast("Link copiado - cliente vê de qualquer celular (Firebase)"); };
+window.openClientTest=()=>{ let url=location.origin+location.pathname+"?track="+sel; window.open(url, "_blank"); };
+window.changeStatus=async(val)=>{ let o=orders.find(x=>x.id===sel); if(!o) return; await updateDoc(doc(db,"pedidos",o.id), {status:val}); toast("Status → "+val+" • Firebase"); };
+window.saveCurrentOrder=async()=>{
+  let o=orders.find(x=>x.id===sel); if(!o) return;
+  let update={ cliente:document.getElementById("eCli").value, produto:document.getElementById("eProd").value, valor:parseFloat(document.getElementById("eVal").value)||0, peso:document.getElementById("ePeso").value, pesoUn:document.getElementById("ePesoUn").value, freteInterno:document.getElementById("eFreteInt").value, freteBR:document.getElementById("eFreteBR").value, rastreio:document.getElementById("eRast").value, };
+  if(window.tempEditCapa) update.capa=window.tempEditCapa;
+  await updateDoc(doc(db,"pedidos",o.id), update);
+  toast("✅ Salvo no Firebase");
+};
+window.removeQc=async(i)=>{ let o=orders.find(x=>x.id===sel); if(!o) return; o.fotos.splice(i,1); await updateDoc(doc(db,"pedidos",o.id), {fotos:o.fotos}); toast("Foto removida"); };
+window.openQcFull=(src)=>{ let el=document.getElementById("qcFull"); document.getElementById("qcFullImg").src=src; el.classList.remove("hidden"); };
 window.createOrder=createOrder;
 </script>
 <script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
