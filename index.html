@@ -3,920 +3,355 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAGUARARA IMPORTS - Admin Premium</title>
+<title>JAGUARARA IMPORTS - Premium Final</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { sans: ['Inter','sans-serif'], serif: ['Instrument Serif','serif'] },
-    }
-  }
-}
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-*{ -webkit-font-smoothing: antialiased; }
-body{ font-family: Inter, sans-serif; }
-.scrollbar-hide::-webkit-scrollbar{ display:none; }
-.scrollbar-hide{ -ms-overflow-style:none; scrollbar-width:none; }
-.glass{ backdrop-filter: blur(16px); }
+*{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+.font-serif{font-family:"Instrument Serif",serif}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{content:"";position:absolute;top:0;left:0;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:shine 2.2s infinite}
 </style>
 </head>
-<body class="bg-[#F6F5F1] text-[#0A0A0A] min-h-screen">
-
-<!-- LOGIN -->
-<div id="loginView" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-  <div class="absolute inset-0">
-    <div class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#009739]/[0.08] rounded-full blur-[120px]"></div>
-    <div class="absolute bottom-[-20%] right-[-10%] w-[700px] h-[700px] bg-[#FFD60A]/[0.12] rounded-full blur-[130px]"></div>
-    <div class="absolute top-[30%] right-[20%] w-[400px] h-[400px] bg-[#0A0A0A]/[0.04] rounded-full blur-[100px]"></div>
-  </div>
-  <div class="w-full max-w-[420px] relative z-10">
-    <div class="bg-white rounded-[32px] border border-[#EDEBE6] shadow-[0_20px_80px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.04)] overflow-hidden">
-      <div class="h-[4px] w-full bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
-      <div class="p-10">
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-11 h-11 rounded-[14px] bg-[#0A0A0A] flex items-center justify-center text-[20px]">🐆</div>
-          <div>
-            <div class="font-extrabold tracking-[-0.02em] text-[15px] leading-none">JAGUARARA</div>
-            <div class="font-extrabold tracking-[-0.02em] text-[15px] leading-none">IMPORTS</div>
-            <div class="text-[10px] tracking-[0.18em] text-[#8A8A86] mt-1 font-semibold">ADMIN • GALPÃO</div>
-          </div>
-          <div class="ml-auto w-2 h-2 rounded-full bg-[#009739] animate-pulse shadow-[0_0_0_6px_rgba(0,151,57,0.15)]"></div>
-        </div>
-        <h1 class="font-serif text-[34px] leading-[0.95] tracking-[-0.03em]">Bem-vindo<br>de volta.</h1>
-        <p class="text-[13px] text-[#6B6B68] mt-3 leading-[1.5]">Acesso restrito ao galpão. Digite sua chave de administrador para gerenciar os pedidos.</p>
-        
-        <div class="mt-8">
-          <label class="text-[10px] font-semibold tracking-[0.16em] text-[#8A8A86] uppercase">Senha de administrador</label>
-          <div class="mt-2 relative">
-            <input id="passInput" type="password" placeholder="••••••••••••" class="w-full h-[52px] rounded-[16px] border border-[#E8E6E0] bg-[#FBFAF7] px-4 pr-12 text-[15px] outline-none focus:border-[#0A0A0A] focus:bg-white transition placeholder:text-[#C4C2BD]">
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0A0A0A] flex items-center justify-center text-white text-[12px]">↗</div>
-          </div>
-          <div id="passError" class="hidden mt-3 text-[12px] text-[#FF3B30] bg-[#FF3B30]/10 border border-[#FF3B30]/20 rounded-full px-3 py-2">Senha incorreta. Tente novamente.</div>
-          <button id="loginBtn" class="mt-4 w-full h-[52px] rounded-[16px] bg-[#0A0A0A] text-white font-semibold text-[14px] tracking-[-0.01em] hover:bg-black hover:scale-[0.99] active:scale-[0.98] transition">Entrar no Galpão</button>
-          <div class="mt-6 flex items-center justify-center gap-2 text-[11px] text-[#9A9996]">
-            <span class="w-1 h-1 rounded-full bg-[#009739]"></span> Criptografia ponta-a-ponta • Acesso auditado
-          </div>
-        </div>
-      </div>
-      <div class="bg-[#FBFAF7] border-t border-[#EDEBE6] px-10 py-4 flex items-center justify-between">
-        <span class="text-[10px] tracking-[0.14em] text-[#8A8A86] uppercase font-semibold">100% Brasileiro • Premium</span>
-        <span class="text-[10px] text-[#B5B3AE]">v3.0 • 2026</span>
-      </div>
-    </div>
-    <div class="mt-4 text-center text-[11px] tracking-[0.12em] text-[#B5B3AE] uppercase">Jaguarara Imports • Conectando o Brasil ao Mundo • Desde 2021</div>
-  </div>
-</div>
-
-<!-- ADMIN -->
-<div id="adminView" class="hidden min-h-screen">
-  <!-- Header -->
-  <header class="sticky top-0 z-30 bg-white/80 glass border-b border-[#EDEBE6]">
-    <div class="max-w-[1280px] mx-auto px-6 md:px-8 h-[72px] flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 rounded-[12px] bg-[#0A0A0A] flex items-center justify-center text-[18px]">🐆</div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-extrabold tracking-[-0.02em] text-[16px]">JAGUARARA</span>
-            <span class="text-[10px] tracking-[0.16em] px-2 py-1 rounded-full bg-[#0A0A0A] text-white font-bold">ADMIN</span>
-          </div>
-          <div class="text-[11px] text-[#8A8A86] tracking-[0.08em] -mt-0.5">GALPÃO • SHENZHEN → BRASIL • AO VIVO</div>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="hidden md:flex items-center gap-2 px-3 h-9 rounded-full bg-[#F6F5F1] border border-[#EDEBE6] text-[11px]">
-          <span class="w-2 h-2 rounded-full bg-[#009739] animate-pulse"></span>
-          <span class="font-medium" id="orderCountTop">0 pedidos</span>
-        </div>
-        <button id="newOrderBtn" class="h-10 px-5 rounded-full bg-[#0A0A0A] text-white text-[13px] font-semibold flex items-center gap-2 hover:bg-black transition"><span class="text-[16px] leading-none">+</span> Novo Pedido</button>
-        <button id="logoutBtn" class="h-10 w-10 rounded-full border border-[#EDEBE6] bg-white flex items-center justify-center hover:bg-[#F6F5F1] transition">↗</button>
-      </div>
-    </div>
-    <div class="h-[3px] w-full bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
-  </header>
-
-  <main class="max-w-[1280px] mx-auto px-6 md:px-8 py-8">
-    <!-- Stats -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white rounded-[22px] border border-[#EDEBE6] p-5 shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
-        <div class="flex justify-between items-start">
-          <div class="text-[10px] font-bold tracking-[0.16em] text-[#9A9996] uppercase">Total Pedidos</div>
-          <div class="w-8 h-8 rounded-full bg-[#F6F5F1] border border-[#EDEBE6] flex items-center justify-center text-[12px]">↗</div>
-        </div>
-        <div class="mt-4 font-serif text-[36px] leading-none tracking-[-0.03em]" id="statTotal">0</div>
-        <div class="mt-1 text-[12px] text-[#8A8A86]">ativos no galpão</div>
-      </div>
-      <div class="bg-white rounded-[22px] border border-[#EDEBE6] p-5 shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
-        <div class="flex justify-between items-start">
-          <div class="text-[10px] font-bold tracking-[0.16em] text-[#9A9996] uppercase">Faturamento</div>
-          <div class="w-8 h-8 rounded-full bg-[#F6F5F1] border border-[#EDEBE6] flex items-center justify-center text-[12px]">R$</div>
-        </div>
-        <div class="mt-4 font-serif text-[32px] leading-none tracking-[-0.03em] truncate" id="statFaturamento">R$ 0,00</div>
-        <div class="mt-1 text-[12px] text-[#8A8A86]">estimado total</div>
-      </div>
-      <div class="bg-white rounded-[22px] border border-[#EDEBE6] p-5 shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
-        <div class="flex justify-between items-start">
-          <div class="text-[10px] font-bold tracking-[0.16em] text-[#9A9996] uppercase">No Galpão</div>
-          <div class="w-8 h-8 rounded-full bg-[#FFF4D6] border border-[#FFD60A]/30 flex items-center justify-center text-[12px]">◍</div>
-        </div>
-        <div class="mt-4 font-serif text-[36px] leading-none tracking-[-0.03em]" id="statGalpao">0</div>
-        <div class="mt-1 text-[12px] text-[#8A8A86]">QC pendente</div>
-      </div>
-      <div class="bg-[#0A0A0A] rounded-[22px] border border-[#0A0A0A] p-5 shadow-[0_12px_32px_rgba(0,0,0,0.18)] text-white">
-        <div class="flex justify-between items-start">
-          <div class="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">Enviados</div>
-          <div class="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-[12px]">✈</div>
-        </div>
-        <div class="mt-4 font-serif text-[36px] leading-none tracking-[-0.03em]" id="statEnviados">0</div>
-        <div class="mt-1 text-[12px] text-white/60">em trânsito</div>
-      </div>
-    </div>
-
-    <!-- Search + Filters -->
-    <div class="mt-6 flex flex-col md:flex-row gap-3">
-      <div class="flex-1 relative">
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#B5B3AE]">⌕</span>
-        <input id="searchInput" placeholder="Buscar JG-, cliente, produto..." class="w-full h-[48px] rounded-full bg-white border border-[#EDEBE6] pl-11 pr-4 text-[14px] outline-none focus:border-[#0A0A0A] placeholder:text-[#B5B3AE]">
-      </div>
-      <div class="flex items-center gap-2 text-[12px]">
-        <span class="text-[#8A8A86] px-3">🇧🇷 Premium • Sem pedidos fake</span>
-      </div>
-    </div>
-
-    <!-- Orders List -->
-    <div class="mt-6 bg-white rounded-[28px] border border-[#EDEBE6] shadow-[0_12px_40px_rgba(0,0,0,0.05)] overflow-hidden">
-      <div class="px-7 h-[64px] flex items-center justify-between border-b border-[#EDEBE6]">
-        <div class="flex items-center gap-3">
-          <div class="font-bold text-[13px] tracking-[0.08em] uppercase">Pedidos • Galpão</div>
-          <span id="listCount" class="text-[11px] px-2.5 py-1 rounded-full bg-[#F6F5F1] border border-[#EDEBE6]">0 pedidos</span>
-        </div>
-        <div class="text-[11px] text-[#8A8A86]">Clique para editar • Status com select</div>
-      </div>
-      <div id="ordersList" class="divide-y divide-[#F0EFEB]"></div>
-      <div id="emptyState" class="hidden p-16 text-center">
-        <div class="w-20 h-20 rounded-[20px] bg-[#F6F5F1] border border-[#EDEBE6] flex items-center justify-center text-[32px] mx-auto">📦</div>
-        <div class="mt-5 font-serif text-[22px] tracking-[-0.02em]">Nenhum pedido ainda.</div>
-        <div class="mt-2 text-[13px] text-[#8A8A86] max-w-[320px] mx-auto leading-[1.5]">Seu galpão está vazio. Clique em + Novo Pedido para criar o primeiro rastreio premium.</div>
-        <button onclick="openNewModal()" class="mt-6 h-11 px-6 rounded-full bg-[#0A0A0A] text-white text-[13px] font-semibold">+ Criar primeiro pedido</button>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- ORDER DRAWER -->
-<div id="drawerOverlay" class="hidden fixed inset-0 z-40 bg-[#0A0A0A]/20 backdrop-blur-[2px]"></div>
-<div id="orderDrawer" class="hidden fixed inset-0 z-50 flex justify-end">
-  <div class="w-full max-w-[560px] h-full bg-[#FCFBF8] border-l border-[#EDEBE6] shadow-[-20px_0_80px_rgba(0,0,0,0.15)] overflow-y-auto scrollbar-hide flex flex-col">
-    <!-- Drawer Header -->
-    <div class="sticky top-0 bg-[#FCFBF8]/90 glass border-b border-[#EDEBE6] z-10">
-      <div class="h-[3px] w-full bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
-      <div class="p-6 flex items-start justify-between gap-4">
-        <div class="flex gap-4">
-          <img id="drawerCapa" class="w-[72px] h-[72px] rounded-[18px] object-cover border border-[#EDEBE6] bg-white hidden">
-          <div id="drawerCapaPlaceholder" class="w-[72px] h-[72px] rounded-[18px] bg-[#F6F5F1] border border-dashed border-[#E0DDD6] flex items-center justify-center text-[24px]">📦</div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span id="drawerId" class="text-[11px] font-bold tracking-[0.12em] px-2.5 py-1 rounded-full bg-[#0A0A0A] text-white">JG-0000</span>
-              <span id="drawerDate" class="text-[11px] text-[#8A8A86]">00/00/2026</span>
-            </div>
-            <div id="drawerProduto" class="mt-2 font-bold text-[18px] leading-[1.15] tracking-[-0.02em] max-w-[280px]">Produto</div>
-            <div id="drawerCliente" class="text-[13px] text-[#6B6B68] mt-1">Cliente</div>
-          </div>
-        </div>
-        <button id="closeDrawer" class="w-9 h-9 rounded-full bg-white border border-[#EDEBE6] flex items-center justify-center hover:bg-[#F6F5F1]">✕</button>
-      </div>
-      <div class="px-6 pb-4 flex gap-2">
-        <button id="copyLinkBtn" class="h-9 px-4 rounded-full bg-[#0A0A0A] text-white text-[12px] font-semibold flex items-center gap-2">🔗 Link Cliente BR</button>
-        <button id="viewClientBtn" class="h-9 px-4 rounded-full bg-white border border-[#EDEBE6] text-[12px] font-semibold">👁 Ver como Cliente</button>
-        <button id="whatsBtn" class="h-9 px-4 rounded-full bg-[#25D366] text-white text-[12px] font-bold">WhatsApp</button>
-      </div>
-    </div>
-
-    <!-- Drawer Content -->
-    <div class="p-6 space-y-6 flex-1">
-      <!-- STATUS SELECT PREMIUM - ESCOLHA LIVRE -->
-      <div class="bg-[#0A0A0A] rounded-[20px] p-5 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-[180px] h-[180px] bg-[#009739]/20 rounded-full blur-[40px] -mr-20 -mt-20"></div>
-        <div class="relative">
-          <div class="text-[10px] font-bold tracking-[0.18em] text-white/50 uppercase">Status Atual • Escolha Livre</div>
-          <div class="mt-3 flex items-center gap-3">
-            <select id="statusSelect" class="flex-1 h-[48px] rounded-[14px] bg-white text-[#0A0A0A] border-0 px-4 text-[13px] font-bold outline-none">
-              <option value="COMPRADO">COMPRADO</option>
-              <option value="CHEGOU NO GALPÃO">CHEGOU NO GALPÃO</option>
-              <option value="INSPEÇÃO QC">INSPEÇÃO QC</option>
-              <option value="ENVIADO AO BRASIL">ENVIADO AO BRASIL</option>
-              <option value="ENTREGUE">ENTREGUE</option>
-            </select>
-            <div id="statusBadgeLive" class="px-3 py-2 rounded-full bg-[#FFD60A] text-[#0A0A0A] text-[10px] font-extrabold tracking-[0.1em]">AGORA • AO VIVO</div>
-          </div>
-          <div class="mt-3 text-[11px] text-white/60 leading-[1.4]">Escolha qualquer etapa livremente. Não precisa avançar um por um. A timeline abaixo atualiza automaticamente.</div>
-        </div>
-      </div>
-
-      <!-- Info Grid -->
-      <div class="grid grid-cols-2 gap-3">
-        <div class="bg-white rounded-[16px] border border-[#EDEBE6] p-4">
-          <div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Cliente</div>
-          <input id="editCliente" class="mt-2 w-full bg-transparent text-[14px] font-medium outline-none" placeholder="Nome do cliente">
-        </div>
-        <div class="bg-white rounded-[16px] border border-[#EDEBE6] p-4">
-          <div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Produto</div>
-          <input id="editProduto" class="mt-2 w-full bg-transparent text-[14px] font-medium outline-none" placeholder="Nome do produto">
-        </div>
-        <div class="bg-white rounded-[16px] border border-[#EDEBE6] p-4">
-          <div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Valor R$</div>
-          <input id="editValor" type="number" step="0.01" class="mt-2 w-full bg-transparent text-[14px] font-medium outline-none" placeholder="0,00">
-        </div>
-        <div class="bg-white rounded-[16px] border border-[#EDEBE6] p-4">
-          <div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Peso</div>
-          <input id="editPeso" class="mt-2 w-full bg-transparent text-[14px] font-medium outline-none" placeholder="1.2kg">
-        </div>
-        <div class="bg-white rounded-[16px] border border-[#EDEBE6] p-4">
-          <div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Frete</div>
-          <input id="editFrete" class="mt-2 w-full bg-transparent text-[14px] font-medium outline-none" placeholder="DHL Express">
-        </div>
-        <div class="bg-white rounded-[16px] border border-[#EDEBE6] p-4">
-          <div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Rastreio</div>
-          <input id="editRastreio" class="mt-2 w-full bg-transparent text-[13px] font-medium outline-none" placeholder="https://...">
-        </div>
-      </div>
-
-      <!-- Capa -->
-      <div class="bg-white rounded-[20px] border border-[#EDEBE6] p-5">
-        <div class="flex items-center justify-between">
-          <div class="text-[11px] font-bold tracking-[0.14em] text-[#8A8A86] uppercase">Capa do Produto</div>
-          <button id="changeCapaBtn" class="text-[11px] font-semibold px-3 h-7 rounded-full bg-[#F6F5F1] border border-[#EDEBE6]">Trocar capa</button>
-        </div>
-        <div class="mt-4 flex gap-4 items-center">
-          <div id="editCapaPreview" class="w-[96px] h-[96px] rounded-[16px] bg-[#F6F5F1] border border-dashed border-[#E0DDD6] flex items-center justify-center text-[11px] text-[#8A8A86] text-center p-2 overflow-hidden">sem capa</div>
-          <div class="text-[12px] text-[#6B6B68] leading-[1.5]">Essa capa aparece na lista e pro cliente. Clique em trocar para subir JPG/PNG.<br><span class="text-[11px] text-[#9A9996]">Recomendado: 800x800</span></div>
-        </div>
-        <input id="capaInput" type="file" accept="image/*" class="hidden">
-      </div>
-
-      <!-- Timeline Visual -->
-      <div class="bg-white rounded-[20px] border border-[#EDEBE6] p-5">
-        <div class="flex items-center justify-between">
-          <div class="text-[11px] font-bold tracking-[0.14em] text-[#8A8A86] uppercase">Timeline • Visual Premium</div>
-          <div class="text-[10px] px-2 py-1 rounded-full bg-[#F6F5F1] border border-[#EDEBE6]">Clique no step para pular direto</div>
-        </div>
-        <!-- Horizontal progress -->
-        <div class="mt-5 relative">
-          <div class="absolute left-3 right-3 top-[14px] h-[6px] bg-[#F0EFEB] rounded-full"></div>
-          <div id="hProgress" class="absolute left-3 top-[14px] h-[6px] bg-[#009739] rounded-full transition-all duration-500" style="width:0%"></div>
-          <div class="relative flex justify-between" id="hSteps"></div>
-        </div>
-        <!-- Vertical detailed -->
-        <div class="mt-8 space-y-0" id="vTimeline"></div>
-      </div>
-
-      <!-- Fotos QC -->
-      <div class="bg-white rounded-[20px] border border-[#EDEBE6] p-5">
-        <div class="flex items-center justify-between">
-          <div class="text-[11px] font-bold tracking-[0.14em] text-[#8A8A86] uppercase">Fotos QC • Galpão (<span id="qcCount">0</span>)</div>
-          <button id="addQcBtn" class="h-8 px-4 rounded-full bg-[#0A0A0A] text-white text-[12px] font-semibold">+ Adicionar</button>
-        </div>
-        <div id="qcGrid" class="mt-4 grid grid-cols-3 gap-3"></div>
-        <div id="qcEmpty" class="mt-4 border border-dashed border-[#E0DDD6] rounded-[16px] p-6 text-center bg-[#FBFAF7]">
-          <div class="text-[13px] font-semibold">Nenhuma foto ainda.</div>
-          <div class="text-[12px] text-[#8A8A86] mt-1">Sobe as fotos reais do galpão.</div>
-        </div>
-        <input id="qcInput" type="file" accept="image/*" multiple class="hidden">
-      </div>
-
-      <button id="saveBtn" class="w-full h-[52px] rounded-[16px] bg-[#0A0A0A] text-white font-bold text-[14px] tracking-[-0.01em] hover:bg-black transition">💾 Salvar alterações • Atualiza cliente ao vivo</button>
-      
-      <div class="pt-4 border-t border-[#EDEBE6] flex items-center justify-between">
-        <button id="deleteBtn" class="text-[13px] text-[#FF3B30] font-semibold flex items-center gap-2 hover:opacity-70">🗑️ Excluir pedido permanentemente</button>
-        <span class="text-[11px] text-[#B5B3AE]">JG • Premium</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- NEW ORDER MODAL -->
-<div id="newModalOverlay" class="hidden fixed inset-0 z-40 bg-[#0A0A0A]/30 backdrop-blur-[3px]"></div>
-<div id="newModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div class="w-full max-w-[520px] bg-white rounded-[28px] border border-[#EDEBE6] shadow-[0_24px_80px_rgba(0,0,0,0.18)] overflow-hidden max-h-[90vh] overflow-y-auto">
-    <div class="h-[4px] w-full bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
-    <div class="p-7">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-bold text-[18px] tracking-[-0.02em]">Novo Pedido • Jaguarara</div>
-          <div class="text-[12px] text-[#8A8A86] mt-1">Cria rastreio premium em 10s • Sem pedidos fake</div>
-        </div>
-        <button id="closeNewModal" class="w-8 h-8 rounded-full bg-[#F6F5F1] border border-[#EDEBE6] flex items-center justify-center">✕</button>
-      </div>
-
-      <div class="mt-6 space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Cliente</label>
-            <input id="newCliente" class="mt-2 w-full h-[44px] rounded-[12px] border border-[#EDEBE6] bg-[#FBFAF7] px-3 text-[14px] outline-none focus:border-[#0A0A0A] focus:bg-white" placeholder="Rafael Mendes">
-          </div>
-          <div>
-            <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Produto</label>
-            <input id="newProduto" class="mt-2 w-full h-[44px] rounded-[12px] border border-[#EDEBE6] bg-[#FBFAF7] px-3 text-[14px] outline-none focus:border-[#0A0A0A] focus:bg-white" placeholder="Nike Air Max 97">
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Capa do Produto (thumbnail premium)</label>
-          <div class="mt-2 flex gap-3 items-center">
-            <div id="newCapaPreview" class="w-[72px] h-[72px] rounded-[14px] bg-[#F6F5F1] border border-dashed border-[#E0DDD6] flex items-center justify-center text-[10px] text-[#8A8A86] text-center overflow-hidden">sem capa</div>
-            <button id="newCapaBtn" type="button" class="h-10 px-4 rounded-full bg-white border border-[#EDEBE6] text-[12px] font-semibold">Escolher imagem</button>
-            <span class="text-[11px] text-[#9A9996]">JPG/PNG até 5MB</span>
-          </div>
-          <input id="newCapaInput" type="file" accept="image/*" class="hidden">
-        </div>
-
-        <div class="grid grid-cols-3 gap-3">
-          <div>
-            <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Valor R$</label>
-            <input id="newValor" type="number" step="0.01" class="mt-2 w-full h-[44px] rounded-[12px] border border-[#EDEBE6] bg-[#FBFAF7] px-3 text-[14px] outline-none focus:border-[#0A0A0A]" placeholder="1249,90">
-          </div>
-          <div>
-            <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Peso</label>
-            <input id="newPeso" class="mt-2 w-full h-[44px] rounded-[12px] border border-[#EDEBE6] bg-[#FBFAF7] px-3 text-[14px] outline-none focus:border-[#0A0A0A]" placeholder="1.2kg">
-          </div>
-          <div>
-            <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Frete</label>
-            <input id="newFrete" class="mt-2 w-full h-[44px] rounded-[12px] border border-[#EDEBE6] bg-[#FBFAF7] px-3 text-[14px] outline-none focus:border-[#0A0A0A]" placeholder="DHL">
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Link Rastreio</label>
-          <input id="newRastreio" class="mt-2 w-full h-[44px] rounded-[12px] border border-[#EDEBE6] bg-[#FBFAF7] px-3 text-[13px] outline-none focus:border-[#0A0A0A]" placeholder="https://...">
-        </div>
-
-        <div>
-          <label class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Status Inicial • Escolha Livre</label>
-          <select id="newStatus" class="mt-2 w-full h-[44px] rounded-[12px] bg-[#0A0A0A] text-white border-0 px-3 text-[13px] font-bold outline-none">
-            <option value="COMPRADO">COMPRADO</option>
-            <option value="CHEGOU NO GALPÃO">CHEGOU NO GALPÃO</option>
-            <option value="INSPEÇÃO QC">INSPEÇÃO QC</option>
-            <option value="ENVIADO AO BRASIL">ENVIADO AO BRASIL</option>
-            <option value="ENTREGUE">ENTREGUE</option>
-          </select>
-        </div>
-
-        <button id="createOrderBtn" class="w-full h-[48px] rounded-[14px] bg-[#0A0A0A] text-white font-bold text-[14px] mt-2">Criar pedido • Gerar link BR</button>
-        <div class="text-center text-[11px] text-[#9A9996]">ID será JG-XXXX automático • Salva no seu navegador</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CLIENT VIEW -->
-<div id="clientView" class="hidden min-h-screen bg-[#F6F5F1]">
-  <div class="max-w-[720px] mx-auto px-5 py-8">
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-[12px] bg-[#0A0A0A] flex items-center justify-center">🐆</div>
-        <div class="font-extrabold text-[14px] leading-none tracking-[-0.02em]">JAGUARARA<br>IMPORTS</div>
-      </div>
-      <div class="text-[11px] px-3 py-1 rounded-full bg-[#0A0A0A] text-white font-bold">RASTREIO PREMIUM • AO VIVO</div>
-    </div>
-
-    <div id="clientContent"></div>
-  </div>
-</div>
-
-<!-- DELETE MODAL -->
-<div id="deleteOverlay" class="hidden fixed inset-0 z-[60] bg-[#0A0A0A]/40 backdrop-blur-[4px]"></div>
-<div id="deleteModal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4">
-  <div class="w-full max-w-[380px] bg-white rounded-[24px] border border-[#EDEBE6] shadow-[0_24px_80px_rgba(0,0,0,0.2)] p-7 text-center">
-    <div class="w-12 h-12 rounded-full bg-[#FF3B30]/10 border border-[#FF3B30]/20 flex items-center justify-center mx-auto text-[20px]">🗑️</div>
-    <div class="mt-4 font-bold text-[16px]">Excluir pedido?</div>
-    <div class="mt-2 text-[13px] text-[#6B6B68] leading-[1.5]">Tem certeza que deseja excluir <span id="deleteIdLabel" class="font-bold text-[#0A0A0A]"></span>? Essa ação não pode ser desfeita.</div>
-    <div class="mt-6 grid grid-cols-2 gap-3">
-      <button id="cancelDelete" class="h-11 rounded-full border border-[#EDEBE6] bg-white text-[13px] font-semibold">Cancelar</button>
-      <button id="confirmDelete" class="h-11 rounded-full bg-[#FF3B30] text-white text-[13px] font-bold">Excluir agora</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-[#0A0A0A] text-white rounded-full px-5 py-3 text-[13px] font-medium shadow-[0_12px_40px_rgba(0,0,0,0.25)] flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-white text-black flex items-center justify-center text-[10px]">✓</span><span id="toastMsg"></span></div>
-
-<!-- QC MODAL -->
-<div id="qcOverlay" class="hidden fixed inset-0 z-[80] bg-[#0A0A0A]/80 backdrop-blur-[8px] flex items-center justify-center p-6">
-  <img id="qcFullImg" class="max-w-[90vw] max-h-[85vh] rounded-[20px] object-contain">
-  <button id="closeQc" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white text-black flex items-center justify-center">✕</button>
-</div>
+<body class="bg-[#F6F5F1]">
+<div id="app"></div>
 
 <script>
-const PASS = "sazgir-gaxxoh-0mIdno";
-const STEPS = ["COMPRADO","CHEGOU NO GALPÃO","INSPEÇÃO QC","ENVIADO AO BRASIL","ENTREGUE"];
-const STEP_DESC = {
-  "COMPRADO": "Pedido realizado na loja • Fornecedor notificado em Shenzhen",
-  "CHEGOU NO GALPÃO": "Chegou no galpão Shenzhen, Guangdong • Peso conferido",
-  "INSPEÇÃO QC": "Inspeção QC • Fotos reais e conferência de autenticidade",
-  "ENVIADO AO BRASIL": "Saiu de Shenzhen • Em trânsito internacional",
-  "ENTREGUE": "Entregue no Brasil • Operação finalizada"
+const PASS="sazgir-gaxxoh-0mIdno";
+const KEY="jaguarara_final_v10";
+const STEPS=[
+{id:"PEDIDO CONFIRMADO",label:"PEDIDO CONFIRMADO",desc:"Seu pedido foi confirmado em nosso sistema"},
+{id:"PAGAMENTO CONFIRMADO",label:"PAGAMENTO CONFIRMADO",desc:"Pagamento confirmado ao fornecedor na China"},
+{id:"ENVIADO PARA GALPÃO - SHENZHEN",label:"ENVIADO PARA GALPÃO",sub:"SHENZHEN, GUANGDONG",desc:"Fornecedor enviou para nosso galpão"},
+{id:"CHEGOU NO GALPÃO - SHENZHEN, GUANGDONG",label:"CHEGOU NO GALPÃO",sub:"SHENZHEN, GUANGDONG, CHINA",desc:"Chegou no galpão Shenzhen - Peso e medidas conferidos"},
+{id:"INSPEÇÃO QC",label:"INSPEÇÃO QC",desc:"Fotos reais sendo tiradas • Conferência de autenticidade"},
+{id:"ARMAZENADO NO GALPÃO",label:"ARMAZENADO NO GALPÃO",desc:"Armazenado com segurança em Shenzhen"},
+{id:"AGUARDANDO ENVIO / PAGAMENTO FRETE",label:"AGUARDANDO ENVIO",sub:"PAGAMENTO FRETE CHINA-BRASIL",desc:"Aguardando liberação do frete China-Brasil"},
+{id:"ENVIADO AO BRASIL",label:"ENVIADO AO BRASIL",desc:"Despachado de Shenzhen rumo ao Brasil"},
+{id:"EM TRÂNSITO INTERNACIONAL",label:"EM TRÂNSITO INTERNACIONAL",desc:"Em trânsito China → Brasil • Rastreio ativo"},
+{id:"ENTREGUE",label:"ENTREGUE",desc:"Entregue ao cliente • Operação finalizada"}
+];
+
+let orders=[];
+try{let r=localStorage.getItem(KEY); if(r) orders=JSON.parse(r);}catch(e){orders=[]}
+let sel=null; let tempCapa=null; let q=""; let pendingDel=null;
+
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(orders)); renderAdmin();}
+const genId=()=>"JG-"+Math.floor(1000+Math.random()*9000);
+const fmt=(n)=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const toast=(m)=>{let t=document.getElementById("toast");document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),2600); }
+const toB64=(f)=>new Promise(r=>{let fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(f);});
+
+function isTrack(){return new URLSearchParams(location.search).get("track");}
+
+function renderLogin(){
+document.getElementById("app").innerHTML=`
+<div class="min-h-screen flex items-center justify-center p-5 bg-[#0A0A0A] relative overflow-hidden">
+<div class="absolute top-[-15%] left-[-10%] w-[700px] h-[700px] bg-[#009739]/15 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-15%] right-[-5%] w-[600px] h-[600px] bg-[#FFD60A]/20 rounded-full blur-[120px]"></div>
+<div class="w-full max-w-[420px] bg-white rounded-[32px] border border-white/20 shadow-[0_24px_80px_rgba(0,0,0,0.4)] relative z-10 overflow-hidden">
+<div class="h-[4px] bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
+<div class="p-10">
+<div class="w-12 h-12 rounded-[16px] bg-black text-white grid place-items-center text-[22px]">🐆</div>
+<h1 class="font-serif text-[36px] leading-[0.9] tracking-[-0.03em] mt-6">Jaguarara<br>Imports</h1>
+<p class="text-[12px] tracking-[0.16em] text-zinc-400 font-bold mt-2 uppercase">Galpão Shenzhen • Premium</p>
+<input id="pw" type="password" placeholder="Senha admin" class="mt-8 w-full h-[56px] rounded-full bg-[#F6F5F1] border border-[#EDEBE6] px-6 outline-none focus:border-black focus:bg-white">
+<button id="btnLogin" class="mt-4 w-full h-[56px] rounded-full bg-black text-white font-bold">Entrar no Galpão →</button>
+</div>
+</div>
+</div>`;
+document.getElementById("btnLogin").onclick=()=>{
+if(document.getElementById("pw").value===PASS){sessionStorage.setItem("jg_auth","1"); renderAdminPage();} else toast("Senha incorreta");
 };
-const LS_KEY = "jaguarara_orders_final_v1";
-
-let orders = [];
-try{
-  const raw = localStorage.getItem(LS_KEY);
-  if(raw){
-    const parsed = JSON.parse(raw);
-    if(Array.isArray(parsed)) orders = parsed;
-  }
-  // migrate old key
-  if(orders.length===0){
-    const oldRaw = localStorage.getItem("jaguarara_orders_v4");
-    if(oldRaw){
-      const old = JSON.parse(oldRaw);
-      if(Array.isArray(old) && old.length>0 && !old[0].produto){
-        // old format different, ignore
-      } else if(Array.isArray(old) && old.length>0){
-        // convert if needed
-        orders = old.map(o=>({
-          id: o.id,
-          cliente: o.cliente || "Cliente",
-          produto: o.produto || "Produto",
-          valor: o.valor || 0,
-          peso: o.peso || "",
-          frete: o.frete || "",
-          rastreio: o.rastreio || "",
-          status: (o.status && STEPS.includes(o.status) ? o.status : (o.status==="CHEGOU_GALPAO"?"CHEGOU NO GALPÃO": o.status==="QC"?"INSPEÇÃO QC": o.status==="ENVIADO_BRASIL"?"ENVIADO AO BRASIL": o.status==="ENTREGUE"?"ENTREGUE":"COMPRADO")),
-          capa: o.capa || null,
-          fotos: o.fotos || [],
-          criadoEm: o.data || new Date().toLocaleDateString("pt-BR")
-        }));
-      }
-    }
-  }
-}catch(e){ orders=[]; }
-
-let selectedId = null;
-let tempNewCapa = null;
-let tempEditCapa = null;
-let pendingDeleteId = null;
-
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify(orders)); render(); }
-function fmtBRL(n){ return Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
-function showToast(msg){
-  const t=document.getElementById("toast");
-  document.getElementById("toastMsg").textContent=msg;
-  t.classList.remove("hidden");
-  setTimeout(()=>t.classList.add("hidden"), 2600);
 }
-function genId(){ return "JG-"+Math.floor(1000+Math.random()*9000); }
 
-function render(){
-  const totalEl=document.getElementById("statTotal");
-  const fatEl=document.getElementById("statFaturamento");
-  const galpaoEl=document.getElementById("statGalpao");
-  const envEl=document.getElementById("statEnviados");
-  const countTop=document.getElementById("orderCountTop");
-  const listCount=document.getElementById("listCount");
-  const total=orders.length;
-  const faturamento=orders.reduce((a,b)=>a+(Number(b.valor)||0),0);
-  const noGalpao=orders.filter(o=>["COMPRADO","CHEGOU NO GALPÃO","INSPEÇÃO QC"].includes(o.status)).length;
-  const enviados=orders.filter(o=>["ENVIADO AO BRASIL","ENTREGUE"].includes(o.status)).length;
-
-  if(totalEl) totalEl.textContent=total;
-  if(fatEl) fatEl.textContent=fmtBRL(faturamento);
-  if(galpaoEl) galpaoEl.textContent=noGalpao;
-  if(envEl) envEl.textContent=enviados;
-  if(countTop) countTop.textContent=total+" pedidos";
-  if(listCount) listCount.textContent=total+" pedidos";
-
-  const list=document.getElementById("ordersList");
-  const empty=document.getElementById("emptyState");
-  const q=document.getElementById("searchInput").value.toLowerCase().trim();
-  let filtered=orders;
-  if(q){
-    filtered=orders.filter(o=> (o.id+" "+o.cliente+" "+o.produto).toLowerCase().includes(q));
-  }
-  // sort newest first
-  filtered=filtered.slice().sort((a,b)=> b.id.localeCompare(a.id));
-
-  if(filtered.length===0){
-    list.innerHTML="";
-    empty.classList.remove("hidden");
-  }else{
-    empty.classList.add("hidden");
-    list.innerHTML=filtered.map(o=>{
-      const idx=STEPS.indexOf(o.status);
-      const pct = STEPS.length>1 ? (idx/(STEPS.length-1))*100 : 0;
-      return `
-      <div class="group px-7 py-5 flex items-center gap-5 hover:bg-[#FBFAF7] cursor-pointer transition" onclick="openDrawer('${o.id}')">
-        <div class="w-[64px] h-[64px] rounded-[16px] overflow-hidden bg-[#F6F5F1] border border-[#EDEBE6] flex items-center justify-center shrink-0">
-          ${o.capa ? `<img src="${o.capa}" class="w-full h-full object-cover">` : `<span class="text-[24px]">📦</span>`}
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2">
-            <span class="text-[11px] font-bold tracking-[0.12em] px-2.5 py-1 rounded-full bg-[#0A0A0A] text-white">${o.id}</span>
-            <span class="text-[11px] px-2.5 py-1 rounded-full border ${idx>=2 ? 'bg-[#FFF4D6] border-[#FFD60A]/30 text-[#8A6500]' : idx>=3 ? 'bg-[#E6F4EA] border-[#009739]/20 text-[#0B6B2F]' : 'bg-[#F6F5F1] border-[#EDEBE6] text-[#6B6B68]'} font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${idx>=3 ? 'bg-[#009739]' : 'bg-[#FFD60A]'}"></span>${o.status}</span>
-            <span class="text-[11px] text-[#9A9996] hidden md:inline">${o.criadoEm}</span>
-          </div>
-          <div class="mt-2 font-semibold text-[15px] tracking-[-0.01em] truncate">${o.produto}</div>
-          <div class="text-[12px] text-[#6B6B68] truncate">${o.cliente} • ${o.peso || 'sem peso'} • ${o.frete || 'frete a definir'}</div>
-          <div class="mt-2 hidden md:flex items-center gap-2">
-            <div class="flex-1 h-[4px] bg-[#F0EFEB] rounded-full overflow-hidden max-w-[180px]"><div class="h-full bg-[#0A0A0A] rounded-full transition-all" style="width:${pct}%"></div></div>
-            <span class="text-[10px] text-[#9A9996]">${idx+1}/5</span>
-          </div>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="font-bold text-[14px]">${fmtBRL(o.valor)}</div>
-          <div class="mt-1 flex gap-2 justify-end">
-            <button onclick="event.stopPropagation(); copyLink('${o.id}')" class="h-8 px-3 rounded-full bg-white border border-[#EDEBE6] text-[11px] font-semibold hover:bg-[#F6F5F1]">Copiar link</button>
-            <button onclick="event.stopPropagation(); openDelete('${o.id}')" class="h-8 w-8 rounded-full bg-white border border-[#EDEBE6] text-[12px] hover:bg-[#FFF0F0] hover:border-[#FF3B30]/20 hover:text-[#FF3B30]">🗑️</button>
-            <div class="h-8 w-8 rounded-full bg-[#0A0A0A] text-white flex items-center justify-center text-[12px] group-hover:bg-black">↗</div>
-          </div>
-        </div>
-      </div>`;
-    }).join("");
-  }
+function renderAdminPage(){
+const track=isTrack();
+if(track){ renderClient(track); return; }
+if(sessionStorage.getItem("jg_auth")!=="1"){ renderLogin(); return; }
+renderAdmin();
 }
+
+function renderAdmin(){
+let app=document.getElementById("app");
+if(!app) return;
+let filtered=orders.filter(o=>(o.id+" "+o.cliente+" "+o.produto).toLowerCase().includes(q.toLowerCase())).sort((a,b)=>b.id.localeCompare(a.id));
+let total=orders.length;
+let fat=orders.reduce((a,b)=>a+(+b.valor||0),0);
+app.innerHTML=`
+<header class="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-[#EDEBE6]">
+<div class="max-w-[1280px] mx-auto px-6 h-[70px] flex items-center justify-between">
+<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[14px] leading-none">JAGUARARA<br><span class="text-[10px] tracking-[0.2em] font-bold text-zinc-400">IMPORTS • SHENZHEN</span></div></div>
+<div class="flex gap-2"><button onclick="openNew()" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold">+ Novo Pedido</button><button onclick="logout()" class="h-10 w-10 rounded-full border bg-white">↗</button></div>
+</div>
+<div class="h-[3px] bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
+</header>
+<main class="max-w-[1280px] mx-auto p-6">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-white rounded-[22px] border border-[#EDEBE6] p-5 shadow-sm"><div class="text-[10px] font-bold tracking-widest text-zinc-400">TOTAL PEDIDOS</div><div class="font-serif text-[36px] leading-none mt-3">${total}</div><div class="text-[12px] text-zinc-500 mt-1">ativos</div></div>
+<div class="bg-white rounded-[22px] border border-[#EDEBE6] p-5 shadow-sm"><div class="text-[10px] font-bold tracking-widest text-zinc-400">FATURAMENTO</div><div class="font-serif text-[28px] leading-none mt-3 truncate">${fmt(fat)}</div><div class="text-[12px] text-zinc-500 mt-1">estimado</div></div>
+<div class="bg-white rounded-[22px] border border-[#EDEBE6] p-5 shadow-sm"><div class="text-[10px] font-bold tracking-widest text-zinc-400">NO GALPÃO</div><div class="font-serif text-[36px] leading-none mt-3">${orders.filter(o=>!["ENTREGUE"].includes(o.status)).length}</div><div class="text-[12px] text-zinc-500 mt-1">Shenzhen • QC</div></div>
+<div class="bg-black rounded-[22px] p-5 text-white shadow-xl"><div class="text-[10px] font-bold tracking-widest text-white/50">ENVIADOS</div><div class="font-serif text-[36px] leading-none mt-3">${orders.filter(o=>["ENVIADO AO BRASIL","EM TRÂNSITO INTERNACIONAL","ENTREGUE"].includes(o.status)).length}</div><div class="text-[12px] text-white/60 mt-1">em trânsito</div></div>
+</div>
+
+<input id="search" placeholder="Buscar JG-, cliente, produto..." value="${q}" class="mt-6 w-full h-[48px] rounded-full bg-white border border-[#EDEBE6] px-6 text-[14px] outline-none">
+
+<div class="mt-6 bg-white rounded-[28px] border border-[#EDEBE6] shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden">
+<div class="px-6 h-[60px] flex items-center justify-between border-b"><span class="font-bold text-[12px] tracking-widest">PEDIDOS • SHENZHEN</span><span class="text-[11px] bg-[#F6F5F1] border px-3 py-1 rounded-full">${filtered.length} pedidos</span></div>
+<div id="list">
+${filtered.length===0?`<div class="py-20 text-center"><div class="text-[20px]">📦</div><div class="font-bold mt-3">Nenhum pedido ainda</div><div class="text-[12px] text-zinc-500 mt-1">Clique em + Novo Pedido</div></div>`:
+filtered.map(o=>{
+let idx=STEPS.findIndex(s=>s.id===o.status);
+let pct=(idx/(STEPS.length-1))*100;
+return `<div onclick="openDrawer('${o.id}')" class="px-6 py-5 flex gap-4 items-center hover:bg-[#FBFAF7] cursor-pointer border-b border-[#F6F5F1] last:border-0">
+<div class="w-[64px] h-[64px] rounded-[16px] bg-[#F6F5F1] border overflow-hidden grid place-items-center shrink-0">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`📦`}</div>
+<div class="flex-1 min-w-0"><div class="flex gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black text-white">${o.id}</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FFF7CC] border">${o.status}</span></div><div class="font-bold text-[14px] truncate mt-1">${o.produto}</div><div class="text-[12px] text-zinc-500 truncate">${o.cliente} • ${o.peso||""} • R$ ${o.valor||0}</div></div>
+<div class="text-right"><div class="font-bold text-[13px]">${fmt(o.valor)}</div><div class="w-[80px] h-[6px] bg-[#F0EFEB] rounded-full mt-2 overflow-hidden"><div class="h-full bg-black rounded-full" style="width:${pct}%"></div></div></div>
+</div>`;
+}).join("")}
+</div>
+</div>
+</main>
+
+<!-- Drawer -->
+<div id="drawerBg" class="fixed inset-0 bg-black/20 backdrop-blur-sm hidden z-40"></div>
+<div id="drawer" class="fixed top-0 right-0 h-full w-full max-w-[560px] bg-[#FCFBF8] border-l border-[#EDEBE6] shadow-[-20px_0_80px_rgba(0,0,0,0.2)] hidden z-50 overflow-y-auto">
+<div class="sticky top-0 bg-[#FCFBF8]/90 backdrop-blur-xl border-b p-6">
+<div class="flex justify-between"><div class="flex gap-3"><img id="dCapa" class="w-[72px] h-[72px] rounded-[16px] object-cover border hidden"><div id="dCapaPh" class="w-[72px] h-[72px] rounded-[16px] bg-[#F6F5F1] border border-dashed grid place-items-center">📦</div><div><div id="dId" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black text-white inline-block"></div><div id="dProd" class="font-bold text-[18px] leading-tight mt-2 max-w-[300px]"></div><div id="dCli" class="text-[13px] text-zinc-500 mt-1"></div></div></div><button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-white border">✕</button></div>
+<div class="flex gap-2 mt-4"><button id="btnCopy" class="h-9 px-4 rounded-full bg-black text-white text-[12px] font-bold">🔗 Link Cliente</button><button id="btnView" class="h-9 px-4 rounded-full bg-white border text-[12px] font-bold">Ver como Cliente</button><button id="btnZap" class="h-9 px-4 rounded-full bg-[#25D366] text-white text-[12px] font-bold">WhatsApp</button></div>
+</div>
+<div class="p-6 space-y-5">
+<div class="bg-black text-white rounded-[20px] p-5 relative overflow-hidden"><div class="absolute top-0 right-0 w-[200px] h-[200px] bg-[#009739]/20 rounded-full blur-[40px]"></div><div class="relative"><div class="text-[10px] tracking-widest text-white/50 font-bold">STATUS ATUAL • ESCOLHA LIVRE</div><select id="selStatus" class="mt-3 w-full h-[52px] rounded-[14px] bg-white text-black px-4 font-bold text-[13px] outline-none">${STEPS.map(s=>`<option value="${s.id}">${s.label}</option>`).join("")}</select><div class="text-[11px] text-white/60 mt-3">Clique em qualquer etapa da timeline abaixo pra pular direto. Não precisa seguir ordem.</div></div></div>
+
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white rounded-[16px] border p-4"><div class="text-[10px] font-bold tracking-widest text-zinc-400">CLIENTE</div><input id="eCli" class="mt-2 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+<div class="bg-white rounded-[16px] border p-4"><div class="text-[10px] font-bold tracking-widest text-zinc-400">PRODUTO</div><input id="eProd" class="mt-2 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+<div class="bg-white rounded-[16px] border p-4"><div class="text-[10px] font-bold tracking-widest text-zinc-400">VALOR R$</div><input id="eVal" type="number" class="mt-2 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+<div class="bg-white rounded-[16px] border p-4"><div class="text-[10px] font-bold tracking-widest text-zinc-400">PESO</div><input id="ePeso" class="mt-2 w-full bg-transparent font-medium text-[14px] outline-none" placeholder="Ex: 235g"></div>
+<div class="bg-white rounded-[16px] border p-4"><div class="text-[10px] font-bold tracking-widest text-zinc-400">FRETE CHINA-BRASIL</div><input id="eFrete" class="mt-2 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+<div class="bg-white rounded-[16px] border p-4"><div class="text-[10px] font-bold tracking-widest text-zinc-400">RASTREIO</div><input id="eRast" class="mt-2 w-full bg-transparent font-medium text-[13px] outline-none"></div>
+</div>
+
+<div class="bg-white rounded-[20px] border p-5"><div class="flex justify-between items-center"><div class="text-[11px] font-bold tracking-widest text-zinc-400">CAPA DO PRODUTO</div><button onclick="document.getElementById('inpCapa').click()" class="text-[11px] font-bold px-3 h-7 rounded-full bg-[#F6F5F1] border">Trocar capa</button></div><div id="prevCapa" class="mt-4 w-[96px] h-[96px] rounded-[16px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[11px] text-zinc-500 overflow-hidden">sem capa</div><input id="inpCapa" type="file" accept="image/*" class="hidden"></div>
+
+<div class="bg-white rounded-[20px] border p-5"><div class="text-[11px] font-bold tracking-widest text-zinc-400">TIMELINE VERTICAL • PREMIUM</div><div id="vTime" class="mt-6"></div></div>
+
+<div class="bg-white rounded-[20px] border p-5"><div class="flex justify-between"><div class="text-[11px] font-bold tracking-widest text-zinc-400">FOTOS QC (<span id="qcC">0</span>)</div><button onclick="document.getElementById('inpQc').click()" class="h-8 px-4 rounded-full bg-black text-white text-[12px] font-bold">+ Adicionar</button></div><div id="qcGrid" class="mt-4 grid grid-cols-3 gap-2"></div><div id="qcEmpty" class="mt-4 border border-dashed rounded-[16px] p-6 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto ainda</div><input id="inpQc" type="file" multiple accept="image/*" class="hidden"></div>
+
+<button id="btnSave" class="w-full h-[52px] rounded-[16px] bg-black text-white font-bold">💾 Salvar alterações • Ao vivo</button>
+<button id="btnDel" class="w-full h-[48px] rounded-full border border-red-200 text-red-500 font-bold text-[13px]">🗑️ Excluir pedido</button>
+</div>
+</div>
+
+<!-- New Modal -->
+<div id="newBg" class="fixed inset-0 bg-black/30 backdrop-blur-sm hidden z-40"></div>
+<div id="newModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+<div class="w-full max-w-[520px] bg-white rounded-[28px] border shadow-[0_24px_80px_rgba(0,0,0,0.2)] overflow-hidden max-h-[90vh] overflow-y-auto">
+<div class="h-[4px] bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
+<div class="p-7">
+<div class="flex justify-between items-center"><div class="font-bold text-[18px]">Novo Pedido • Shenzhen</div><button onclick="closeNew()" class="w-8 h-8 rounded-full bg-[#F6F5F1] border">✕</button></div>
+<div class="mt-6 space-y-4">
+<div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold tracking-widest text-zinc-400">CLIENTE</div><input id="nCli" class="mt-2 w-full h-[46px] rounded-[14px] bg-[#FBFAF7] border border-[#EDEBE6] px-4 outline-none"></div><div><div class="text-[10px] font-bold tracking-widest text-zinc-400">PRODUTO</div><input id="nProd" class="mt-2 w-full h-[46px] rounded-[14px] bg-[#FBFAF7] border border-[#EDEBE6] px-4 outline-none"></div></div>
+<div><div class="text-[10px] font-bold tracking-widest text-zinc-400">CAPA</div><div class="mt-2 flex gap-3 items-center"><div id="nPrev" class="w-[64px] h-[64px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[10px] overflow-hidden">sem capa</div><button onclick="document.getElementById('nCapaInp').click()" class="h-10 px-4 rounded-full bg-white border text-[12px] font-bold">Escolher imagem</button></div><input id="nCapaInp" type="file" accept="image/*" class="hidden"></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3"><div><div class="text-[10px] font-bold tracking-widest text-zinc-400">VALOR R$</div><input id="nVal" type="number" class="mt-2 w-full h-[46px] rounded-[14px] bg-[#FBFAF7] border px-4 outline-none"></div><div><div class="text-[10px] font-bold tracking-widest text-zinc-400">PESO</div><input id="nPeso" class="mt-2 w-full h-[46px] rounded-[14px] bg-[#FBFAF7] border px-4 outline-none" placeholder="235g"></div><div><div class="text-[10px] font-bold tracking-widest text-zinc-400">FRETE R$</div><input id="nFrete" type="number" class="mt-2 w-full h-[46px] rounded-[14px] bg-[#FBFAF7] border px-4 outline-none"></div></div>
+<div><div class="text-[10px] font-bold tracking-widest text-zinc-400">RASTREIO</div><input id="nRast" class="mt-2 w-full h-[46px] rounded-[14px] bg-[#FBFAF7] border px-4 outline-none" placeholder="https://"></div>
+<button onclick="createOrder()" class="w-full h-[52px] rounded-full bg-black text-white font-bold mt-2">Criar Pedido • Status Pedido Confirmado</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Delete modal -->
+<div id="delBg" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-[60]"></div>
+<div id="delModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4"><div class="w-full max-w-[360px] bg-white rounded-[24px] border p-7 text-center"><div class="w-12 h-12 rounded-full bg-red-50 border border-red-100 grid place-items-center mx-auto">🗑️</div><div class="font-bold mt-4">Excluir pedido?</div><div class="text-[13px] text-zinc-500 mt-2">Tem certeza que deseja excluir <b id="delId"></b>? Ação irreversível.</div><div class="grid grid-cols-2 gap-3 mt-6"><button onclick="closeDel()" class="h-11 rounded-full border font-bold text-[13px]">Cancelar</button><button id="confirmDel" class="h-11 rounded-full bg-[#FF3B30] text-white font-bold text-[13px]">Excluir</button></div></div></div>
+
+<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-black text-white rounded-full px-5 py-3 text-[13px] font-medium shadow-xl z-[100]"><span id="toastMsg"></span></div>
+<div id="qcFull" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur flex items-center justify-center p-6"><img id="qcFullImg" class="max-w-[90vw] max-h-[85vh] rounded-[20px]"><button onclick="document.getElementById('qcFull').classList.add('hidden')" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white">✕</button></div>
+`;
+
+document.getElementById("search").addEventListener("input",e=>{q=e.target.value; renderAdmin();});
+
+function openNew(){document.getElementById("newBg").classList.remove("hidden"); document.getElementById("newModal").classList.remove("hidden");}
+function closeNew(){document.getElementById("newBg").classList.add("hidden"); document.getElementById("newModal").classList.add("hidden"); document.getElementById("nCli").value=""; document.getElementById("nProd").value=""; document.getElementById("nVal").value=""; document.getElementById("nPeso").value=""; document.getElementById("nFrete").value=""; document.getElementById("nRast").value=""; tempCapa=null; document.getElementById("nPrev").innerHTML="sem capa";}
+document.getElementById("newBg").onclick=closeNew;
+document.getElementById("nCapaInp").addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; tempCapa=await toB64(f); document.getElementById("nPrev").innerHTML=`<img src="${tempCapa}" class="w-full h-full object-cover">`;});
+
+function createOrder(){
+let cliente=document.getElementById("nCli").value.trim();
+let produto=document.getElementById("nProd").value.trim();
+let valor=parseFloat(document.getElementById("nVal").value)||0;
+let peso=document.getElementById("nPeso").value.trim();
+let frete=document.getElementById("nFrete").value.trim();
+let rastreio=document.getElementById("nRast").value.trim();
+if(!cliente||!produto){ toast("Preencha cliente e produto"); return; }
+orders.push({id:genId(),cliente,produto,valor,peso,frete,rastreio,status:"PEDIDO CONFIRMADO",capa:tempCapa,fotos:[],criadoEm:new Date().toLocaleDateString("pt-BR")});
+save(); closeNew(); toast("Pedido criado • Pedido Confirmado");
+}
+
+window.openNew=openNew; window.closeNew=closeNew; window.createOrder=createOrder;
 
 function openDrawer(id){
-  const o=orders.find(x=>x.id===id);
-  if(!o) return;
-  selectedId=id;
-  document.getElementById("drawerId").textContent=o.id;
-  document.getElementById("drawerDate").textContent=o.criadoEm;
-  document.getElementById("drawerProduto").textContent=o.produto;
-  document.getElementById("drawerCliente").textContent=o.cliente;
-  document.getElementById("editCliente").value=o.cliente;
-  document.getElementById("editProduto").value=o.produto;
-  document.getElementById("editValor").value=o.valor;
-  document.getElementById("editPeso").value=o.peso;
-  document.getElementById("editFrete").value=o.frete;
-  document.getElementById("editRastreio").value=o.rastreio;
-  document.getElementById("statusSelect").value=o.status;
-  tempEditCapa=o.capa;
-  const capaPrev=document.getElementById("editCapaPreview");
-  const capaImg=document.getElementById("drawerCapa");
-  const capaPlaceholder=document.getElementById("drawerCapaPlaceholder");
-  if(o.capa){
-    capaPrev.innerHTML=`<img src="${o.capa}" class="w-full h-full object-cover">`;
-    capaImg.src=o.capa;
-    capaImg.classList.remove("hidden");
-    capaPlaceholder.classList.add("hidden");
-  }else{
-    capaPrev.textContent="sem capa";
-    capaPrev.className="w-[96px] h-[96px] rounded-[16px] bg-[#F6F5F1] border border-dashed border-[#E0DDD6] flex items-center justify-center text-[11px] text-[#8A8A86] text-center p-2 overflow-hidden";
-    capaImg.classList.add("hidden");
-    capaPlaceholder.classList.remove("hidden");
-  }
-  renderTimeline(o);
-  renderQc(o);
-  document.getElementById("drawerOverlay").classList.remove("hidden");
-  document.getElementById("orderDrawer").classList.remove("hidden");
-  document.body.style.overflow="hidden";
+let o=orders.find(x=>x.id===id); if(!o) return;
+sel=o.id;
+document.getElementById("dId").textContent=o.id;
+document.getElementById("dProd").textContent=o.produto;
+document.getElementById("dCli").textContent=o.cliente+" • "+o.criadoEm;
+document.getElementById("eCli").value=o.cliente;
+document.getElementById("eProd").value=o.produto;
+document.getElementById("eVal").value=o.valor;
+document.getElementById("ePeso").value=o.peso;
+document.getElementById("eFrete").value=o.frete;
+document.getElementById("eRast").value=o.rastreio;
+document.getElementById("selStatus").value=o.status;
+if(o.capa){document.getElementById("dCapa").src=o.capa; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden"); document.getElementById("prevCapa").innerHTML=`<img src="${o.capa}" class="w-full h-full object-cover">`;} else {document.getElementById("dCapa").classList.add("hidden"); document.getElementById("dCapaPh").classList.remove("hidden"); document.getElementById("prevCapa").textContent="sem capa";}
+renderVTime(o); renderQc(o);
+document.getElementById("drawerBg").classList.remove("hidden");
+document.getElementById("drawer").classList.remove("hidden");
 }
+function closeDrawer(){document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null;}
+document.getElementById("drawerBg").onclick=closeDrawer;
 
-function closeDrawer(){
-  document.getElementById("drawerOverlay").classList.add("hidden");
-  document.getElementById("orderDrawer").classList.add("hidden");
-  document.body.style.overflow="";
-  selectedId=null;
-}
-
-function renderTimeline(o){
-  const idx=STEPS.indexOf(o.status);
-  const pct = STEPS.length>1 ? (idx/(STEPS.length-1))*100 : 0;
-  document.getElementById("hProgress").style.width=pct+"%";
-  const hSteps=document.getElementById("hSteps");
-  hSteps.innerHTML=STEPS.map((s,i)=>{
-    const done=i<=idx;
-    const curr=i===idx;
-    return `<button onclick="setStatus('${s}')" class="flex flex-col items-center w-[56px] group">
-      <div class="w-[28px] h-[28px] rounded-full border-2 flex items-center justify-center text-[11px] font-bold transition ${done ? 'bg-[#0A0A0A] border-[#0A0A0A] text-white' : 'bg-white border-[#EDEBE6] text-[#B5B3AE] group-hover:border-[#0A0A0A]'} ${curr ? 'ring-4 ring-[#FFD60A]/30' : ''}">${done ? '✓' : ''}</div>
-      <div class="mt-2 text-[9px] font-bold tracking-[0.1em] text-center leading-[1.1] ${curr ? 'text-[#0A0A0A]' : done ? 'text-[#0A0A0A]' : 'text-[#B5B3AE]'}">${s.split(' ')[0]}</div>
-      ${curr ? '<div class="mt-1 text-[8px] font-extrabold bg-[#FFD60A] px-2 py-0.5 rounded-full">AGORA</div>' : ''}
-    </button>`;
-  }).join("");
-
-  const v=document.getElementById("vTimeline");
-  v.innerHTML=STEPS.map((s,i)=>{
-    const done=i<=idx;
-    const curr=i===idx;
-    return `<div class="flex gap-4 group cursor-pointer" onclick="setStatus('${s}')">
-      <div class="flex flex-col items-center">
-        <div class="w-[28px] h-[28px] rounded-full border-2 flex items-center justify-center text-[11px] font-bold ${done ? 'bg-[#0A0A0A] border-[#0A0A0A] text-white' : 'bg-white border-[#EDEBE6] text-[#B5B3AE]'} ${curr ? 'ring-4 ring-[#FFD60A]/25' : ''}">${done ? '✓' : ''}</div>
-        ${i<STEPS.length-1 ? `<div class="w-[2px] flex-1 mt-2 ${i<idx ? 'bg-[#0A0A0A]' : 'bg-[#F0EFEB]'} min-h-[28px]"></div>` : ''}
-      </div>
-      <div class="flex-1 pb-7">
-        <div class="flex items-center gap-2">
-          <span class="text-[12px] font-bold tracking-[-0.01em] ${curr ? 'text-[#0A0A0A]' : done ? 'text-[#0A0A0A]' : 'text-[#9A9996]'}">${s}</span>
-          ${curr ? '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#FFD60A]">AGORA • AO VIVO</span>' : ''}
-        </div>
-        <div class="mt-1 text-[12px] ${curr ? 'text-[#3A3936]' : 'text-[#9A9996]'} leading-[1.4]">${STEP_DESC[s]}</div>
-        ${done ? `<div class="mt-1 text-[11px] text-[#6B6B68]">✔ Concluído • ${curr ? 'agora' : 'ok'}</div>` : `<div class="mt-1 text-[11px] text-[#B5B3AE]">Pendente</div>`}
-      </div>
-    </div>`;
-  }).join("");
+function renderVTime(o){
+let idx=STEPS.findIndex(s=>s.id===o.status);
+let el=document.getElementById("vTime");
+el.innerHTML=STEPS.map((s,i)=>{
+let done=i<=idx; let curr=i===idx;
+return `<div class="flex gap-4 cursor-pointer group" onclick="setStatus('${s.id}')">
+<div class="flex flex-col items-center"><div class="w-[32px] h-[32px] rounded-full border-2 flex items-center justify-center text-[12px] font-bold ${done?'bg-black border-black text-white':'bg-white border-[#EDEBE6] text-zinc-300 group-hover:border-black'} ${curr?'ring-4 ring-[#FFD60A]/30 animate-pulse':''}">${done?'✓':''}</div>${i<STEPS.length-1?`<div class="w-[2px] flex-1 mt-2 ${i<idx?'bg-black':'bg-[#F0EFEB]'} min-h-[28px]"></div>`:''}</div>
+<div class="flex-1 pb-8 -mt-1"><div class="flex gap-2 items-center flex-wrap"><span class="font-bold text-[13px] ${curr?'text-black':done?'text-black':'text-zinc-400'}">${s.label}</span>${curr?'<span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-[#FFD60A]">AGORA • AO VIVO</span>':''}</div>${s.sub?`<div class="text-[10px] text-zinc-400 tracking-wide mt-0.5">${s.sub}</div>`:''}<div class="text-[12px] text-zinc-500 mt-1 leading-[1.4]">${s.desc}</div></div>
+</div>`;
+}).join("");
 }
 
 function renderQc(o){
-  const grid=document.getElementById("qcGrid");
-  const empty=document.getElementById("qcEmpty");
-  document.getElementById("qcCount").textContent=o.fotos.length;
-  if(o.fotos.length===0){
-    grid.innerHTML="";
-    empty.classList.remove("hidden");
-  }else{
-    empty.classList.add("hidden");
-    grid.innerHTML=o.fotos.map((f,i)=>`
-      <div class="relative group aspect-square rounded-[14px] overflow-hidden border border-[#EDEBE6] bg-[#F6F5F1]">
-        <img src="${f}" class="w-full h-full object-cover cursor-pointer" onclick="openQc('${f}')">
-        <button onclick="removeQc(${i})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-[#0A0A0A]/80 text-white text-[10px] opacity-0 group-hover:opacity-100 transition">✕</button>
-      </div>
-    `).join("");
-  }
+let grid=document.getElementById("qcGrid"); let empty=document.getElementById("qcEmpty"); document.getElementById("qcC").textContent=o.fotos.length;
+if(o.fotos.length===0){grid.innerHTML=""; empty.classList.remove("hidden");} else {empty.classList.add("hidden"); grid.innerHTML=o.fotos.map((f,i)=>`<div class="relative group aspect-square rounded-[14px] overflow-hidden border bg-[#F6F5F1]"><img src="${f}" class="w-full h-full object-cover cursor-pointer" onclick="openQcFull('${f}')"><button onclick="removeQc(${i})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white text-[10px] opacity-0 group-hover:opacity-100">✕</button></div>`).join("");}
 }
 
-function setStatus(newStatus){
-  if(!selectedId) return;
-  const o=orders.find(x=>x.id===selectedId);
-  if(!o) return;
-  o.status=newStatus;
-  save();
-  renderTimeline(o);
-  render();
-  showToast("Status alterado para "+newStatus);
-}
-
-function openQc(src){
-  document.getElementById("qcFullImg").src=src;
-  document.getElementById("qcOverlay").classList.remove("hidden");
-}
-function closeQc(){ document.getElementById("qcOverlay").classList.add("hidden"); }
-
-function copyLink(id){
-  const url=location.origin+location.pathname+"?track="+id;
-  navigator.clipboard.writeText(url);
-  showToast("Link copiado: "+id);
-}
-function openClientView(id){
-  const url=location.origin+location.pathname+"?track="+id;
-  window.open(url,"_blank");
-}
-
-function openNewModal(){
-  document.getElementById("newModalOverlay").classList.remove("hidden");
-  document.getElementById("newModal").classList.remove("hidden");
-}
-function closeNewModal(){
-  document.getElementById("newModalOverlay").classList.add("hidden");
-  document.getElementById("newModal").classList.add("hidden");
-  // reset
-  document.getElementById("newCliente").value="";
-  document.getElementById("newProduto").value="";
-  document.getElementById("newValor").value="";
-  document.getElementById("newPeso").value="";
-  document.getElementById("newFrete").value="";
-  document.getElementById("newRastreio").value="";
-  document.getElementById("newStatus").value="COMPRADO";
-  tempNewCapa=null;
-  document.getElementById("newCapaPreview").innerHTML="sem capa";
-}
-
-function fileToBase64(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result);
-    r.onerror=rej;
-    r.readAsDataURL(file);
-  });
-}
-
-// Events
-document.getElementById("loginBtn").onclick=()=>{
-  const v=document.getElementById("passInput").value;
-  if(v===PASS){
-    sessionStorage.setItem("jag_auth","1");
-    document.getElementById("loginView").classList.add("hidden");
-    document.getElementById("adminView").classList.remove("hidden");
-    render();
-  }else{
-    document.getElementById("passError").classList.remove("hidden");
-    document.getElementById("passInput").classList.add("border-[#FF3B30]");
-  }
-};
-document.getElementById("passInput").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("loginBtn").click(); });
-document.getElementById("logoutBtn").onclick=()=>{
-  sessionStorage.removeItem("jag_auth");
-  location.reload();
-};
-document.getElementById("newOrderBtn").onclick=openNewModal;
-document.getElementById("closeNewModal").onclick=closeNewModal;
-document.getElementById("newModalOverlay").onclick=closeNewModal;
-document.getElementById("drawerOverlay").onclick=closeDrawer;
-document.getElementById("closeDrawer").onclick=closeDrawer;
-document.getElementById("searchInput").addEventListener("input",render);
-
-document.getElementById("newCapaBtn").onclick=()=>document.getElementById("newCapaInput").click();
-document.getElementById("newCapaInput").addEventListener("change", async e=>{
-  const f=e.target.files[0];
-  if(!f) return;
-  const b64=await fileToBase64(f);
-  tempNewCapa=b64;
-  document.getElementById("newCapaPreview").innerHTML=`<img src="${b64}" class="w-full h-full object-cover">`;
-});
-
-document.getElementById("createOrderBtn").onclick=()=>{
-  const cliente=document.getElementById("newCliente").value.trim();
-  const produto=document.getElementById("newProduto").value.trim();
-  const valor=parseFloat(document.getElementById("newValor").value) || 0;
-  const peso=document.getElementById("newPeso").value.trim();
-  const frete=document.getElementById("newFrete").value.trim();
-  const rastreio=document.getElementById("newRastreio").value.trim();
-  const status=document.getElementById("newStatus").value;
-  if(!cliente || !produto){ showToast("Preencha cliente e produto"); return; }
-  const o={
-    id: genId(),
-    cliente, produto, valor, peso, frete, rastreio, status,
-    capa: tempNewCapa,
-    fotos: [],
-    criadoEm: new Date().toLocaleDateString("pt-BR")
-  };
-  orders.push(o);
-  save();
-  closeNewModal();
-  showToast("Pedido "+o.id+" criado • Link pronto");
-};
-
-document.getElementById("changeCapaBtn").onclick=()=>document.getElementById("capaInput").click();
-document.getElementById("capaInput").addEventListener("change", async e=>{
-  const f=e.target.files[0];
-  if(!f || !selectedId) return;
-  const b64=await fileToBase64(f);
-  tempEditCapa=b64;
-  document.getElementById("editCapaPreview").innerHTML=`<img src="${b64}" class="w-full h-full object-cover">`;
-  document.getElementById("drawerCapa").src=b64;
-  document.getElementById("drawerCapa").classList.remove("hidden");
-  document.getElementById("drawerCapaPlaceholder").classList.add("hidden");
-});
-
-document.getElementById("addQcBtn").onclick=()=>document.getElementById("qcInput").click();
-document.getElementById("qcInput").addEventListener("change", async e=>{
-  if(!selectedId) return;
-  const files=[...e.target.files];
-  for(const f of files){
-    const b64=await fileToBase64(f);
-    const o=orders.find(x=>x.id===selectedId);
-    if(o) o.fotos.push(b64);
-  }
-  save();
-  const o=orders.find(x=>x.id===selectedId);
-  if(o) renderQc(o);
-  e.target.value="";
-});
-
-document.getElementById("statusSelect").addEventListener("change", e=>{
-  setStatus(e.target.value);
-});
-
-document.getElementById("saveBtn").onclick=()=>{
-  if(!selectedId) return;
-  const o=orders.find(x=>x.id===selectedId);
-  if(!o) return;
-  o.cliente=document.getElementById("editCliente").value.trim() || o.cliente;
-  o.produto=document.getElementById("editProduto").value.trim() || o.produto;
-  o.valor=parseFloat(document.getElementById("editValor").value) || o.valor;
-  o.peso=document.getElementById("editPeso").value.trim();
-  o.frete=document.getElementById("editFrete").value.trim();
-  o.rastreio=document.getElementById("editRastreio").value.trim();
-  o.capa=tempEditCapa;
-  save();
-  document.getElementById("drawerProduto").textContent=o.produto;
-  document.getElementById("drawerCliente").textContent=o.cliente;
-  showToast("Salvo • Cliente atualizado ao vivo");
-};
-
-document.getElementById("copyLinkBtn").onclick=()=>{
-  if(selectedId) copyLink(selectedId);
-};
-document.getElementById("viewClientBtn").onclick=()=>{
-  if(selectedId) openClientView(selectedId);
-};
-document.getElementById("whatsBtn").onclick=()=>{
-  if(!selectedId) return;
-  const o=orders.find(x=>x.id===selectedId);
-  if(!o) return;
-  const url=location.origin+location.pathname+"?track="+o.id;
-  const txt=`🐆 JAGUARARA IMPORTS\nOlá ${o.cliente}! Seu pedido ${o.id} - ${o.produto} está em ${o.status}\nAcompanhe aqui: ${url}\nRastreio: ${o.rastreio || 'em breve'}`;
-  window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank");
-};
-
-function openDelete(id){
-  pendingDeleteId=id;
-  document.getElementById("deleteIdLabel").textContent=id;
-  document.getElementById("deleteOverlay").classList.remove("hidden");
-  document.getElementById("deleteModal").classList.remove("hidden");
-}
-function closeDelete(){
-  document.getElementById("deleteOverlay").classList.add("hidden");
-  document.getElementById("deleteModal").classList.add("hidden");
-  pendingDeleteId=null;
-}
-document.getElementById("deleteBtn").onclick=()=>{ if(selectedId) openDelete(selectedId); };
-document.getElementById("cancelDelete").onclick=closeDelete;
-document.getElementById("deleteOverlay").onclick=closeDelete;
-document.getElementById("confirmDelete").onclick=()=>{
-  if(!pendingDeleteId) return;
-  orders=orders.filter(x=>x.id!==pendingDeleteId);
-  save();
-  closeDelete();
-  closeDrawer();
-  showToast("Pedido "+pendingDeleteId+" excluído");
-};
-
-function removeQc(idx){
-  if(!selectedId) return;
-  const o=orders.find(x=>x.id===selectedId);
-  if(!o) return;
-  o.fotos.splice(idx,1);
-  save();
-  renderQc(o);
-}
-
-document.getElementById("closeQc").onclick=closeQc;
-document.getElementById("qcOverlay").onclick=closeQc;
-
-// Client view logic
-(function(){
-  const params=new URLSearchParams(location.search);
-  const track=params.get("track");
-  if(track){
-    document.getElementById("loginView").classList.add("hidden");
-    document.getElementById("adminView").classList.add("hidden");
-    const clientView=document.getElementById("clientView");
-    clientView.classList.remove("hidden");
-    const o=orders.find(x=>x.id===track);
-    const container=document.getElementById("clientContent");
-    if(!o){
-      container.innerHTML=`<div class="bg-white rounded-[28px] border border-[#EDEBE6] p-12 text-center"><div class="text-[40px]">🔍</div><div class="mt-4 font-bold text-[18px]">Pedido ${track} não encontrado</div><div class="text-[13px] text-[#8A8A86] mt-2">Verifique o link ou fale com o suporte Jaguarara.</div></div>`;
-      return;
-    }
-    const idx=STEPS.indexOf(o.status);
-    const pct = STEPS.length>1 ? (idx/(STEPS.length-1))*100 : 0;
-    container.innerHTML=`
-      <div class="bg-white rounded-[28px] border border-[#EDEBE6] shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden">
-        <div class="h-[4px] w-full bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
-        <div class="p-7">
-          <div class="flex gap-5">
-            <div class="w-[96px] h-[96px] rounded-[20px] bg-[#F6F5F1] border border-[#EDEBE6] overflow-hidden flex items-center justify-center shrink-0">${o.capa ? `<img src="${o.capa}" class="w-full h-full object-cover">` : '📦'}</div>
-            <div class="flex-1">
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] font-bold tracking-[0.12em] px-2.5 py-1 rounded-full bg-[#0A0A0A] text-white">${o.id}</span>
-                <span class="text-[11px] px-2.5 py-1 rounded-full bg-[#FFD60A] font-bold">${o.status}</span>
-              </div>
-              <div class="mt-3 font-bold text-[20px] leading-[1.15] tracking-[-0.02em]">${o.produto}</div>
-              <div class="text-[13px] text-[#6B6B68] mt-1">Cliente: ${o.cliente} • ${o.peso || ''} • ${o.criadoEm}</div>
-            </div>
-          </div>
-          <div class="mt-6 grid grid-cols-3 gap-3">
-            <div class="bg-[#F6F5F1] rounded-[16px] border border-[#EDEBE6] p-4"><div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Valor</div><div class="mt-1 font-bold text-[14px]">${fmtBRL(o.valor)}</div></div>
-            <div class="bg-[#F6F5F1] rounded-[16px] border border-[#EDEBE6] p-4"><div class="text-[10px] font-bold tracking-[0.14em] text-[#9A9996] uppercase">Frete</div><div class="mt-1 font-bold text-[14px]">${o.frete || 'A definir'}</div></div>
-            <div class="bg-[#0A0A0A] rounded-[16px] p-4 text-white"><div class="text-[10px] font-bold tracking-[0.14em] text-white/50 uppercase">Rastreio</div><div class="mt-1 font-medium text-[12px] truncate">${o.rastreio ? `<a href="${o.rastreio}" target="_blank" class="underline">${o.rastreio}</a>` : 'Em breve'}</div></div>
-          </div>
-          <div class="mt-8">
-            <div class="flex justify-between items-center"><div class="text-[11px] font-bold tracking-[0.14em] text-[#8A8A86] uppercase">Progressão Premium</div><div class="text-[11px] px-2.5 py-1 rounded-full bg-[#F6F5F1] border border-[#EDEBE6]">${idx+1} de 5</div></div>
-            <div class="mt-4 relative"><div class="absolute left-3 right-3 top-[14px] h-[6px] bg-[#F0EFEB] rounded-full"></div><div class="absolute left-3 top-[14px] h-[6px] bg-[#0A0A0A] rounded-full transition-all" style="width:${pct}%"></div><div class="relative flex justify-between">${STEPS.map((s,i)=>{const done=i<=idx; const curr=i===idx; return `<div class="flex flex-col items-center w-[56px]"><div class="w-[28px] h-[28px] rounded-full border-2 flex items-center justify-center text-[11px] font-bold ${done?'bg-[#0A0A0A] border-[#0A0A0A] text-white':'bg-white border-[#EDEBE6] text-[#B5B3AE]'} ${curr?'ring-4 ring-[#FFD60A]/30':''}">${done?'✓':''}</div><div class="mt-2 text-[9px] font-bold tracking-[0.1em] text-center leading-[1.1] ${curr?'text-[#0A0A0A]':done?'text-[#0A0A0A]':'text-[#B5B3AE]'}">${s.split(' ')[0]}</div>${curr?'<div class="mt-1 text-[8px] font-extrabold bg-[#FFD60A] px-2 py-0.5 rounded-full">AGORA</div>':''}</div>`}).join("")}</div></div>
-            <div class="mt-8 space-y-0">${STEPS.map((s,i)=>{const done=i<=idx; const curr=i===idx; return `<div class="flex gap-4"><div class="flex flex-col items-center"><div class="w-[28px] h-[28px] rounded-full border-2 flex items-center justify-center text-[11px] font-bold ${done?'bg-[#0A0A0A] border-[#0A0A0A] text-white':'bg-white border-[#EDEBE6] text-[#B5B3AE]'} ${curr?'ring-4 ring-[#FFD60A]/25':''}">${done?'✓':''}</div>${i<STEPS.length-1?`<div class="w-[2px] flex-1 mt-2 ${i<idx?'bg-[#0A0A0A]':'bg-[#F0EFEB]'} min-h-[24px]"></div>`:''}</div><div class="flex-1 pb-6"><div class="flex items-center gap-2"><span class="text-[13px] font-bold">${s}</span>${curr?'<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#FFD60A]">AGORA • AO VIVO</span>':''}</div><div class="mt-1 text-[12px] text-[#6B6B68] leading-[1.4]">${STEP_DESC[s]}</div></div></div>`}).join("")}</div>
-          </div>
-          ${o.fotos.length>0 ? `<div class="mt-8"><div class="text-[11px] font-bold tracking-[0.14em] text-[#8A8A86] uppercase">Fotos Reais do Galpão • ${o.fotos.length}</div><div class="mt-3 grid grid-cols-3 gap-3">${o.fotos.map(f=>`<div class="aspect-square rounded-[14px] overflow-hidden border border-[#EDEBE6] bg-[#F6F5F1]"><img src="${f}" class="w-full h-full object-cover"></div>`).join("")}</div></div>` : `<div class="mt-8 border border-dashed border-[#E0DDD6] rounded-[16px] p-6 text-center bg-[#FBFAF7]"><div class="text-[13px] font-semibold">Fotos QC em produção</div><div class="text-[12px] text-[#8A8A86] mt-1">Nossa equipe no galpão vai subir as fotos reais em breve.</div></div>`}
-        </div>
-      </div>
-      <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">${[{t:"100% Brasileiro",d:"Empresa nacional"},{t:"Galpão Próprio",d:"Shenzhen • China"},{t:"Logística Segura",d:"DHL / FedEx"},{t:"Confiança",d:"Suporte 1:1"}].map(p=>`<div class="bg-white border border-[#EDEBE6] rounded-[16px] p-4"><div class="text-[11px] font-bold">${p.t}</div><div class="text-[11px] text-[#8A8A86] mt-0.5">${p.d}</div></div>`).join("")}</div>
-      <div class="mt-8 text-center text-[11px] tracking-[0.12em] text-[#B5B3AE] uppercase">Jaguarara Imports • Rastreio Premium • ${o.id}</div>
-    `;
-  }
-})();
-
-// Initial auth check
-(function(){
-  const params=new URLSearchParams(location.search);
-  if(!params.get("track")){
-    if(sessionStorage.getItem("jag_auth")==="1"){
-      document.getElementById("loginView").classList.add("hidden");
-      document.getElementById("adminView").classList.remove("hidden");
-      render();
-    }
-  }else{
-    document.getElementById("loginView").classList.add("hidden");
-  }
-})();
-
-// Expose globals for inline handlers
 window.openDrawer=openDrawer;
-window.copyLink=copyLink;
-window.openDelete=openDelete;
-window.openQc=openQc;
+window.closeDrawer=closeDrawer;
+
+function setStatus(s){
+let o=orders.find(x=>x.id===sel); if(!o) return; o.status=s; save(); renderVTime(o); renderAdmin(); toast("Status → "+s);
+}
 window.setStatus=setStatus;
-window.removeQc=removeQc;
-window.openNewModal=openNewModal;
+
+document.getElementById("selStatus").addEventListener("change",e=>setStatus(e.target.value));
+
+document.getElementById("btnSave").onclick=()=>{
+let o=orders.find(x=>x.id===sel); if(!o) return;
+o.cliente=document.getElementById("eCli").value.trim()||o.cliente;
+o.produto=document.getElementById("eProd").value.trim()||o.produto;
+o.valor=parseFloat(document.getElementById("eVal").value)||o.valor;
+o.peso=document.getElementById("ePeso").value.trim();
+o.frete=document.getElementById("eFrete").value.trim();
+o.rastreio=document.getElementById("eRast").value.trim();
+if(tempEditCapa) o.capa=tempEditCapa;
+save(); toast("Salvo • Ao vivo");
+};
+
+let tempEditCapa=null;
+document.getElementById("inpCapa").addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; tempEditCapa=await toB64(f); document.getElementById("prevCapa").innerHTML=`<img src="${tempEditCapa}" class="w-full h-full object-cover">`; document.getElementById("dCapa").src=tempEditCapa; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden");});
+
+document.getElementById("inpQc").addEventListener("change", async e=>{
+let o=orders.find(x=>x.id===sel); if(!o) return;
+for(let f of e.target.files){o.fotos.push(await toB64(f));}
+save(); renderQc(o); e.target.value="";
+});
+window.removeQc=(i)=>{let o=orders.find(x=>x.id===sel); o.fotos.splice(i,1); save(); renderQc(o);};
+
+document.getElementById("btnCopy").onclick=()=>{let url=location.origin+location.pathname+"?track="+sel; navigator.clipboard.writeText(url); toast("Link copiado");};
+document.getElementById("btnView").onclick=()=>{window.open(location.origin+location.pathname+"?track="+sel,"_blank");};
+document.getElementById("btnZap").onclick=()=>{
+let o=orders.find(x=>x.id===sel); let url=location.origin+location.pathname+"?track="+sel; let txt=`🐆 JAGUARARA IMPORTS\nOlá ${o.cliente}! Pedido ${o.id} - ${o.produto} está em ${o.status}\n${url}`; window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank");
+};
+
+function openDel(id){pendingDel=id; document.getElementById("delId").textContent=id; document.getElementById("delBg").classList.remove("hidden"); document.getElementById("delModal").classList.remove("hidden");}
+function closeDel(){document.getElementById("delBg").classList.add("hidden"); document.getElementById("delModal").classList.add("hidden"); pendingDel=null;}
+window.openDel=openDel; window.closeDel=closeDel;
+document.getElementById("btnDel").onclick=()=>openDel(sel);
+document.getElementById("delBg").onclick=closeDel;
+document.getElementById("confirmDel").onclick=()=>{if(!pendingDel) return; orders=orders.filter(x=>x.id!==pendingDel); save(); closeDel(); closeDrawer(); toast("Excluído");};
+window.closeDel=closeDel;
+
+window.openQcFull=(src)=>{document.getElementById("qcFullImg").src=src; document.getElementById("qcFull").classList.remove("hidden");};
+document.getElementById("qcFull").onclick=()=>document.getElementById("qcFull").classList.add("hidden");
+
+function renderClient(trackId){
+let o=orders.find(x=>x.id===trackId);
+let app=document.getElementById("app");
+if(!o){app.innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-12 text-center max-w-[400px]"><div class="text-[40px]">🔍</div><div class="font-bold mt-4">Pedido ${trackId} não encontrado</div></div></div>`; return;}
+let idx=STEPS.findIndex(s=>s.id===o.status);
+app.innerHTML=`
+<div class="min-h-screen bg-[#F6F5F1] py-6 px-4">
+<div class="max-w-[720px] mx-auto">
+<div class="flex justify-between items-center mb-6"><div class="flex items-center gap-2"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br>IMPORTS</div></div><div class="text-[11px] px-3 py-1 rounded-full bg-black text-white font-bold">PREMIUM • SHENZHEN</div></div>
+
+<div class="bg-white rounded-[32px] border border-[#EDEBE6] shadow-[0_16px_48px_rgba(0,0,0,0.08)] overflow-hidden">
+<div class="h-[4px] bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
+<div class="p-6 md:p-8">
+<!-- CLIENTE NOME GRANDE APARENTE -->
+<div class="flex items-center gap-3 mb-5">
+<div class="w-12 h-12 rounded-full bg-black text-white grid place-items-center font-bold text-[16px]">${o.cliente[0]?.toUpperCase()||"C"}</div>
+<div><div class="text-[11px] tracking-[0.16em] text-zinc-400 font-bold uppercase">Cliente</div><div class="font-black text-[20px] leading-none tracking-[-0.02em] mt-1">Olá, ${o.cliente} 👋</div><div class="text-[12px] text-zinc-500 mt-1">Seu pedido está sendo cuidado no galpão Shenzhen, Guangdong, China</div></div>
+<div class="ml-auto hidden md:block text-[11px] px-3 py-1.5 rounded-full bg-[#F6F5F1] border font-bold">${o.id} • ${o.criadoEm}</div>
+</div>
+
+<div class="w-full aspect-[4/3] rounded-[24px] overflow-hidden bg-[#F6F5F1] border border-[#EDEBE6]">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`<div class="w-full h-full grid place-items-center text-[40px]">📦</div>`}</div>
+
+<div class="mt-5"><div class="font-black text-[22px] leading-[1.15] tracking-[-0.02em] break-words">${o.produto}</div><div class="text-[13px] text-zinc-500 mt-2">ID ${o.id} • ${o.criadoEm} • Galpão Shenzhen, Guangdong, China</div></div>
+
+<!-- 3 CAIXINHAS IGUAIS: VALOR / PESO / FRETE - COMO ANTES -->
+<div class="mt-6 grid grid-cols-3 gap-3">
+<div class="bg-[#F6F5F1] rounded-[18px] border border-[#EDEBE6] p-4"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Valor Pago</div><div class="font-black text-[16px] mt-2">${fmt(o.valor)}</div><div class="text-[11px] text-zinc-500 mt-1">BRL • à vista</div></div>
+<div class="bg-[#F6F5F1] rounded-[18px] border border-[#EDEBE6] p-4 relative overflow-hidden"><div class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#009739] animate-pulse"></div><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Peso Real</div><div class="font-black text-[16px] mt-2">${o.peso||"—"}</div><div class="text-[11px] text-zinc-500 mt-1">conferido no galpão</div></div>
+<div class="bg-[#0A0A0A] rounded-[18px] p-4 text-white"><div class="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">Frete China-Brasil</div><div class="font-bold text-[14px] mt-2 truncate">${o.frete||"A calcular"}</div><div class="text-[11px] text-white/60 mt-1">${o.rastreio?`Rastreio ativo`:`Em breve`}</div></div>
+</div>
+
+<!-- TIMELINE VERTICAL APENAS - 10 STATUS -->
+<div class="mt-8">
+<div class="flex items-center justify-between"><div class="text-[11px] font-black tracking-[0.16em] uppercase">Progressão do seu pedido • Vertical</div><div class="text-[11px] px-2.5 py-1 rounded-full bg-[#F6F5F1] border font-bold">${idx+1} de ${STEPS.length} • ${o.status}</div></div>
+<div class="mt-6 relative">
+<div class="absolute left-[15px] top-2 bottom-2 w-[2px] bg-[#F0EFEB]"></div>
+<div class="absolute left-[15px] top-2 w-[2px] bg-black transition-all duration-700" style="height:${(idx/(STEPS.length-1))*100}%"></div>
+<div class="space-y-0">
+${STEPS.map((s,i)=>{
+let done=i<=idx; let curr=i===idx;
+return `<div class="flex gap-4 group">
+<div class="flex flex-col items-center"><div class="w-[32px] h-[32px] rounded-full border-2 grid place-items-center text-[12px] font-bold ${done?'bg-black border-black text-white':'bg-white border-[#EDEBE6] text-zinc-300'} ${curr?'ring-4 ring-[#FFD60A]/30 animate-pulse shadow-[0_0_0_8px_rgba(255,214,10,0.15)]':''}">${done?'✓':''}</div>${i<STEPS.length-1?`<div class="w-[2px] flex-1 mt-2 ${i<idx?'bg-black':'bg-[#F0EFEB]'} min-h-[32px]"></div>`:''}</div>
+<div class="flex-1 pb-8 -mt-1"><div class="flex gap-2 items-center flex-wrap"><span class="font-bold text-[13px] ${curr?'text-black':done?'text-black':'text-zinc-400'}">${s.label}</span>${curr?'<span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-[#FFD60A] animate-pulse">AGORA</span>':''}</div>${s.sub?`<div class="text-[10px] text-zinc-400 tracking-wide mt-0.5">${s.sub}</div>`:''}<div class="text-[12px] text-zinc-600 mt-1 leading-[1.4]">${s.desc}</div>${curr?`<div class="mt-2 inline-flex items-center gap-2 text-[11px] px-3 py-1 rounded-full bg-black text-white"><span class="w-1.5 h-1.5 rounded-full bg-[#FFD60A] animate-pulse"></span>Atualizado agora • Shenzhen, Guangdong, China</div>`:''}</div>
+</div>`;
+}).join("")}
+</div>
+</div>
+</div>
+
+${o.fotos.length>0?`<div class="mt-8"><div class="text-[11px] font-black tracking-widest">FOTOS REAIS DO GALPÃO • QC (${o.fotos.length})</div><div class="mt-3 grid grid-cols-3 gap-3">${o.fotos.map(f=>`<div class="aspect-square rounded-[16px] overflow-hidden border bg-[#F6F5F1]"><img src="${f}" class="w-full h-full object-cover"></div>`).join("")}</div></div>`:`<div class="mt-8 border border-dashed rounded-[20px] p-8 text-center bg-[#FBFAF7]"><div class="font-bold text-[14px]">Fotos em produção</div><div class="text-[12px] text-zinc-500 mt-1">Nossa equipe no galpão Shenzhen vai subir as fotos reais em breve.</div></div>`}
+
+</div>
+</div>
+
+<div class="mt-6 text-center text-[11px] tracking-[0.12em] text-zinc-400 uppercase">© 2026 Jaguarara Imports • Conectando o Brasil ao Mundo • Galpão Shenzhen, Guangdong, China</div>
+</div>
+</div>
+`;
+}
+
+function logout(){sessionStorage.removeItem("jg_auth"); location.reload();}
+
+(function(){
+let track=isTrack();
+if(track){ renderClient(track); return; }
+if(sessionStorage.getItem("jg_auth")==="1"){ renderAdmin(); } else { renderLogin(); }
+})();
+
+window.logout=logout;
+window.openNew=openNew;
+window.closeNew=closeNew;
+window.openDrawer=openDrawer;
+window.closeDrawer=closeDrawer;
 </script>
 </body>
 </html>
