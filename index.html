@@ -24,36 +24,58 @@
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAGUARARA - Peso e Frete Dinâmico</title>
+<title>JAGUARARA V14 - Fix g + QC 10 fotos</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>*{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}</style>
+<style>*{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased} body{overflow-x:hidden}</style>
 </head>
 <body class="bg-[#F6F5F1]">
 <div id="app"></div>
 <script>
 const PASS="sazgir-gaxxoh-0mIdno";
-const KEY="jaguarara_v13_dinamico";
+const KEY="jaguarara_v14_fix";
 const STEPS=[
 {id:"PEDIDO CONFIRMADO",label:"PEDIDO CONFIRMADO",desc:"Pedido confirmado no sistema • Shenzhen"},
 {id:"PAGAMENTO CONFIRMADO",label:"PAGAMENTO CONFIRMADO",desc:"Pagamento confirmado ao fornecedor"},
 {id:"ENVIADO PARA GALPÃO - SHENZHEN",label:"ENVIADO PARA GALPÃO",sub:"SHENZHEN, GUANGDONG",desc:"Fornecedor enviou para nosso galpão"},
-{id:"CHEGOU NO GALPÃO - SHENZHEN, GUANGDONG",label:"CHEGOU NO GALPÃO",sub:"SHENZHEN, GUANGDONG, CHINA",desc:"Chegou no galpão Shenzhen - Peso e medidas conferidos"},
+{id:"CHEGOU NO GALPÃO - SHENZHEN, GUANGDONG",label:"CHEGOU NO GALPÃO",sub:"SHENZHEN, GUANGDONG, CHINA",desc:"Chegou no galpão Shenzhen - Peso conferido"},
 {id:"INSPEÇÃO QC",label:"INSPEÇÃO QC",desc:"Fotos reais • Conferência autenticidade"},
 {id:"ARMAZENADO NO GALPÃO",label:"ARMAZENADO NO GALPÃO",desc:"Armazenado em Shenzhen"},
-{id:"AGUARDANDO ENVIO / PAGAMENTO FRETE",label:"AGUARDANDO ENVIO",sub:"FRETE CHINA-BRASIL",desc:"Aguardando liberação do frete China-Brasil • Produto já montado com caixa"},
+{id:"AGUARDANDO ENVIO / PAGAMENTO FRETE",label:"AGUARDANDO ENVIO",sub:"FRETE CHINA-BRASIL",desc:"Aguardando frete China-Brasil • Produto montado com caixa"},
 {id:"ENVIADO AO BRASIL",label:"ENVIADO AO BRASIL",desc:"Despachado de Shenzhen"},
 {id:"EM TRÂNSITO INTERNACIONAL",label:"EM TRÂNSITO",desc:"Em trânsito China → Brasil"},
 {id:"ENTREGUE",label:"ENTREGUE",desc:"Entregue ao cliente"}
 ];
-let orders=[]; try{let r=localStorage.getItem(KEY); if(r) orders=JSON.parse(r); if(orders.length===0){let old=localStorage.getItem("jaguarara_v12_final_fix"); if(old) orders=JSON.parse(old);} }catch(e){}
+let orders=[]; try{let r=localStorage.getItem(KEY); if(r) orders=JSON.parse(r); if(orders.length===0){let old=localStorage.getItem("jaguarara_v13_dinamico"); if(old) orders=JSON.parse(old);} }catch(e){}
 let sel=null; let tempCapa=null; let q=""; let pendingDel=null;
 const save=()=>{localStorage.setItem(KEY,JSON.stringify(orders)); renderAdminList();}
 const genId=()=>"JG-"+Math.floor(100000+Math.random()*999999);
 const fmt=(n)=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const fmtYen=(n)=>`¥ ${n||0}`;
-const toast=(m)=>{let t=document.getElementById("toast"); document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),2600);}
-const toB64=(f)=>new Promise(r=>{let fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(f);});
+const toast=(m)=>{let t=document.getElementById("toast"); document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),2800);}
+
+// COMPRESSÃO DE IMAGEM - FIX QC NÃO UPA
+function compressImage(file, maxW=1280, quality=0.7){
+return new Promise((resolve,reject)=>{
+  let img=new Image();
+  img.onload=()=>{
+    let canvas=document.createElement("canvas");
+    let w=img.width, h=img.height;
+    if(w>maxW){h=(maxW/w)*h; w=maxW;}
+    canvas.width=w; canvas.height=h;
+    let ctx=canvas.getContext("2d");
+    ctx.drawImage(img,0,0,w,h);
+    let dataUrl=canvas.toDataURL("image/jpeg", quality);
+    resolve(dataUrl);
+  };
+  img.onerror=reject;
+  let reader=new FileReader();
+  reader.onload=e=>{img.src=e.target.result;};
+  reader.onerror=reject;
+  reader.readAsDataURL(file);
+});
+}
+const toB64=compressImage;
 
 function renderLogin(){
 document.getElementById("app").innerHTML=`<div class="min-h-screen flex items-center justify-center p-5 bg-[#0A0A0A]"><div class="w-full max-w-[400px] bg-white rounded-[28px] p-8"><div class="w-10 h-10 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><h1 class="font-black text-[28px] leading-none mt-6">Jaguarara<br>Imports</h1><input id="pw" type="password" placeholder="Senha" class="mt-6 w-full h-[52px] rounded-full bg-[#F6F5F1] border px-6 outline-none"><button id="btnLogin" class="mt-4 w-full h-[52px] rounded-full bg-black text-white font-bold">Entrar</button></div></div>`;
@@ -70,12 +92,34 @@ document.getElementById("app").innerHTML=`
 <main class="max-w-[1280px] mx-auto p-6"><input id="search" placeholder="Buscar JG-, cliente, produto..." class="w-full h-[48px] rounded-full bg-white border px-6 text-[14px] outline-none"><div class="mt-6 bg-white rounded-[24px] border shadow-sm overflow-hidden"><div class="px-6 h-[56px] flex items-center justify-between border-b"><span class="font-bold text-[12px] tracking-widest">PEDIDOS • SHENZHEN</span><span id="cnt" class="text-[11px] bg-[#F6F5F1] border px-3 py-1 rounded-full">0 pedidos</span></div><div id="list"></div><div id="empty" class="hidden py-16 text-center"><div>📦</div><div class="font-bold mt-2">Nenhum pedido</div></div></div></main>
 <div id="drawerBg" class="fixed inset-0 bg-black/20 hidden z-40"></div>
 <div id="drawer" class="fixed top-0 right-0 h-full w-full max-w-[560px] bg-[#FCFBF8] border-l shadow-2xl hidden z-50 overflow-y-auto">
-<div class="bg-[#FCFBF8] border-b p-6"><div class="flex justify-between"><div class="flex gap-3"><img id="dCapa" class="w-[72px] h-[72px] rounded-[16px] object-cover border hidden"><div id="dCapaPh" class="w-[72px] h-[72px] rounded-[16px] bg-[#F6F5F1] border border-dashed grid place-items-center">📦</div><div><div id="dId" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black text-white inline-block"></div><div id="dProd" class="font-bold text-[17px] leading-tight mt-2 max-w-[300px] break-words"></div><div id="dCli" class="text-[12px] text-zinc-500 mt-1"></div></div></div><button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-white border">✕</button></div><div class="mt-4"><button id="btnCopy" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold w-full">🔗 Copiar Link do Cliente</button></div></div>
-<div class="p-6 space-y-4">
-<div class="bg-black text-white rounded-[20px] p-5"><div class="text-[10px] tracking-widest text-white/50 font-bold">STATUS • ESCOLHA LIVRE</div><select id="selStatus" class="mt-3 w-full h-[50px] rounded-[14px] bg-white text-black px-4 font-bold text-[13px] outline-none">${STEPS.map(s=>`<option value="${s.id}">${s.label}</option>`).join("")}</select><div class="text-[11px] text-white/60 mt-2">Peso só aparece pro cliente quando chegar no galpão. Frete Internacional só quando for pra Aguardando Envio.</div></div>
-<div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">CLIENTE</div><input id="eCli" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">PRODUTO</div><input id="eProd" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">VALOR PRODUTO R$</div><input id="eVal" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div><div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">PESO REAL</div><div class="flex gap-2 mt-1"><input id="ePeso" type="number" inputmode="decimal" class="flex-1 bg-transparent font-medium text-[14px] outline-none" placeholder="380"><select id="ePesoUn" class="w-[70px] h-[32px] rounded-full bg-[#F6F5F1] border text-[12px] font-bold px-2"><option value="g">g</option><option value="kg">kg</option></select></div><div class="text-[10px] text-zinc-400 mt-1">Só preencha quando chegar no galpão</div></div><div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO CHINA ¥</div><input id="eFreteInt" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none" placeholder="6"></div><div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">FRETE CHINA-BRASIL R$ (Internacional)</div><input id="eFreteBR" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none" placeholder="Só em Aguardando Envio"><div class="text-[10px] text-zinc-400 mt-1">Só aparece pro cliente em Aguardando Envio</div></div><div class="bg-white rounded-[14px] border p-3 col-span-2"><div class="text-[10px] font-bold text-zinc-400">RASTREIO - CÓDIGO</div><input id="eRast" type="text" class="mt-1 w-full bg-transparent font-medium text-[13px] outline-none" placeholder="JT123456"></div></div>
+<div class="bg-[#FCFBF8] border-b p-6"><div class="flex justify-between gap-3"><div class="flex gap-3 min-w-0 flex-1"><img id="dCapa" class="w-[72px] h-[72px] rounded-[16px] object-cover border hidden shrink-0"><div id="dCapaPh" class="w-[72px] h-[72px] rounded-[16px] bg-[#F6F5F1] border border-dashed grid place-items-center shrink-0">📦</div><div class="min-w-0 flex-1"><div id="dId" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black text-white inline-block"></div><div id="dProd" class="font-bold text-[16px] leading-tight mt-2 break-words line-clamp-2"></div><div id="dCli" class="text-[12px] text-zinc-500 mt-1 truncate"></div></div></div><button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-white border shrink-0">✕</button></div><div class="mt-4"><button id="btnCopy" class="h-10 px-5 rounded-full bg-black text-white text-[13px] font-bold w-full">🔗 Copiar Link do Cliente</button></div></div>
+<div class="p-5 space-y-4">
+<div class="bg-black text-white rounded-[20px] p-4"><div class="text-[10px] tracking-widest text-white/50 font-bold">STATUS • ESCOLHA LIVRE</div><select id="selStatus" class="mt-3 w-full h-[48px] rounded-[12px] bg-white text-black px-4 font-bold text-[13px] outline-none">${STEPS.map(s=>`<option value="${s.id}">${s.label}</option>`).join("")}</select></div>
+
+<!-- GRID CORRIGIDO - SEM ESTOURAR -->
+<div class="grid grid-cols-1 gap-3">
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">CLIENTE</div><input id="eCli" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+<div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">PRODUTO</div><input id="eProd" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+</div>
+
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">VALOR PRODUTO R$</div><input id="eVal" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+<div class="bg-white rounded-[14px] border p-3 min-w-0 overflow-hidden"><div class="text-[10px] font-bold text-zinc-400">PESO REAL</div><div class="mt-1 flex items-center gap-2 w-full"><input id="ePeso" type="number" inputmode="decimal" class="flex-1 min-w-0 bg-transparent font-medium text-[14px] outline-none" placeholder="380"><select id="ePesoUn" class="shrink-0 w-[64px] h-[32px] rounded-full bg-[#F6F5F1] border text-[12px] font-bold px-2"><option value="g">g</option><option value="kg">kg</option></select></div><div class="text-[10px] text-zinc-400 mt-1">Só quando chegar no galpão</div></div>
+</div>
+
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO CHINA ¥</div><input id="eFreteInt" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none"></div>
+<div class="bg-white rounded-[14px] border p-3 min-w-0"><div class="text-[10px] font-bold text-zinc-400">FRETE CHINA-BRASIL R$</div><input id="eFreteBR" type="number" inputmode="decimal" class="mt-1 w-full bg-transparent font-medium text-[14px] outline-none" placeholder="Só em Aguardando Envio"></div>
+</div>
+
+<div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">RASTREIO - CÓDIGO</div><input id="eRast" type="text" class="mt-1 w-full bg-transparent font-medium text-[13px] outline-none" placeholder="JT123456"></div>
+</div>
+
 <div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between"><div class="text-[11px] font-bold">CAPA</div><button onclick="document.getElementById('inpCapa').click()" class="text-[11px] font-bold px-3 h-7 rounded-full bg-[#F6F5F1] border">Trocar</button></div><div id="prevCapa" class="mt-3 w-[96px] h-[96px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[11px] overflow-hidden">sem capa</div><input id="inpCapa" type="file" accept="image/*" class="hidden"></div>
-<div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between"><div class="text-[11px] font-bold">FOTOS QC (<span id="qcC">0</span>)</div><button onclick="document.getElementById('inpQc').click()" class="h-7 px-3 rounded-full bg-black text-white text-[11px] font-bold">+ Adicionar</button></div><div id="qcGrid" class="mt-3 grid grid-cols-3 gap-2"></div><div id="qcEmpty" class="mt-3 border border-dashed rounded-[14px] p-5 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto</div><input id="inpQc" type="file" multiple accept="image/*" class="hidden"></div>
+
+<div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between items-center"><div class="text-[11px] font-bold">FOTOS QC (<span id="qcC">0</span>/10)</div><button onclick="document.getElementById('inpQc').click()" class="h-7 px-3 rounded-full bg-black text-white text-[11px] font-bold">+ Adicionar</button></div><div id="qcGrid" class="mt-3 grid grid-cols-3 gap-2"></div><div id="qcEmpty" class="mt-3 border border-dashed rounded-[14px] p-5 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto • Limite 10 fotos (5 Sugargoo + 5 personalizadas)</div><input id="inpQc" type="file" multiple accept="image/*" class="hidden"><div class="text-[10px] text-zinc-400 mt-2">Dica: Pode selecionar até 10 fotos de uma vez. Compressão automática pra não travar.</div></div>
+
 <button id="btnSave" class="w-full h-[50px] rounded-[16px] bg-black text-white font-bold">💾 Salvar</button>
 <button id="btnDel" class="w-full h-11 rounded-full border border-red-200 text-red-500 font-bold text-[13px]">🗑️ Excluir pedido</button>
 </div>
@@ -89,10 +133,12 @@ document.getElementById("app").innerHTML=`
 <div class="flex justify-between"><div class="font-bold text-[18px]">Novo Pedido • Shenzhen</div><button onclick="closeNew()" class="w-8 h-8 rounded-full bg-[#F6F5F1] border">✕</button></div>
 <div class="mt-6 space-y-4">
 <div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">CLIENTE</div><input id="nCli" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div><div><div class="text-[10px] font-bold text-zinc-400">PRODUTO</div><input id="nProd" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none"></div></div>
-<div><div class="text-[10px] font-bold text-zinc-400">CAPA DO PRODUTO</div><div class="mt-2 flex gap-3 items-center"><div id="nPrev" class="w-[64px] h-[64px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[10px] overflow-hidden">sem capa</div><button type="button" onclick="document.getElementById('nCapaInp').click()" class="h-10 px-4 rounded-full bg-white border text-[12px] font-bold">Escolher imagem</button></div><input id="nCapaInp" type="file" accept="image/*" class="hidden"></div>
-<div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">VALOR DO PRODUTO R$</div><input id="nVal" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="45,04"></div><div><div class="text-[10px] font-bold text-zinc-400">PESO ESTIMADO (opcional)</div><div class="flex gap-2 mt-1"><input id="nPeso" type="number" inputmode="decimal" class="flex-1 h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="—"><select id="nPesoUn" class="w-[70px] h-[46px] rounded-[14px] bg-[#FBFAF7] border text-[12px] font-bold px-2"><option value="g" selected>g</option><option value="kg">kg</option></select></div><div class="text-[10px] text-zinc-400 mt-1">Deixe vazio, pesa só no galpão</div></div></div>
+<div><div class="text-[10px] font-bold text-zinc-400">CAPA</div><div class="mt-2 flex gap-3 items-center"><div id="nPrev" class="w-[64px] h-[64px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[10px] overflow-hidden">sem capa</div><button type="button" onclick="document.getElementById('nCapaInp').click()" class="h-10 px-4 rounded-full bg-white border text-[12px] font-bold">Escolher imagem</button></div><input id="nCapaInp" type="file" accept="image/*" class="hidden"></div>
+<div class="grid grid-cols-1 gap-3">
+<div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">VALOR PRODUTO R$</div><input id="nVal" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="45,04"></div><div><div class="text-[10px] font-bold text-zinc-400">PESO (opcional)</div><div class="flex gap-2 mt-1"><input id="nPeso" type="number" inputmode="decimal" class="flex-1 min-w-0 h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="—"><select id="nPesoUn" class="shrink-0 w-[68px] h-[46px] rounded-[14px] bg-[#FBFAF7] border text-[12px] font-bold px-2"><option value="g" selected>g</option><option value="kg">kg</option></select></div></div></div>
 <div class="grid grid-cols-2 gap-3"><div><div class="text-[10px] font-bold text-zinc-400">FRETE INTERNO CHINA ¥</div><input id="nFreteInt" type="number" inputmode="decimal" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="6"></div><div><div class="text-[10px] font-bold text-zinc-400">RASTREIO - CÓDIGO</div><input id="nRast" type="text" class="mt-1 w-full h-[46px] rounded-[12px] bg-[#FBFAF7] border px-4 outline-none" placeholder="JT123456"></div></div>
-<button onclick="createOrder()" class="w-full h-[52px] rounded-full bg-black text-white font-bold mt-2">Criar Pedido • Pedido Confirmado</button>
+</div>
+<button onclick="createOrder()" class="w-full h-[52px] rounded-full bg-black text-white font-bold mt-4">Criar Pedido • Pedido Confirmado</button>
 </div>
 </div>
 </div>
@@ -104,7 +150,7 @@ document.getElementById("app").innerHTML=`
 <div id="qcFull" class="hidden fixed inset-0 z-[80] bg-black/80 flex items-center justify-center p-6"><img id="qcFullImg" class="max-w-[90vw] max-h-[85vh] rounded-[20px]"><button onclick="document.getElementById('qcFull').classList.add('hidden')" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white">✕</button></div>
 `;
 document.getElementById("search")?.addEventListener("input",e=>{q=e.target.value; renderAdminList();});
-document.getElementById("nCapaInp")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; tempCapa=await toB64(f); document.getElementById("nPrev").innerHTML=`<img src="${tempCapa}" class="w-full h-full object-cover">`;});
+document.getElementById("nCapaInp")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await toB64(f); tempCapa=b; document.getElementById("nPrev").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`;});
 renderAdminList();
 }
 function renderAdminList(){
@@ -113,7 +159,7 @@ if(!listEl) return;
 let filtered=orders.filter(o=>(o.id+" "+o.cliente+" "+o.produto).toLowerCase().includes(q.toLowerCase())).sort((a,b)=>b.id.localeCompare(a.id));
 if(cntEl) cntEl.textContent=filtered.length+" pedidos";
 if(filtered.length===0){listEl.innerHTML=""; emptyEl.classList.remove("hidden");} else {emptyEl.classList.add("hidden");
-listEl.innerHTML=filtered.map(o=>{let idx=STEPS.findIndex(s=>s.id===o.status); let pct=(idx/(STEPS.length-1))*100; return `<div onclick="openDrawer('${o.id}')" class="px-6 py-5 flex gap-4 items-center hover:bg-[#FBFAF7] cursor-pointer border-b last:border-0"><div class="w-[64px] h-[64px] rounded-[16px] bg-[#F6F5F1] border overflow-hidden grid place-items-center shrink-0">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`📦`}</div><div class="flex-1 min-w-0"><div class="flex gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black text-white">${o.id}</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FFF7CC] border truncate max-w-[150px]">${o.status}</span></div><div class="font-bold text-[14px] truncate mt-1">${o.produto}</div><div class="text-[12px] text-zinc-500 truncate">${o.cliente} • ${o.peso?o.peso+o.pesoUn:"sem peso"}</div></div><div class="text-right"><div class="font-bold text-[13px]">${fmt(o.valor)}</div><div class="w-[80px] h-[6px] bg-[#F0EFEB] rounded-full mt-2 overflow-hidden"><div class="h-full bg-black rounded-full" style="width:${pct}%"></div></div></div></div>`;}).join("");}
+listEl.innerHTML=filtered.map(o=>{let idx=STEPS.findIndex(s=>s.id===o.status); let pct=(idx/(STEPS.length-1))*100; return `<div onclick="openDrawer('${o.id}')" class="px-6 py-5 flex gap-4 items-center hover:bg-[#FBFAF7] cursor-pointer border-b last:border-0"><div class="w-[64px] h-[64px] rounded-[16px] bg-[#F6F5F1] border overflow-hidden grid place-items-center shrink-0">${o.capa?`<img src="${o.capa}" class="w-full h-full object-cover">`:`📦`}</div><div class="flex-1 min-w-0"><div class="flex gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black text-white">${o.id}</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FFF7CC] border truncate max-w-[150px]">${o.status}</span></div><div class="font-bold text-[14px] truncate mt-1">${o.produto}</div><div class="text-[12px] text-zinc-500 truncate">${o.cliente} • ${o.peso?o.peso+o.pesoUn:"sem peso"} • ${o.fotos.length} fotos QC</div></div><div class="text-right"><div class="font-bold text-[13px]">${fmt(o.valor)}</div><div class="w-[80px] h-[6px] bg-[#F0EFEB] rounded-full mt-2 overflow-hidden"><div class="h-full bg-black rounded-full" style="width:${pct}%"></div></div></div></div>`;}).join("");}
 }
 function openNew(){document.getElementById("newBg").classList.remove("hidden"); document.getElementById("newModal").classList.remove("hidden");}
 function closeNew(){document.getElementById("newBg").classList.add("hidden"); document.getElementById("newModal").classList.add("hidden");}
@@ -163,17 +209,13 @@ let hasWeight = idx >= idxChegou && o.peso;
 let hasFreteBR = idx >= idxAguardando && o.freteBR;
 
 let boxesHtml = '';
-// Sempre mostra Valor Pago
 boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Valor Pago</div><div class="font-black text-[18px] mt-2">${fmt(o.valor)}</div><div class="text-[11px] text-zinc-500 mt-1">BRL</div></div>`;
-// Frete Interno - sempre mostra se tiver, mas sem "Interno" na linha do valor e sem "Em breve"
 if(o.freteInterno){
   boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Frete Interno</div><div class="font-black text-[18px] mt-2">${fmtYen(o.freteInterno)}</div><div class="text-[11px] text-zinc-500 mt-1">China</div></div>`;
 }
-// Peso Real - SÓ aparece quando chegou no galpão
 if(hasWeight){
   boxesHtml += `<div class="bg-[#F6F5F1] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Peso Real</div><div class="font-black text-[18px] mt-2">${o.peso}${o.pesoUn||"g"}</div><div class="text-[11px] text-zinc-500 mt-1">conferido</div></div>`;
 }
-// Frete Internacional - SÓ aparece quando aguardando envio
 if(hasFreteBR){
   boxesHtml += `<div class="bg-[#0A0A0A] rounded-[20px] p-5 text-white"><div class="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">Frete Internacional</div><div class="font-black text-[18px] mt-2">R$ ${o.freteBR}</div><div class="text-[11px] text-white/60 mt-1">China → Brasil</div></div>`;
 }
@@ -195,7 +237,7 @@ ${boxesHtml}
 <div class="mt-6 relative"><div class="absolute left-[15px] top-2 bottom-2 w-[2px] bg-[#F0EFEB]"></div><div class="absolute left-[15px] top-2 w-[2px] bg-black" style="height:${(idx/(STEPS.length-1))*100}%"></div><div class="space-y-0">
 ${STEPS.map((s,i)=>{let done=i<=idx; let curr=i===idx; return `<div class="flex gap-4"><div class="flex flex-col items-center"><div class="w-[32px] h-[32px] rounded-full border-2 grid place-items-center text-[12px] font-bold ${done?'bg-black border-black text-white':'bg-white border-[#EDEBE6] text-zinc-300'} ${curr?'ring-4 ring-[#FFD60A]/30':''}">${done?'✓':''}</div>${i<STEPS.length-1?`<div class="w-[2px] flex-1 mt-2 ${i<idx?'bg-black':'bg-[#F0EFEB]'} min-h-[28px]"></div>`:''}</div><div class="flex-1 pb-8 -mt-1"><div class="flex gap-2 items-center"><span class="font-bold text-[13px] ${curr?'text-black':done?'text-black':'text-zinc-400'}">${s.label}</span>${curr?'<span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-[#FFD60A]">AGORA</span>':''}</div>${s.sub?`<div class="text-[10px] text-zinc-400 mt-0.5">${s.sub}</div>`:''}<div class="text-[12px] text-zinc-600 mt-1">${s.desc}</div></div></div>`;}).join("")}
 </div></div></div>
-${o.fotos.length>0?`<div class="mt-8"><div class="text-[11px] font-black tracking-widest">FOTOS REAIS QC (${o.fotos.length})</div><div class="mt-3 grid grid-cols-3 gap-3">${o.fotos.map(f=>`<div class="aspect-square rounded-[16px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"></div>`).join("")}</div></div>`:`<div class="mt-8 border border-dashed rounded-[20px] p-8 text-center bg-[#FBFAF7]"><div class="font-bold text-[14px]">Fotos em produção</div><div class="text-[12px] text-zinc-500 mt-1">Equipe Shenzhen vai subir em breve</div></div>`}
+${o.fotos.length>0?`<div class="mt-8"><div class="text-[11px] font-black tracking-widest">FOTOS REAIS QC (${o.fotos.length}/10)</div><div class="mt-3 grid grid-cols-3 gap-3">${o.fotos.map(f=>`<div class="aspect-square rounded-[16px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"></div>`).join("")}</div></div>`:`<div class="mt-8 border border-dashed rounded-[20px] p-8 text-center bg-[#FBFAF7]"><div class="font-bold text-[14px]">Fotos em produção</div><div class="text-[12px] text-zinc-500 mt-2">Assim que chegar ao galpão nossa equipe irá colocar as fotos aqui</div></div>`}
 </div></div>
 <div class="mt-6 text-center text-[11px] tracking-widest text-zinc-400 uppercase">© 2026 Jaguarara Imports • Shenzhen, Guangdong, China</div>
 </div></div>
@@ -239,8 +281,28 @@ document.getElementById("drawerBg")?.addEventListener("click",closeDrawer);
 document.getElementById("newBg")?.addEventListener("click",closeNew);
 document.getElementById("delBg")?.addEventListener("click",closeDel);
 document.getElementById("inpCapa")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await toB64(f); document.getElementById("prevCapa").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`; document.getElementById("dCapa").src=b; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden"); window.tempEditCapa=b;});
-document.getElementById("inpQc")?.addEventListener("change", async e=>{let o=orders.find(x=>x.id===sel); if(!o) return; for(let f of e.target.files){o.fotos.push(await toB64(f));} localStorage.setItem(KEY,JSON.stringify(orders)); document.getElementById("qcC").textContent=o.fotos.length; document.getElementById("qcGrid").innerHTML=o.fotos.map((f,i)=>`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"><button onclick="removeQc(${i})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white text-[10px]">✕</button></div>`).join(""); e.target.value="";});
-window.removeQc=(i)=>{let o=orders.find(x=>x.id===sel); o.fotos.splice(i,1); localStorage.setItem(KEY,JSON.stringify(orders)); document.getElementById("qcC").textContent=o.fotos.length; document.getElementById("qcGrid").innerHTML=o.fotos.map((f,j)=>`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"><button onclick="removeQc(${j})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white">✕</button></div>`).join("");};
+document.getElementById("inpQc")?.addEventListener("change", async e=>{
+let o=orders.find(x=>x.id===sel); if(!o) return;
+if(o.fotos.length>=10){toast("Limite de 10 fotos atingido"); return;}
+let files=Array.from(e.target.files);
+let remaining=10-o.fotos.length;
+files=files.slice(0,remaining);
+if(files.length===0){toast("Limite de 10 fotos"); return;}
+toast(`Comprimindo ${files.length} fotos...`);
+for(let f of files){
+  try{
+    let b=await toB64(f);
+    o.fotos.push(b);
+  }catch(err){console.error(err);}
+}
+localStorage.setItem(KEY,JSON.stringify(orders));
+document.getElementById("qcC").textContent=o.fotos.length;
+document.getElementById("qcGrid").innerHTML=o.fotos.map((f,i)=>`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"><button onclick="removeQc(${i})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white text-[10px]">✕</button></div>`).join("");
+document.getElementById("qcEmpty").classList.add("hidden");
+e.target.value="";
+toast(`${files.length} fotos adicionadas • Total ${o.fotos.length}/10`);
+});
+window.removeQc=(i)=>{let o=orders.find(x=>x.id===sel); o.fotos.splice(i,1); localStorage.setItem(KEY,JSON.stringify(orders)); document.getElementById("qcC").textContent=o.fotos.length; document.getElementById("qcGrid").innerHTML=o.fotos.map((f,j)=>`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover"><button onclick="removeQc(${j})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white">✕</button></div>`).join(""); if(o.fotos.length===0) document.getElementById("qcEmpty").classList.remove("hidden");};
 document.getElementById("selStatus")?.addEventListener("change",e=>{let o=orders.find(x=>x.id===sel); if(!o) return; o.status=e.target.value; localStorage.setItem(KEY,JSON.stringify(orders)); toast("Status → "+e.target.value); renderAdminList();});
 document.getElementById("btnSave")?.addEventListener("click",()=>{let o=orders.find(x=>x.id===sel); if(!o) return; o.cliente=document.getElementById("eCli").value; o.produto=document.getElementById("eProd").value; o.valor=parseFloat(document.getElementById("eVal").value)||0; o.peso=document.getElementById("ePeso").value; o.pesoUn=document.getElementById("ePesoUn").value; o.freteInterno=document.getElementById("eFreteInt").value; o.freteBR=document.getElementById("eFreteBR").value; o.rastreio=document.getElementById("eRast").value; if(window.tempEditCapa) o.capa=window.tempEditCapa; localStorage.setItem(KEY,JSON.stringify(orders)); toast("Salvo"); renderAdminList();});
 document.getElementById("btnDel")?.addEventListener("click",()=>openDel(sel));
