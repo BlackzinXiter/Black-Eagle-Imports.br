@@ -24,7 +24,7 @@
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAGUARARA V15 - Preview Instantâneo QC</title>
+<title>JAGUARARA V16 - Fix Duplicado + Salvar</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>*{font-family:Inter,sans-serif} body{overflow-x:hidden}</style>
@@ -33,7 +33,7 @@
 <div id="app"></div>
 <script>
 const PASS="sazgir-gaxxoh-0mIdno";
-const KEY="jaguarara_v15_preview";
+const KEY="jaguarara_v16_nodup";
 const STEPS=[
 {id:"PEDIDO CONFIRMADO",label:"PEDIDO CONFIRMADO",desc:"Pedido confirmado no sistema • Shenzhen"},
 {id:"PAGAMENTO CONFIRMADO",label:"PAGAMENTO CONFIRMADO",desc:"Pagamento confirmado ao fornecedor"},
@@ -46,13 +46,13 @@ const STEPS=[
 {id:"EM TRÂNSITO INTERNACIONAL",label:"EM TRÂNSITO",desc:"Em trânsito China → Brasil"},
 {id:"ENTREGUE",label:"ENTREGUE",desc:"Entregue ao cliente"}
 ];
-let orders=[]; try{let r=localStorage.getItem(KEY); if(r) orders=JSON.parse(r); if(orders.length===0){let old=localStorage.getItem("jaguarara_v14_fix"); if(old) orders=JSON.parse(old);} }catch(e){}
+let orders=[]; try{let r=localStorage.getItem(KEY); if(r) orders=JSON.parse(r); if(orders.length===0){let old=localStorage.getItem("jaguarara_v15_preview"); if(old) orders=JSON.parse(old);} }catch(e){}
 let sel=null; let tempCapa=null; let q=""; let pendingDel=null;
+let pendingQc=[]; // NOVO: fotos pendentes, só vão pro pedido quando clicar Salvar
 const genId=()=>"JG-"+Math.floor(100000+Math.random()*999999);
 const fmt=(n)=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const fmtYen=(n)=>`¥ ${n||0}`;
 const toast=(m)=>{let t=document.getElementById("toast"); document.getElementById("toastMsg").textContent=m; t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),3000);}
-
 function compressImage(file, maxW=1280, quality=0.7){
 return new Promise((resolve,reject)=>{
   let reader=new FileReader();
@@ -101,9 +101,17 @@ document.getElementById("app").innerHTML=`
 <div class="bg-white rounded-[14px] border p-3"><div class="text-[10px] font-bold text-zinc-400">RASTREIO - CÓDIGO</div><input id="eRast" type="text" class="mt-1 w-full bg-transparent font-medium text-[13px] outline-none" placeholder="JT123456"></div>
 </div>
 <div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between"><div class="text-[11px] font-bold">CAPA</div><button onclick="document.getElementById('inpCapa').click()" class="text-[11px] font-bold px-3 h-7 rounded-full bg-[#F6F5F1] border">Trocar</button></div><div id="prevCapa" class="mt-3 w-[96px] h-[96px] rounded-[14px] bg-[#F6F5F1] border border-dashed grid place-items-center text-[11px] overflow-hidden">sem capa</div><input id="inpCapa" type="file" accept="image/*" class="hidden"></div>
-<div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between items-center"><div class="text-[11px] font-bold">FOTOS QC (<span id="qcC">0</span>/10)</div><button onclick="document.getElementById('inpQc').click()" class="h-7 px-3 rounded-full bg-black text-white text-[11px] font-bold">+ Adicionar</button></div><div id="qcGrid" class="mt-3 grid grid-cols-3 gap-2"></div><div id="qcEmpty" class="mt-3 border border-dashed rounded-[14px] p-5 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto • Limite 10 (5 Sugargoo + 5 extras)</div><input id="inpQc" type="file" multiple accept="image/*" class="hidden"><div id="qcPreviewArea" class="mt-3 hidden"><div class="text-[11px] font-bold text-zinc-500 mb-2">Prévia instantânea (antes de salvar):</div><div id="qcPreviewGrid" class="grid grid-cols-3 gap-2"></div></div></div>
-<button id="btnSave" class="w-full h-[50px] rounded-[16px] bg-black text-white font-bold">💾 Salvar</button>
-<button id="btnDel" class="w-full h-11 rounded-full border border-red-200 text-red-500 font-bold text-[13px]">🗑️ Excluir</button>
+
+<div class="bg-white rounded-[16px] border p-4">
+<div class="flex justify-between items-center"><div class="text-[11px] font-bold">FOTOS QC (<span id="qcC">0</span>/10)</div><button onclick="document.getElementById('inpQc').click()" class="h-7 px-3 rounded-full bg-black text-white text-[11px] font-bold">+ Adicionar</button></div>
+<div id="qcGrid" class="mt-3 grid grid-cols-3 gap-2"></div>
+<div id="qcEmpty" class="mt-3 border border-dashed rounded-[14px] p-5 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto • Limite 10 (5 Sugargoo + 5 extras)</div>
+<div id="qcPendingWrap" class="hidden mt-4 p-3 rounded-[14px] bg-[#FFFBEB] border border-[#FFD60A]/30"><div class="flex justify-between items-center"><div class="text-[11px] font-bold text-[#92400E]">📸 Prévia - ${""} fotos novas (não salvas ainda)</div><button onclick="clearPending()" class="text-[11px] text-zinc-500 underline">Limpar</button></div><div id="qcPendingGrid" class="mt-2 grid grid-cols-3 gap-2"></div><div class="text-[11px] text-[#92400E] mt-2">Clique em <b>Salvar</b> pra confirmar e mandar pro cliente</div></div>
+<input id="inpQc" type="file" multiple accept="image/*" class="hidden">
+</div>
+
+<button id="btnSave" class="w-full h-[52px] rounded-[16px] bg-black text-white font-bold text-[15px]">💾 Salvar</button>
+<button id="btnDel" class="w-full h-11 rounded-full border border-red-200 text-red-500 font-bold text-[13px]">🗑️ Excluir pedido</button>
 </div>
 </div>
 <div id="newBg" class="fixed inset-0 bg-black/30 hidden z-40"></div>
@@ -156,7 +164,7 @@ localStorage.setItem(KEY,JSON.stringify(orders)); closeNew(); renderAdminList();
 tempCapa=null; document.getElementById("nPrev").innerHTML="sem capa"; document.getElementById("nCli").value=""; document.getElementById("nProd").value=""; document.getElementById("nVal").value=""; document.getElementById("nPeso").value=""; document.getElementById("nFreteInt").value=""; document.getElementById("nRast").value="";
 }
 function openDrawer(id){
-let o=orders.find(x=>x.id===id); if(!o) return; sel=o.id;
+let o=orders.find(x=>x.id===id); if(!o) return; sel=o.id; pendingQc=[];
 document.getElementById("dId").textContent=o.id;
 document.getElementById("dProd").textContent=o.produto;
 document.getElementById("dCli").textContent=o.cliente+" • "+o.criadoEm;
@@ -174,12 +182,16 @@ renderQcGrid(o);
 document.getElementById("drawerBg").classList.remove("hidden");
 document.getElementById("drawer").classList.remove("hidden");
 }
-function closeDrawer(){document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null;}
+function closeDrawer(){document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null; pendingQc=[];}
+
 function renderQcGrid(o){
 let grid=document.getElementById("qcGrid"); let empty=document.getElementById("qcEmpty");
 document.getElementById("qcC").textContent=o.fotos.length;
 if(o.fotos.length===0){grid.innerHTML=""; empty.classList.remove("hidden");} else {empty.classList.add("hidden"); grid.innerHTML=o.fotos.map((f,i)=>`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${f}" class="w-full h-full object-cover cursor-pointer" onclick="openQcFull('${f}')"><button onclick="removeQc(${i})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white text-[10px]">✕</button></div>`).join("");}
+document.getElementById("qcPendingWrap").classList.add("hidden");
+document.getElementById("qcPendingGrid").innerHTML="";
 }
+
 function renderClientPage(trackId){
 let o=orders.find(x=>x.id===trackId);
 let app=document.getElementById("app");
@@ -224,7 +236,7 @@ if(sessionStorage.getItem("jg_auth")==="1"){renderAdminPage();} else {renderLogi
 window.openNew=openNew;
 window.closeNew=closeNew;
 window.openDrawer=(id)=>{
-let o=orders.find(x=>x.id===id); if(!o) return; sel=o.id;
+let o=orders.find(x=>x.id===id); if(!o) return; sel=o.id; pendingQc=[];
 document.getElementById("dId").textContent=o.id;
 document.getElementById("dProd").textContent=o.produto;
 document.getElementById("dCli").textContent=o.cliente+" • "+o.criadoEm;
@@ -242,75 +254,85 @@ renderQcGrid(o);
 document.getElementById("drawerBg").classList.remove("hidden");
 document.getElementById("drawer").classList.remove("hidden");
 };
-window.closeDrawer=()=>{document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null;};
+window.closeDrawer=()=>{document.getElementById("drawerBg").classList.add("hidden"); document.getElementById("drawer").classList.add("hidden"); sel=null; pendingQc=[];};
 window.logout=logout;
 window.openDel=openDel;
 window.closeDel=closeDel;
+window.clearPending=()=>{pendingQc=[]; document.getElementById("qcPendingWrap").classList.add("hidden"); document.getElementById("qcPendingGrid").innerHTML="";};
 document.getElementById("drawerBg")?.addEventListener("click",closeDrawer);
 document.getElementById("newBg")?.addEventListener("click",closeNew);
 document.getElementById("delBg")?.addEventListener("click",closeDel);
 document.getElementById("inpCapa")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await compressImage(f,800,0.8); document.getElementById("prevCapa").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`; document.getElementById("dCapa").src=b; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden"); window.tempEditCapa=b;});
 
-// QC COM PRÉVIA INSTANTÂNEA ANTES DE SALVAR - CORRIGIDO
+// QC - AGORA SEM DUPLICAR, PRÉVIA ANTES DE SALVAR, SALVAR FUNCIONA
 document.getElementById("inpQc")?.addEventListener("change", async e=>{
 let o=orders.find(x=>x.id===sel); if(!o) return;
-if(o.fotos.length>=10){toast("Limite 10 fotos atingido"); return;}
+let totalAtual = o.fotos.length + pendingQc.length;
+if(totalAtual>=10){toast("Limite 10 fotos atingido"); return;}
 let files=Array.from(e.target.files);
-let remaining=10-o.fotos.length;
+let remaining=10-totalAtual;
 files=files.slice(0,remaining);
 if(files.length===0){toast("Limite 10"); return;}
 
-// 1. MOSTRA PRÉVIA INSTANTÂNEA NA HORA (ANTES DE COMPRIMIR)
-let previewArea=document.getElementById("qcPreviewArea");
-let previewGrid=document.getElementById("qcPreviewGrid");
-previewArea.classList.remove("hidden");
-previewGrid.innerHTML=`<div class="col-span-3 text-[11px] text-zinc-500">Carregando prévia de ${files.length} fotos...</div>`;
+let pendingWrap=document.getElementById("qcPendingWrap");
+let pendingGrid=document.getElementById("qcPendingGrid");
+pendingWrap.classList.remove("hidden");
 
-// Mostra prévia instantânea com URL.createObjectURL
+// Prévia instantânea imediata
 let tempUrls=files.map(f=>URL.createObjectURL(f));
-previewGrid.innerHTML=tempUrls.map(url=>`<div class="aspect-square rounded-[14px] overflow-hidden border-2 border-dashed border-[#FFD60A] bg-[#FFFBEB] relative"><img src="${url}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[9px] text-center py-0.5">prévia</div></div>`).join("");
+pendingGrid.innerHTML = tempUrls.map((url,i)=>`<div class="aspect-square rounded-[14px] overflow-hidden border-2 border-dashed border-[#FFD60A] bg-[#FFFBEB] relative"><img src="${url}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-[9px] text-center py-0.5">prévia ${i+1}</div></div>`).join("") + `<div class="col-span-3 text-[11px] text-[#92400E] mt-1">Comprimindo ${files.length} fotos... clique em Salvar pra confirmar</div>`;
 
-toast(`Prévia de ${files.length} fotos - comprimindo...`);
+toast(`Prévia de ${files.length} fotos - clique em Salvar pra confirmar`);
 
-// 2. COMPRIME E SALVA, MOSTRANDO NA GRID PRINCIPAL TAMBÉM
-let grid=document.getElementById("qcGrid");
-document.getElementById("qcEmpty").classList.add("hidden");
-let currentHtml=grid.innerHTML;
-
-for(let i=0; i<files.length; i++){
-  let f=files[i];
-  // Mostra na grid principal com loading
-  let loadingId=`loading-${Date.now()}-${i}`;
-  grid.innerHTML+=`<div id="${loadingId}" class="aspect-square rounded-[14px] overflow-hidden border border-dashed bg-[#F6F5F1] grid place-items-center"><span class="text-[10px] text-zinc-400">comprimindo...</span></div>`;
-  
+// Comprime em background mas NÃO salva ainda, só guarda no pendingQc
+pendingQc=[];
+for(let f of files){
   try{
     let b=await compressImage(f,1280,0.7);
-    o.fotos.push(b);
-    // Substitui loading por imagem real
-    let el=document.getElementById(loadingId);
-    if(el){
-      el.outerHTML=`<div class="relative aspect-square rounded-[14px] overflow-hidden border"><img src="${b}" class="w-full h-full object-cover"><button onclick="removeQc(${o.fotos.length-1})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white text-[10px]">✕</button></div>`;
-    }
-    document.getElementById("qcC").textContent=o.fotos.length;
-    // Limpa preview parcial
-    tempUrls.forEach(url=>URL.revokeObjectURL(url));
-  }catch(err){
-    let el=document.getElementById(loadingId);
-    if(el) el.innerHTML=`<span class="text-[10px] text-red-500">erro</span>`;
-  }
+    pendingQc.push(b);
+  }catch(err){}
 }
+tempUrls.forEach(url=>URL.revokeObjectURL(url));
+// Atualiza prévia com versões comprimidas
+pendingGrid.innerHTML = pendingQc.map((b,i)=>`<div class="aspect-square rounded-[14px] overflow-hidden border-2 border-dashed border-[#FFD60A] bg-[#FFFBEB] relative"><img src="${b}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-[9px] text-center py-0.5">pronta pra salvar</div></div>`).join("");
 
-localStorage.setItem(KEY,JSON.stringify(orders));
-previewArea.classList.add("hidden");
-previewGrid.innerHTML="";
 e.target.value="";
-toast(`✅ ${files.length} fotos salvas • Total ${o.fotos.length}/10 - já visível pro cliente`);
-renderQcGrid(o);
 });
 
 window.removeQc=(i)=>{let o=orders.find(x=>x.id===sel); o.fotos.splice(i,1); localStorage.setItem(KEY,JSON.stringify(orders)); renderQcGrid(o);};
+
 document.getElementById("selStatus")?.addEventListener("change",e=>{let o=orders.find(x=>x.id===sel); if(!o) return; o.status=e.target.value; localStorage.setItem(KEY,JSON.stringify(orders)); toast("Status → "+e.target.value); renderAdminList();});
-document.getElementById("btnSave")?.addEventListener("click",()=>{let o=orders.find(x=>x.id===sel); if(!o) return; o.cliente=document.getElementById("eCli").value; o.produto=document.getElementById("eProd").value; o.valor=parseFloat(document.getElementById("eVal").value)||0; o.peso=document.getElementById("ePeso").value; o.pesoUn=document.getElementById("ePesoUn").value; o.freteInterno=document.getElementById("eFreteInt").value; o.freteBR=document.getElementById("eFreteBR").value; o.rastreio=document.getElementById("eRast").value; if(window.tempEditCapa) o.capa=window.tempEditCapa; localStorage.setItem(KEY,JSON.stringify(orders)); toast("Salvo"); renderAdminList();});
+
+// BOTÃO SALVAR - AGORA FUNCIONA E SALVA PENDING
+document.getElementById("btnSave")?.addEventListener("click",()=>{
+let o=orders.find(x=>x.id===sel); if(!o) return;
+o.cliente=document.getElementById("eCli").value;
+o.produto=document.getElementById("eProd").value;
+o.valor=parseFloat(document.getElementById("eVal").value)||0;
+o.peso=document.getElementById("ePeso").value;
+o.pesoUn=document.getElementById("ePesoUn").value;
+o.freteInterno=document.getElementById("eFreteInt").value;
+o.freteBR=document.getElementById("eFreteBR").value;
+o.rastreio=document.getElementById("eRast").value;
+if(window.tempEditCapa) o.capa=window.tempEditCapa;
+
+// Se tem fotos pendentes, move pra fotos oficiais
+if(pendingQc.length>0){
+  let espaco=10-o.fotos.length;
+  let paraAdd=pendingQc.slice(0,espaco);
+  o.fotos.push(...paraAdd);
+  toast(`✅ ${paraAdd.length} fotos QC salvas • Total ${o.fotos.length}/10`);
+  pendingQc=[];
+  document.getElementById("qcPendingWrap").classList.add("hidden");
+  document.getElementById("qcPendingGrid").innerHTML="";
+}
+
+localStorage.setItem(KEY,JSON.stringify(orders));
+renderQcGrid(o);
+renderAdminList();
+toast("✅ Pedido salvo • Cliente já vê atualizado");
+});
+
 document.getElementById("btnDel")?.addEventListener("click",()=>openDel(sel));
 document.getElementById("confirmDel")?.addEventListener("click",()=>{if(!pendingDel) return; orders=orders.filter(x=>x.id!==pendingDel); localStorage.setItem(KEY,JSON.stringify(orders)); closeDel(); closeDrawer(); renderAdminList(); toast("Excluído");});
 document.getElementById("btnCopy")?.addEventListener("click",()=>{let url=location.origin+location.pathname+"?track="+sel; navigator.clipboard.writeText(url); toast("Link copiado");});
