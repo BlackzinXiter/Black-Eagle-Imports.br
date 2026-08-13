@@ -387,12 +387,71 @@ span.bg-\[\#FFF7CC\]{ background:rgba(224,255,96,0.2) !important; color:#CCFF00 
   50%{ box-shadow:0 0 20px rgba(204,255,0,0.6), 0 0 40px rgba(204,255,0,0.3); }
 }
 </style>
+
+<style id="qc-gallery-neon-redesign">
+/* GALLERY MODAL - QC PHOTOS NEON REDESIGN */
+#galleryModal{
+  background:#050505 !important;
+}
+#galleryModal .h-\[76px\]{
+  background:#0F0F0F !important;
+  border-bottom:2px solid rgba(204,255,0,0.15) !important;
+}
+#galleryModal .w-10.h-10.rounded-\[12px\].bg-white{
+  background:#CCFF00 !important;
+  color:#000 !important;
+  font-weight:900 !important;
+  box-shadow:0 0 15px rgba(204,255,0,0.4) !important;
+}
+#galleryModal .text-white.font-bold.text-\[13px\]{
+  color:#CCFF00 !important;
+}
+#galleryModal #galleryImg{
+  border:2px solid rgba(204,255,0,0.2) !important;
+  box-shadow:0 0 60px rgba(0,0,0,0.8), 0 0 30px rgba(204,255,0,0.1) !important;
+}
+#galleryModal .bg-\[\#0F0F0F\].border-t{
+  background:#0F0F0F !important;
+  border-top:2px solid rgba(204,255,0,0.15) !important;
+}
+#galleryThumbs .ring-2.ring-white{
+  --tw-ring-color:#CCFF00 !important;
+  box-shadow:0 0 20px rgba(204,255,0,0.5) !important;
+}
+#galleryThumbs .ring-offset-\[\#0F0F0F\]{
+  --tw-ring-offset-color:#0F0F0F !important;
+}
+#galleryThumbs div{
+  border-width:2px !important;
+  transition: all 0.3s ease !important;
+}
+#galleryThumbs div:hover{
+  border-color:#CCFF00 !important;
+  box-shadow:0 0 15px rgba(204,255,0,0.4) !important;
+  transform: scale(1.05) !important;
+}
+
+/* CLIENT QC GRID - MORE PREMIUM */
+#app .mt-8 .grid.grid-cols-3 .aspect-square{
+  border:2px solid rgba(255,255,255,0.06) !important;
+  background:#0A0A0A !important;
+}
+#app .mt-8 .grid.grid-cols-3 .aspect-square:hover{
+  border-color:#CCFF00 !important;
+}
+
+/* LOADING ANIMATIONS */
+@keyframes shimmer{
+  0%{ transform:translateX(-100%); }
+  100%{ transform:translateX(200%); }
+}
+</style>
 </head>
 <body class="bg-[#080808]">
 <div id="app"></div>
 
-<div id="galleryModal" class="hidden fixed inset-0 z-[200] bg-[#080808] flex flex-col">
-  <div class="h-[76px] flex items-center justify-between px-5 md:px-8 bg-[#0F0F0F] border-b border-white/[0.06] shrink-0">
+<div id="galleryModal" class="hidden fixed inset-0 z-[200] bg-[#050505] flex flex-col">
+  <div class="h-[76px] flex items-center justify-between px-5 md:px-8 bg-[#0F0F0F] border-b-2 border-[#CCFF00]/15 shrink-0">
     <div class="flex items-center gap-5">
       <div class="w-10 h-10 rounded-[12px] bg-white text-black grid place-items-center font-black text-[16px]">J</div>
       <div class="hidden md:block w-px h-8 bg-white/[0.08]"></div>
@@ -430,7 +489,7 @@ span.bg-\[\#FFF7CC\]{ background:rgba(224,255,96,0.2) !important; color:#CCFF00 
       <span id="galleryCounterMobile">1 / 5</span>
     </div>
   </div>
-  <div class="bg-[#0F0F0F] border-t border-white/[0.06] shrink-0">
+  <div class="bg-[#0F0F0F] border-t-2 border-[#CCFF00]/15 shrink-0">
     <div class="px-5 md:px-8 py-4">
       <div id="galleryThumbs" class="flex gap-2.5 overflow-x-auto scrollbar-hide"></div>
       <div id="galleryDateInfo" class="mt-3 text-white/20 text-[10px] tracking-widest mono text-center"></div>
@@ -651,7 +710,7 @@ if(!o.fotos || o.fotos.length===0){grid.innerHTML=""; empty.classList.remove("hi
 }
 
 async function renderClientPageLive(trackId){
-document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-[#121212] border border-white/[0.08] rounded-[28px] p-8 text-center animate-fadeIn"><div class="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div><div class="font-bold mt-4">Carregando...</div></div></div>`;
+document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-[#121212] border-2 border-[#CCFF00]/20 rounded-[28px] p-8 text-center animate-fadeIn shadow-[0_0_60px_rgba(204,255,0,0.1)]"><div class="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div><div class="font-bold mt-4">Carregando...</div></div></div>`;
   if(clientUnsub) clientUnsub();
   clientUnsub = onSnapshot(doc(db,"pedidos",trackId), (snap)=>{
     if(!snap.exists()){
@@ -711,7 +770,7 @@ ${o.fotosAtualizadasEm ? `<div class="mt-3 text-[11px] text-zinc-500 mono bg-whi
 </div>`:`<div class="mt-8 border border-dashed rounded-[20px] p-8 text-center bg-[#FBFAF7]"><div class="font-bold text-[14px]">Fotos em produção</div><div class="text-[12px] text-zinc-500 mt-2">Assim que chegar ao galpão nossa equipe irá colocar as fotos aqui</div></div>`}
 
 </div></div>
-<div class="mt-6 text-center text-[11px] tracking-widest text-zinc-400 uppercase">© 2026 Jaguarara Imports • Galpão Shenzhen</div>
+<div class="mt-6 text-center text-[11px] tracking-widest text-zinc-400 uppercase">© 2026 JAGUARARA IMPORTS • Todos os direitos reservados</div>
 </div></div>
 `;
 }
