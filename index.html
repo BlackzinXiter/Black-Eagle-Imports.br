@@ -125,6 +125,69 @@ span.bg-\[\#FFF7CC\]{ background:rgba(204,255,0,0.2) !important; color:#CCFF00 !
 /* Gallery stays dark already */
 #galleryModal{ background:#050505 !important; }
 </style>
+
+<style id="client-neon-fix">
+/* CLIENT PAGE DARK FIX */
+.bg-\[\#080808\]{ background:#080808 !important; }
+.bg-\[\#121212\]{ background:#121212 !important; }
+
+/* Client header */
+.max-w-\[720px\] .flex.justify-between .bg-black{ background:#fff !important; color:#000 !important; }
+.max-w-\[720px\] .flex.justify-between .font-black{ color:#fff !important; }
+
+/* Client name area - fix white on white bug */
+.w-14.h-14.rounded-full.bg-black{ background:#CCFF00 !important; color:#000 !important; }
+.text-\[11px\].tracking-widest.text-zinc-400{ color:rgba(255,255,255,0.4) !important; }
+.font-black.text-\[22px\]{ color:#fff !important; }
+.text-\[13px\].text-zinc-500{ color:rgba(255,255,255,0.5) !important; }
+
+/* Boxes neon - Valor Pago etc */
+.bg-\[\#121212\].rounded-\[20px\] .text-\[10px\]{ color:rgba(255,255,255,0.4) !important; }
+.bg-\[\#121212\].rounded-\[20px\] .font-black{ color:#fff !important; }
+.bg-\[\#121212\].rounded-\[20px\] .text-\[11px\]{ color:rgba(255,255,255,0.5) !important; }
+
+/* Frete Internacional neon */
+.bg-\[\#CCFF00\]\/10 .text-white\/50{ color:rgba(204,255,0,0.6) !important; }
+.bg-\[\#CCFF00\]\/10 .text-white\/60{ color:rgba(204,255,0,0.8) !important; }
+
+/* Tracking section */
+.text-\[11px\].font-black.tracking-widest.uppercase{ color:#fff !important; }
+.bg-\[\#F6F5F1\].border.font-bold{ background:#1E1E1E !important; color:#CCFF00 !important; border-color:rgba(204,255,0,0.2) !important; }
+
+/* Timeline */
+.absolute.left-\[15px\].top-2.bottom-2.w-\[2px\].bg-\[\#F0EFEB\]{ background:rgba(255,255,255,0.08) !important; }
+.absolute.left-\[15px\].top-2.w-\[2px\].bg-black{ background:#CCFF00 !important; box-shadow:0 0 8px rgba(204,255,0,0.6) !important; }
+.w-\[32px\].h-\[32px\].rounded-full.border-2{ background:#121212 !important; border-color:rgba(255,255,255,0.1) !important; color:rgba(255,255,255,0.3) !important; }
+.w-\[32px\].h-\[32px\].rounded-full.border-2.bg-black{ background:#CCFF00 !important; border-color:#CCFF00 !important; color:#000 !important; box-shadow:0 0 12px rgba(204,255,0,0.5) !important; }
+.w-\[2px\].flex-1.mt-2.bg-black{ background:#CCFF00 !important; }
+.w-\[2px\].flex-1.mt-2.bg-\[\#F0EFEB\]{ background:rgba(255,255,255,0.08) !important; }
+
+/* Timeline text */
+.text-\[13px\].font-bold{ color:#fff !important; }
+.text-\[13px\].font-bold.text-zinc-400{ color:rgba(255,255,255,0.3) !important; }
+.text-\[12px\].text-zinc-600{ color:rgba(255,255,255,0.6) !important; }
+.text-\[10px\].text-zinc-400{ color:rgba(255,255,255,0.4) !important; }
+
+/* Date badges */
+.mono.bg-\[\#F6F5F1\]{ background:#1E1E1E !important; color:rgba(255,255,255,0.6) !important; border-color:rgba(255,255,255,0.08) !important; }
+.mono.bg-white{ background:#1E1E1E !important; color:rgba(255,255,255,0.6) !important; border-color:rgba(255,255,255,0.08) !important; }
+
+/* Photos section */
+.aspect-square.rounded-\[16px\].overflow-hidden.border{ background:#121212 !important; border-color:rgba(255,255,255,0.08) !important; }
+.aspect-square.rounded-\[16px\].overflow-hidden.border:hover{ border-color:rgba(204,255,0,0.4) !important; }
+.border.border-dashed.rounded-\[20px\].p-8{ background:#121212 !important; border-color:rgba(255,255,255,0.1) !important; }
+.border.border-dashed.rounded-\[20px\].p-8 .font-bold{ color:#fff !important; }
+.border.border-dashed.rounded-\[20px\].p-8 .text-zinc-500{ color:rgba(255,255,255,0.5) !important; }
+
+/* Footer */
+.text-center.text-\[11px\].tracking-widest.text-zinc-400{ color:rgba(255,255,255,0.25) !important; }
+
+/* Fix image container */
+.w-full.aspect-\[4\/3\].rounded-\[24px\]{ background:#0A0A0A !important; border-color:rgba(255,255,255,0.06) !important; }
+
+/* Top gradient neon */
+.h-\[4px\].bg-gradient-to-r{ background:linear-gradient(90deg, #CCFF00 0%, #00FF88 100%) !important; }
+</style>
 </head>
 <body class="bg-[#080808]">
 <div id="app"></div>
@@ -389,11 +452,11 @@ if(!o.fotos || o.fotos.length===0){grid.innerHTML=""; empty.classList.remove("hi
 }
 
 async function renderClientPageLive(trackId){
-document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-8 text-center animate-fadeIn"><div class="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div><div class="font-bold mt-4">Carregando...</div></div></div>`;
+document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-[#121212] border border-white/[0.08] rounded-[28px] p-8 text-center animate-fadeIn"><div class="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div><div class="font-bold mt-4">Carregando...</div></div></div>`;
   if(clientUnsub) clientUnsub();
   clientUnsub = onSnapshot(doc(db,"pedidos",trackId), (snap)=>{
     if(!snap.exists()){
-      document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8"><div class="bg-white rounded-[28px] border p-8 text-center">Pedido ${trackId} não encontrado</div></div>`;
+      document.getElementById("app").innerHTML=`<div class="min-h-screen grid place-items-center p-8 bg-[#080808]"><div class="bg-[#121212] border border-white/[0.08] rounded-[28px] p-8 text-center text-white">Pedido ${trackId} não encontrado</div></div>`;
       return;
     }
     let o={id:snap.id, ...snap.data()};
@@ -410,17 +473,17 @@ function renderClientContent(o){
   let hasWeight = idx >= idxChegou && o.peso;
   let hasFreteBR = idx >= idxAguardando && o.freteBR;
   let boxesHtml = '';
-  boxesHtml += `<div class="bg-[#18181B] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Valor Pago</div><div class="font-black text-[18px] mt-2">${fmt(o.valor)}</div><div class="text-[11px] text-zinc-500 mt-1">BRL</div></div>`;
-  if(o.freteInterno){ boxesHtml += `<div class="bg-[#18181B] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Frete Interno</div><div class="font-black text-[18px] mt-2">¥ ${o.freteInterno}</div><div class="text-[11px] text-zinc-500 mt-1">China</div></div>`; }
-  if(hasWeight){ boxesHtml += `<div class="bg-[#18181B] rounded-[20px] border border-[#EDEBE6] p-5"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Peso Real</div><div class="font-black text-[18px] mt-2">${o.peso}${o.pesoUn||"g"}</div><div class="text-[11px] text-zinc-500 mt-1">conferido</div></div>`; }
-  if(hasFreteBR){ boxesHtml += `<div class="bg-[#0A0A0A] rounded-[20px] p-5 text-white"><div class="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">Frete Internacional</div><div class="font-black text-[18px] mt-2">R$ ${o.freteBR}</div><div class="text-[11px] text-white/60 mt-1">China → Brasil</div></div>`; }
+  boxesHtml += `<div class="bg-[#121212] rounded-[20px] border border-[#CCFF00]/30 p-5 hover:border-[#CCFF00]/60 transition-colors"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Valor Pago</div><div class="font-black text-[18px] mt-2">${fmt(o.valor)}</div><div class="text-[11px] text-zinc-500 mt-1">BRL</div></div>`;
+  if(o.freteInterno){ boxesHtml += `<div class="bg-[#121212] rounded-[20px] border border-[#CCFF00]/30 p-5 hover:border-[#CCFF00]/60 transition-colors"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Frete Interno</div><div class="font-black text-[18px] mt-2">¥ ${o.freteInterno}</div><div class="text-[11px] text-zinc-500 mt-1">China</div></div>`; }
+  if(hasWeight){ boxesHtml += `<div class="bg-[#121212] rounded-[20px] border border-[#CCFF00]/30 p-5 hover:border-[#CCFF00]/60 transition-colors"><div class="text-[10px] font-bold tracking-[0.16em] text-zinc-400 uppercase">Peso Real</div><div class="font-black text-[18px] mt-2">${o.peso}${o.pesoUn||"g"}</div><div class="text-[11px] text-zinc-500 mt-1">conferido</div></div>`; }
+  if(hasFreteBR){ boxesHtml += `<div class="bg-[#CCFF00]/10 rounded-[20px] border border-[#CCFF00]/40 p-5 text-white"><div class="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">Frete Internacional</div><div class="font-black text-[18px] mt-2">R$ ${o.freteBR}</div><div class="text-[11px] text-white/60 mt-1">China → Brasil</div></div>`; }
 
   document.getElementById("app").innerHTML=`
-<div class="min-h-screen bg-[#18181B] py-6 px-4">
+<div class="min-h-screen bg-[#080808] py-6 px-4">
 <div class="max-w-[720px] mx-auto">
 <div class="flex justify-between items-center mb-6"><div class="flex items-center gap-2"><div class="w-9 h-9 rounded-[12px] bg-black text-white grid place-items-center">🐆</div><div class="font-black text-[13px] leading-none">JAGUARARA<br>IMPORTS</div></div><div class="text-[11px] px-3 py-1 rounded-full bg-black text-white font-bold">PREMIUM</div></div>
 
-<div class="bg-white rounded-[32px] border shadow-[0_16px_48px_rgba(0,0,0,0.08)] overflow-hidden">
+<div class="bg-[#121212] rounded-[32px] border border-white/[0.08] shadow-[0_16px_48px_rgba(0,0,0,0.5)] overflow-hidden">
 <div class="h-[4px] bg-gradient-to-r from-[#009739] via-[#FFD60A] to-[#002776]"></div>
 <div class="p-6 md:p-8">
 <div class="flex items-center gap-4 mb-6"><div class="w-14 h-14 rounded-full bg-black text-white grid place-items-center font-bold text-[18px]">${o.cliente[0]?.toUpperCase()||"C"}</div><div><div class="text-[11px] tracking-widest text-zinc-400 font-bold uppercase">Cliente Premium</div><div class="font-black text-[22px] leading-none mt-1">Olá, ${o.cliente} 👋</div><div class="text-[13px] text-zinc-500 mt-1">Galpão Shenzhen, Guangdong, China</div></div></div>
