@@ -656,6 +656,22 @@ document.getElementById("app").innerHTML=`
 <div class="text-[10px] text-white/40 mt-1 line-clamp-1">Fotos reais disponíveis para conferência...</div>
 </button>
 
+<button onclick="copyMsg('vendedor')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">🏭 VENDEDOR ENVIOU</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Fornecedor enviou pro nosso galpão em Shenzhen...</div>
+</button>
+
+<button onclick="copyMsg('embalado')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">📦 PEDIDO EMBALADO</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Embalado e aguardando confirmação do frete...</div>
+</button>
+
 <button onclick="copyMsg('enviado')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
 <div class="flex justify-between items-center">
 <div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">✈️ ENVIADO AO BRASIL</div>
@@ -957,8 +973,10 @@ window.copyMsg=(tipo)=>{
   let prod = o.produto;
   let msgs={
     confirmado: `Fala ${nome}! 🐆\n\nSeu pedido *${prod}* foi CONFIRMADO no sistema ✅\n\nID: ${o.id}\nStatus: PEDIDO CONFIRMADO - Shenzhen\n\nAcompanha aqui: ${link}\n\nQualquer dúvida me chama!\nJAGUARARA IMPORTS`,
+    vendedor: `Fala ${nome}! 🏭\n\nAtualização do seu *${prod}* - O vendedor ENVIOU! ✅\n\nO fornecedor despachou e já está a caminho do nosso galpão em Shenzhen, Guangdong 🇨🇳\n\nID: ${o.id}\nEm trânsito pro galpão oficial\n\nAcompanha: ${link}\n\nAssim que chegar lá eu te aviso e já faço a conferência! 📦\nJAGUARARA IMPORTS`,
     galpao: `Fala ${nome}! 📦\n\nBoa notícia! Seu *${prod}* CHEGOU NO NOSSO GALPÃO em Shenzhen, Guangdong 🇨🇳\nPeso conferido e armazenado com segurança!\n\nID: ${o.id}\n\nPróximo passo: Inspeção QC com fotos reais 📸\nAcompanha: ${link}\n\nJAGUARARA IMPORTS`,
     qc: `Fala ${nome}! 📸\n\nSeu *${prod}* passou pela INSPEÇÃO QC! Fotos reais disponíveis ✅\n\nConferimos autenticidade, detalhes e qualidade.\n\nID: ${o.id}\nVeja as fotos: ${link}\n\nMe confirma se aprova pra gente enviar pro Brasil! ✈️\nJAGUARARA IMPORTS`,
+    embalado: `Fala ${nome}! 📦\n\nSeu *${prod}* já foi EMBALADO! ✅\n\nPassou na inspeção QC, foi embalado com proteção premium e agora está ARMAZENADO no nosso galpão em Shenzhen aguardando a confirmação do frete China-Brasil ✈️\n\nID: ${o.id}\nPeso real: ${o.peso||''}${o.pesoUn||'g'}\n\nAcompanha: ${link}\n\nAssim que liberar o frete a gente despacha! 🚀\nJAGUARARA IMPORTS`,
     enviado: `Fala ${nome}! ✈️\n\nSeu *${prod}* foi ENVIADO AO BRASIL! Saiu de Shenzhen agora 🇨🇳➡️🇧🇷\n\nID: ${o.id}\nEm trânsito internacional - Curitiba/PR é o destino\nRastreio: ${o.rastreio||'Em atualização'}\n\nAcompanha: ${link}\n\nJAGUARARA IMPORTS`,
     brasil: `Fala ${nome}! 🇧🇷\n\nChegou! Seu *${prod}* CHEGOU NO BRASIL - Curitiba/PR 📍\n\nEstá em FISCALIZAÇÃO ADUANEIRA, aguardando liberação da Receita. Isso pode levar 2-7 dias.\n\nID: ${o.id}\n\nAcompanha em tempo real: ${link}\n\nAssim que liberar eu te aviso! 🚚\nJAGUARARA IMPORTS`,
     saiu: `Fala ${nome}! 🚚💨\n\nLIBERADO! Seu *${prod}* SAIU PARA ENTREGA!\n\nFoi liberado da alfândega em Curitiba e já está em rota pro seu endereço! 🇧🇷\n\nID: ${o.id}\nRastreio: ${o.rastreio||''}\n\nAcompanha os últimos passos: ${link}\n\nFica de olho no rastreio! 👀\nJAGUARARA IMPORTS`,
