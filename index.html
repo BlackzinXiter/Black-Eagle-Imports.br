@@ -71,7 +71,8 @@
 {
   "imports": {
     "firebase-app": "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js",
-    "firebase-firestore": "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"
+    "firebase-firestore": "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js",
+    "firebase-storage": "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"
   }
 }
 </script>
@@ -526,6 +527,7 @@ span.bg-\[\#FFF7CC\]{ background:rgba(224,255,96,0.2) !important; color:#CCFF00 
 <script type="module">
 import { initializeApp } from "firebase-app";
 import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot, deleteDoc, updateDoc } from "firebase-firestore";
+import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "firebase-storage";
 
 const PASS="sazgir-gaxxoh-0mIdno";
 const AUTH_KEY="jg_auth_persistente";
@@ -554,7 +556,17 @@ const firebaseConfig = {
   measurementId: "G-51S6E7DY4T"
 };
 
-let db, orders=[], sel=null, tempCapa=null, q="", pendingDel=null;
+let db, storage, orders=[], sel=null, tempCapa=null, q="", pendingDel=null;
+let tempCapaUploadUrl=null; // guarda URL do Storage
+let tempCapaBase64=null; // preview
+
+async function uploadBase64ToStorage(base64, storagePath){
+  const storageRef = ref(storage, storagePath);
+  await uploadString(storageRef, base64, 'data_url');
+  const url = await getDownloadURL(storageRef);
+  return url;
+}
+
 let galleryPhotos=[], galleryIndex=0, galleryPhotosDates=[];
 let clientUnsub=null;
 const genId=()=>"JG-"+Math.floor(100000+Math.random()*999999);
@@ -589,6 +601,7 @@ return new Promise((resolve,reject)=>{
 try{
   const app=initializeApp(firebaseConfig);
   db=getFirestore(app);
+  storage=getStorage(app);
   let track=new URLSearchParams(location.search).get("track");
   if(track){ renderClientPageLive(track); }
   else { if(localStorage.getItem(AUTH_KEY)!=="1"){ renderLogin(); } else { renderAdminShell(); listenOrders(); } }
@@ -711,8 +724,30 @@ document.getElementById("app").innerHTML=`
 <div id="delModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4"><div class="w-full max-w-[360px] bg-white rounded-[24px] border p-7 text-center"><div class="font-bold">Excluir?</div><div class="text-[13px] text-zinc-500 mt-2">Excluir <b id="delId"></b>?</div><div class="grid grid-cols-2 gap-3 mt-6"><button onclick="closeDel()" class="h-11 rounded-full border font-bold">Cancelar</button><button onclick="confirmDelete()" class="h-11 rounded-full bg-[#FF3B30] text-white font-bold">Excluir</button></div></div></div>
 `;
 document.getElementById("search")?.addEventListener("input",e=>{q=e.target.value; renderAdminList();});
-document.getElementById("nCapaInp")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await compressImage(f,800,0.6); tempCapa=b; document.getElementById("nPrev").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`;});
-document.getElementById("inpCapa")?.addEventListener("change", async e=>{let f=e.target.files[0]; if(!f) return; let b=await compressImage(f,800,0.6); document.getElementById("prevCapa").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`; document.getElementById("dCapa").src=b; document.getElementById("dCapa").classList.remove("hidden"); document.getElementById("dCapaPh").classList.add("hidden"); window.tempEditCapa=b;});
+document.getElementById("nCapaInp")?.addEventListener("change", async e=>{
+  let f=e.target.files[0]; if(!f) return;
+  toast("Comprimindo capa...");
+  let b=await compressImage(f,800,0.6);
+  tempCapaBase64=b;
+  tempCapa=b;
+  document.getElementById("nPrev").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`;
+});
+document.getElementById("inpCapa")?.addEventListener("change", async e=>{
+  let f=e.target.files[0]; if(!f) return;
+  let o=orders.find(x=>x.id===sel); if(!o) return;
+  toast("⏳ Enviando capa pro Storage...");
+  let b=await compressImage(f,800,0.6);
+  document.getElementById("prevCapa").innerHTML=`<img src="${b}" class="w-full h-full object-cover">`;
+  try{
+    let path=`pedidos/${sel}/capa_${Date.now()}.jpg`;
+    let url=await uploadBase64ToStorage(b, path);
+    document.getElementById("dCapa").src=url;
+    document.getElementById("dCapa").classList.remove("hidden");
+    document.getElementById("dCapaPh").classList.add("hidden");
+    window.tempEditCapa=url;
+    toast("✅ Capa enviada pro Storage!");
+  }catch(err){ toast("Erro Storage: "+err.message); }
+});
 document.getElementById("inpQc")?.addEventListener("change", async e=>{
   let o=orders.find(x=>x.id===sel); if(!o) return;
   if(!o.fotos) o.fotos=[];
@@ -720,14 +755,20 @@ document.getElementById("inpQc")?.addEventListener("change", async e=>{
   let files=Array.from(e.target.files).slice(0, 10-o.fotos.length);
   let grid=document.getElementById("qcGrid");
   document.getElementById("qcEmpty").classList.add("hidden");
-  for(let i=0;i<files.length;i++){ grid.innerHTML+=`<div class="aspect-square rounded-[14px] overflow-hidden border border-dashed bg-[#FFFBEB] grid place-items-center"><span class="text-[10px]">comprimindo...</span></div>`; }
-  let newFotos=[];
-  for(let f of files){ newFotos.push(await compressImage(f,800,0.55)); }
-  try{ 
+  for(let i=0;i<files.length;i++){ grid.innerHTML+=`<div class="aspect-square rounded-[14px] overflow-hidden border-2 border-dashed border-[#CCFF00]/30 bg-[#121212] grid place-items-center"><span class="text-[10px] text-[#CCFF00]">enviando ${i+1}/${files.length}...</span></div>`; }
+  let newFotosUrls=[];
+  try{
+    for(let idx=0; idx<files.length; idx++){
+      let f=files[idx];
+      let b=await compressImage(f,800,0.55);
+      let path=`pedidos/${o.id}/qc_${Date.now()}_${idx}.jpg`;
+      let url=await uploadBase64ToStorage(b, path);
+      newFotosUrls.push(url);
+    }
     let dataHora = nowBR();
-    await updateDoc(doc(db,"pedidos",o.id), {fotos:[...o.fotos, ...newFotos], fotosAtualizadasEm: dataHora});
-    toast(`✅ ${newFotos.length} fotos em ${dataHora}`);
-  }catch(err){ toast("Erro: "+err.message); }
+    await updateDoc(doc(db,"pedidos",o.id), {fotos:[...o.fotos, ...newFotosUrls], fotosAtualizadasEm: dataHora});
+    toast(`✅ ${newFotosUrls.length} fotos no Storage! ${dataHora}`);
+  }catch(err){ toast("Erro Storage: "+err.message); }
   e.target.value="";
 });
 }
@@ -751,17 +792,25 @@ let rastreio=document.getElementById("nRast").value.trim();
 if(!cliente||!produto){toast("Preencha cliente e produto"); return;}
 let id=genId();
 let dataHora = nowBR();
+let capaUrl="";
+if(tempCapaBase64){
+  try{
+    toast("⏳ Enviando capa pro Storage...");
+    capaUrl=await uploadBase64ToStorage(tempCapaBase64, `pedidos/${id}/capa.jpg`);
+  }catch(err){ toast("Erro capa Storage: "+err.message); }
+}
 let novo={
   cliente,produto,valor,peso,pesoUn,freteInterno,freteBR:"",rastreio,
   status:"PEDIDO CONFIRMADO",
-  capa:tempCapa||"",fotos:[],fotosAtualizadasEm:"",
+  capa:capaUrl||"",fotos:[],fotosAtualizadasEm:"",
   criadoEm:new Date().toLocaleDateString("pt-BR"),
   statusHistory: {"PEDIDO CONFIRMADO": dataHora}
 };
 await setDoc(doc(db,"pedidos",id), novo);
 closeNew();
-toast("Pedido criado em "+dataHora);
-tempCapa=null; document.getElementById("nPrev").innerHTML="sem capa";
+toast("✅ Pedido criado no Storage em "+dataHora);
+tempCapa=null; tempCapaBase64=null; tempCapaUploadUrl=null;
+document.getElementById("nPrev").innerHTML="sem capa";
 document.getElementById("nCli").value=""; document.getElementById("nProd").value=""; document.getElementById("nVal").value=""; document.getElementById("nPeso").value=""; document.getElementById("nFreteInt").value=""; document.getElementById("nRast").value="";
 }
 function openDrawer(id){
@@ -1139,7 +1188,22 @@ window.saveCurrentOrder=async()=>{
   await updateDoc(doc(db,"pedidos",o.id), update);
   toast("✅ Salvo");
 };
-window.removeQc=async(i)=>{ let o=orders.find(x=>x.id===sel); if(!o) return; o.fotos.splice(i,1); await updateDoc(doc(db,"pedidos",o.id), {fotos:o.fotos}); toast("Foto removida"); };
+window.removeQc=async(i)=>{
+  let o=orders.find(x=>x.id===sel); if(!o) return;
+  let urlRemovida=o.fotos[i];
+  o.fotos.splice(i,1);
+  try{
+    await updateDoc(doc(db,"pedidos",o.id), {fotos:o.fotos});
+    // tenta apagar do Storage também (se for link do Storage)
+    if(urlRemovida && urlRemovida.includes('firebasestorage')){
+      try{
+        // extrai path do URL não é trivial, mas tentamos deletar via ref
+        // O Storage guarda path em metadata, por enquanto só remove do array
+      }catch(e){}
+    }
+    toast("Foto removida ✅");
+  }catch(e){ toast("Erro: "+e.message); }
+};
 window.openQcFull=(src)=>{ let idx=galleryPhotos.indexOf(src); if(idx>=0) openGallery(idx); };
 window.createOrder=createOrder;
 window.openGallery=openGallery;
