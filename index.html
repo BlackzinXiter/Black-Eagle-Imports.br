@@ -625,7 +625,82 @@ document.getElementById("app").innerHTML=`
 </div>
 <div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between"><div class="text-[11px] font-bold">CAPA</div><button onclick="document.getElementById('inpCapa').click()" class="text-[11px] font-bold px-3 h-7 rounded-full bg-[#18181B] border">Trocar</button></div><div id="prevCapa" class="mt-3 w-[96px] h-[96px] rounded-[14px] bg-[#18181B] border border-dashed grid place-items-center text-[11px] overflow-hidden">sem capa</div><input id="inpCapa" type="file" accept="image/*" class="hidden"></div>
 <div class="bg-white rounded-[16px] border p-4"><div class="flex justify-between items-center"><div class="text-[11px] font-bold">FOTOS QC (<span id="qcC">0</span>/10)</div><button onclick="document.getElementById('inpQc').click()" class="h-7 px-3 rounded-full bg-black text-white text-[11px] font-bold">+ Adicionar</button></div><div id="qcGrid" class="mt-3 grid grid-cols-3 gap-2"></div><div id="qcEmpty" class="mt-3 border border-dashed rounded-[14px] p-5 text-center bg-[#FBFAF7] text-[12px] text-zinc-500">Nenhuma foto</div><input id="inpQc" type="file" multiple accept="image/*" class="hidden"></div>
+
+<div class="bg-[#121212] border border-[#CCFF00]/20 rounded-[16px] p-4">
+<div class="flex justify-between items-center mb-3">
+<div class="text-[11px] font-black tracking-widest text-[#CCFF00]">💬 MENSAGENS RÁPIDAS • CLIQUE PARA COPIAR</div>
+<span class="text-[9px] text-white/40 font-bold">WHATSAPP</span>
+</div>
+<div class="space-y-2">
+<button onclick="copyMsg('confirmado')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">✅ PEDIDO CONFIRMADO</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Seu pedido foi confirmado no sistema...</div>
+</button>
+
+<button onclick="copyMsg('galpao')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">📦 CHEGOU NO GALPÃO</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Chegou no nosso galpão em Shenzhen, peso conferido...</div>
+</button>
+
+<button onclick="copyMsg('qc')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">📸 INSPEÇÃO QC</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Fotos reais disponíveis para conferência...</div>
+</button>
+
+<button onclick="copyMsg('enviado')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">✈️ ENVIADO AO BRASIL</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Seu pedido foi despachado de Shenzhen...</div>
+</button>
+
+<button onclick="copyMsg('brasil')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">🇧🇷 CHEGOU NO BRASIL</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Chegou em Curitiba/PR, em fiscalização aduaneira...</div>
+</button>
+
+<button onclick="copyMsg('saiu')" class="w-full text-left bg-[#CCFF00]/10 hover:bg-[#CCFF00]/20 border border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-[#CCFF00]">🚚 SAIU PARA ENTREGA</div>
+<div class="text-[9px] bg-[#CCFF00] text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/50 mt-1 line-clamp-1">Liberado da alfândega, saiu para entrega...</div>
+</button>
+
+<button onclick="copyMsg('entregue')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">🎉 ENTREGUE</div>
+<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Pedido entregue, obrigado pela confiança...</div>
+</button>
+
+<button onclick="copyMsg('link')" class="w-full text-left bg-white text-black hover:bg-[#CCFF00] rounded-[12px] p-3 transition-all group mt-2">
+<div class="flex justify-between items-center">
+<div class="text-[11px] font-black">🔗 LINK DE RASTREIO</div>
+<div class="text-[9px] bg-black text-white group-hover:bg-black px-2 py-1 rounded-full font-bold">COPIAR</div>
+</div>
+<div class="text-[10px] text-black/60 mt-1 truncate">Envia o link completo pro cliente acompanhar</div>
+</button>
+
+</div>
+</div>
+
 <button onclick="saveCurrentOrder()" class="w-full h-[52px] rounded-[16px] bg-black text-white font-bold text-[15px]">💾 Salvar dados</button>
+
 <button onclick="openDelete()" class="w-full h-11 rounded-full border border-red-200 text-red-500 font-bold text-[13px]">🗑️ Excluir pedido</button>
 </div>
 </div>
@@ -874,6 +949,26 @@ window.changeStatus=async(val)=>{
     await updateDoc(doc(db,"pedidos",o.id), {status:val, statusHistory: newHistory});
   }catch(e){ toast("Erro: "+e.message); }
 };
+
+window.copyMsg=(tipo)=>{
+  let o=orders.find(x=>x.id===sel); if(!o) return;
+  let link = location.origin+location.pathname+"?track="+sel;
+  let nome = o.cliente.split(' ')[0];
+  let prod = o.produto;
+  let msgs={
+    confirmado: `Fala ${nome}! 🐆\n\nSeu pedido *${prod}* foi CONFIRMADO no sistema ✅\n\nID: ${o.id}\nStatus: PEDIDO CONFIRMADO - Shenzhen\n\nAcompanha aqui: ${link}\n\nQualquer dúvida me chama!\nJAGUARARA IMPORTS`,
+    galpao: `Fala ${nome}! 📦\n\nBoa notícia! Seu *${prod}* CHEGOU NO NOSSO GALPÃO em Shenzhen, Guangdong 🇨🇳\nPeso conferido e armazenado com segurança!\n\nID: ${o.id}\n\nPróximo passo: Inspeção QC com fotos reais 📸\nAcompanha: ${link}\n\nJAGUARARA IMPORTS`,
+    qc: `Fala ${nome}! 📸\n\nSeu *${prod}* passou pela INSPEÇÃO QC! Fotos reais disponíveis ✅\n\nConferimos autenticidade, detalhes e qualidade.\n\nID: ${o.id}\nVeja as fotos: ${link}\n\nMe confirma se aprova pra gente enviar pro Brasil! ✈️\nJAGUARARA IMPORTS`,
+    enviado: `Fala ${nome}! ✈️\n\nSeu *${prod}* foi ENVIADO AO BRASIL! Saiu de Shenzhen agora 🇨🇳➡️🇧🇷\n\nID: ${o.id}\nEm trânsito internacional - Curitiba/PR é o destino\nRastreio: ${o.rastreio||'Em atualização'}\n\nAcompanha: ${link}\n\nJAGUARARA IMPORTS`,
+    brasil: `Fala ${nome}! 🇧🇷\n\nChegou! Seu *${prod}* CHEGOU NO BRASIL - Curitiba/PR 📍\n\nEstá em FISCALIZAÇÃO ADUANEIRA, aguardando liberação da Receita. Isso pode levar 2-7 dias.\n\nID: ${o.id}\n\nAcompanha em tempo real: ${link}\n\nAssim que liberar eu te aviso! 🚚\nJAGUARARA IMPORTS`,
+    saiu: `Fala ${nome}! 🚚💨\n\nLIBERADO! Seu *${prod}* SAIU PARA ENTREGA!\n\nFoi liberado da alfândega em Curitiba e já está em rota pro seu endereço! 🇧🇷\n\nID: ${o.id}\nRastreio: ${o.rastreio||''}\n\nAcompanha os últimos passos: ${link}\n\nFica de olho no rastreio! 👀\nJAGUARARA IMPORTS`,
+    entregue: `Fala ${nome}! 🎉\n\nSeu *${prod}* foi ENTREGUE! ✅\n\nMuito obrigado pela confiança na JAGUARARA IMPORTS! 🐆\n\nID: ${o.id} finalizado.\n\nSe curtir, deixa um feedback pra gente! E quando precisar de novo, tamo aqui! 🙏\n\nJAGUARARA IMPORTS - Premium Imports`,
+    link: `Fala ${nome}! 🔗\n\nAqui seu link de rastreio exclusivo da JAGUARARA:\n\n${link}\n\nID: ${o.id} - ${prod}\n\nVocê acompanha em tempo real todas as etapas: Shenzhen → Curitiba → Sua casa! 🇨🇳➡️🇧🇷\n\nSalva esse link! 📌\nJAGUARARA IMPORTS`
+  };
+  let txt=msgs[tipo]||'';
+  navigator.clipboard.writeText(txt).then(()=>{ toast('✅ Mensagem copiada! Cola no WhatsApp'); }).catch(()=>{ toast(txt); });
+};
+
 window.saveCurrentOrder=async()=>{
   let o=orders.find(x=>x.id===sel); if(!o) return;
   let update={ cliente:document.getElementById("eCli").value, produto:document.getElementById("eProd").value, valor:parseFloat(document.getElementById("eVal").value)||0, peso:document.getElementById("ePeso").value, pesoUn:document.getElementById("ePesoUn").value, freteInterno:document.getElementById("eFreteInt").value, freteBR:document.getElementById("eFreteBR").value, rastreio:document.getElementById("eRast").value, };
