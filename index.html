@@ -628,88 +628,58 @@ document.getElementById("app").innerHTML=`
 
 <div class="bg-[#121212] border border-[#CCFF00]/20 rounded-[16px] p-4">
 <div class="flex justify-between items-center mb-3">
-<div class="text-[11px] font-black tracking-widest text-[#CCFF00]">💬 MENSAGENS RÁPIDAS • CLIQUE PARA COPIAR</div>
-<span class="text-[9px] text-white/40 font-bold">WHATSAPP</span>
+<div class="text-[11px] font-black tracking-widest text-[#CCFF00]">💬 MENSAGENS RÁPIDAS • PROFISSIONAL</div>
+<span class="text-[9px] text-white/40 font-bold">ORDEM CRONOLÓGICA</span>
 </div>
 <div class="space-y-2">
 <button onclick="copyMsg('confirmado')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">✅ PEDIDO CONFIRMADO</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Seu pedido foi confirmado no sistema...</div>
-</button>
-
-<button onclick="copyMsg('galpao')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">📦 CHEGOU NO GALPÃO</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Chegou no nosso galpão em Shenzhen, peso conferido...</div>
-</button>
-
-<button onclick="copyMsg('qc')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">📸 INSPEÇÃO QC</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Fotos reais disponíveis para conferência...</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">1️⃣ ✅ PEDIDO CONFIRMADO</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Confirmação + valor + peso + próximos passos</div>
 </button>
 
 <button onclick="copyMsg('vendedor')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">🏭 VENDEDOR ENVIOU</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Fornecedor enviou pro nosso galpão em Shenzhen...</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">2️⃣ 🏭 VENDEDOR ENVIOU</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Fornecedor despachou para galpão Shenzhen</div>
+</button>
+
+<button onclick="copyMsg('galpao')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">3️⃣ 📦 CHEGOU NO GALPÃO</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Peso conferido + frete interno + próxima QC</div>
+</button>
+
+<button onclick="copyMsg('qc')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">4️⃣ 📸 INSPEÇÃO QC</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Fotos reais + autenticidade + aprovação</div>
 </button>
 
 <button onclick="copyMsg('embalado')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">📦 PEDIDO EMBALADO</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Embalado e aguardando confirmação do frete...</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">5️⃣ 📦 PEDIDO EMBALADO</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Embalagem premium + aguardando frete BR</div>
 </button>
 
 <button onclick="copyMsg('enviado')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">✈️ ENVIADO AO BRASIL</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Seu pedido foi despachado de Shenzhen...</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">6️⃣ ✈️ ENVIADO AO BRASIL</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Despachado Shenzhen + rastreio + prazo</div>
 </button>
 
 <button onclick="copyMsg('brasil')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">🇧🇷 CHEGOU NO BRASIL</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Chegou em Curitiba/PR, em fiscalização aduaneira...</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">7️⃣ 🇧🇷 CHEGOU NO BRASIL</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Curitiba + fiscalização aduaneira 2-7 dias</div>
 </button>
 
 <button onclick="copyMsg('saiu')" class="w-full text-left bg-[#CCFF00]/10 hover:bg-[#CCFF00]/20 border border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-[#CCFF00]">🚚 SAIU PARA ENTREGA</div>
-<div class="text-[9px] bg-[#CCFF00] text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/50 mt-1 line-clamp-1">Liberado da alfândega, saiu para entrega...</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-[#CCFF00]">8️⃣ 🚚 SAIU PARA ENTREGA</div><div class="text-[9px] bg-[#CCFF00] text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/50 mt-1">Liberado da alfândega + em rota + 1-5 dias</div>
 </button>
 
 <button onclick="copyMsg('entregue')" class="w-full text-left bg-white/[0.05] hover:bg-[#CCFF00]/10 border border-white/[0.06] hover:border-[#CCFF00]/30 rounded-[12px] p-3 transition-all group">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">🎉 ENTREGUE</div>
-<div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-white/40 mt-1 line-clamp-1">Pedido entregue, obrigado pela confiança...</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black text-white group-hover:text-[#CCFF00]">9️⃣ 🎉 ENTREGUE</div><div class="text-[9px] bg-white/10 group-hover:bg-[#CCFF00] group-hover:text-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-white/40 mt-1">Finalizado + agradecimento + feedback</div>
 </button>
 
 <button onclick="copyMsg('link')" class="w-full text-left bg-white text-black hover:bg-[#CCFF00] rounded-[12px] p-3 transition-all group mt-2">
-<div class="flex justify-between items-center">
-<div class="text-[11px] font-black">🔗 LINK DE RASTREIO</div>
-<div class="text-[9px] bg-black text-white group-hover:bg-black px-2 py-1 rounded-full font-bold">COPIAR</div>
-</div>
-<div class="text-[10px] text-black/60 mt-1 truncate">Envia o link completo pro cliente acompanhar</div>
+<div class="flex justify-between items-center"><div class="text-[11px] font-black">🔗 LINK DE RASTREIO</div><div class="text-[9px] bg-black text-white group-hover:bg-black px-2 py-1 rounded-full font-bold">COPIAR</div></div>
+<div class="text-[10px] text-black/60 mt-1">Link exclusivo com todas as informações em tempo real</div>
 </button>
 
 </div>
@@ -972,16 +942,191 @@ window.copyMsg=(tipo)=>{
   let nome = o.cliente.split(' ')[0];
   let prod = o.produto;
   let msgs={
-    confirmado: `Fala ${nome}! 🐆\n\nSeu pedido *${prod}* foi CONFIRMADO no sistema ✅\n\nID: ${o.id}\nStatus: PEDIDO CONFIRMADO - Shenzhen\n\nAcompanha aqui: ${link}\n\nQualquer dúvida me chama!\nJAGUARARA IMPORTS`,
-    vendedor: `Fala ${nome}! 🏭\n\nAtualização do seu *${prod}* - O vendedor ENVIOU! ✅\n\nO fornecedor despachou e já está a caminho do nosso galpão em Shenzhen, Guangdong 🇨🇳\n\nID: ${o.id}\nEm trânsito pro galpão oficial\n\nAcompanha: ${link}\n\nAssim que chegar lá eu te aviso e já faço a conferência! 📦\nJAGUARARA IMPORTS`,
-    galpao: `Fala ${nome}! 📦\n\nBoa notícia! Seu *${prod}* CHEGOU NO NOSSO GALPÃO em Shenzhen, Guangdong 🇨🇳\nPeso conferido e armazenado com segurança!\n\nID: ${o.id}\n\nPróximo passo: Inspeção QC com fotos reais 📸\nAcompanha: ${link}\n\nJAGUARARA IMPORTS`,
-    qc: `Fala ${nome}! 📸\n\nSeu *${prod}* passou pela INSPEÇÃO QC! Fotos reais disponíveis ✅\n\nConferimos autenticidade, detalhes e qualidade.\n\nID: ${o.id}\nVeja as fotos: ${link}\n\nMe confirma se aprova pra gente enviar pro Brasil! ✈️\nJAGUARARA IMPORTS`,
-    embalado: `Fala ${nome}! 📦\n\nSeu *${prod}* já foi EMBALADO! ✅\n\nPassou na inspeção QC, foi embalado com proteção premium e agora está ARMAZENADO no nosso galpão em Shenzhen aguardando a confirmação do frete China-Brasil ✈️\n\nID: ${o.id}\nPeso real: ${o.peso||''}${o.pesoUn||'g'}\n\nAcompanha: ${link}\n\nAssim que liberar o frete a gente despacha! 🚀\nJAGUARARA IMPORTS`,
-    enviado: `Fala ${nome}! ✈️\n\nSeu *${prod}* foi ENVIADO AO BRASIL! Saiu de Shenzhen agora 🇨🇳➡️🇧🇷\n\nID: ${o.id}\nEm trânsito internacional - Curitiba/PR é o destino\nRastreio: ${o.rastreio||'Em atualização'}\n\nAcompanha: ${link}\n\nJAGUARARA IMPORTS`,
-    brasil: `Fala ${nome}! 🇧🇷\n\nChegou! Seu *${prod}* CHEGOU NO BRASIL - Curitiba/PR 📍\n\nEstá em FISCALIZAÇÃO ADUANEIRA, aguardando liberação da Receita. Isso pode levar 2-7 dias.\n\nID: ${o.id}\n\nAcompanha em tempo real: ${link}\n\nAssim que liberar eu te aviso! 🚚\nJAGUARARA IMPORTS`,
-    saiu: `Fala ${nome}! 🚚💨\n\nLIBERADO! Seu *${prod}* SAIU PARA ENTREGA!\n\nFoi liberado da alfândega em Curitiba e já está em rota pro seu endereço! 🇧🇷\n\nID: ${o.id}\nRastreio: ${o.rastreio||''}\n\nAcompanha os últimos passos: ${link}\n\nFica de olho no rastreio! 👀\nJAGUARARA IMPORTS`,
-    entregue: `Fala ${nome}! 🎉\n\nSeu *${prod}* foi ENTREGUE! ✅\n\nMuito obrigado pela confiança na JAGUARARA IMPORTS! 🐆\n\nID: ${o.id} finalizado.\n\nSe curtir, deixa um feedback pra gente! E quando precisar de novo, tamo aqui! 🙏\n\nJAGUARARA IMPORTS - Premium Imports`,
-    link: `Fala ${nome}! 🔗\n\nAqui seu link de rastreio exclusivo da JAGUARARA:\n\n${link}\n\nID: ${o.id} - ${prod}\n\nVocê acompanha em tempo real todas as etapas: Shenzhen → Curitiba → Sua casa! 🇨🇳➡️🇧🇷\n\nSalva esse link! 📌\nJAGUARARA IMPORTS`
+    confirmado: `*JAGUARARA IMPORTS PREMIUM* 🐆
+
+Fala ${nome}! Seu pedido foi *CONFIRMADO* ✅
+
+📦 *Detalhes do pedido:*
+▫️ Produto: ${prod}
+▫️ ID: ${o.id}
+▫️ Valor: R$ ${o.valor||'--'}
+▫️ Peso: ${o.peso||'--'}${o.pesoUn||'g'}
+▫️ Data: ${o.criadoEm||''}
+▫️ Status: PEDIDO CONFIRMADO - Shenzhen
+
+🔜 *Próximo passo:* Fornecedor vai enviar para nosso galpão oficial em Shenzhen
+
+🔗 *Acompanha em tempo real:*
+${link}
+
+Salva esse link! Qualquer dúvida me chama 🤝
+*JAGUARARA IMPORTS*`,
+    vendedor: `*JAGUARARA IMPORTS PREMIUM* 🏭
+
+Fala ${nome}! Atualização do seu *${prod}*
+
+✅ O vendedor *ENVIOU* seu pedido!
+
+📦 *Detalhes:*
+▫️ ID: ${o.id}
+▫️ Produto: ${prod}
+▫️ Status: ENVIADO PARA GALPÃO - SHENZHEN
+▫️ Destino: Galpão Oficial Jaguarara - Guangdong, China 🇨🇳
+
+🔜 *Próximo passo:* Chegada no galpão + conferência de peso
+
+🔗 *Rastreio em tempo real:*
+${link}
+
+Assim que chegar lá te aviso! 🚀
+*JAGUARARA IMPORTS*`,
+    galpao: `*JAGUARARA IMPORTS PREMIUM* 📦
+
+Fala ${nome}! Boa notícia! 🎉
+
+Seu *${prod}* *CHEGOU NO NOSSO GALPÃO* em Shenzhen, Guangdong 🇨🇳
+
+📦 *Conferência realizada:*
+▫️ ID: ${o.id}
+▫️ Peso real: ${o.peso||'--'}${o.pesoUn||'g'} ✅
+▫️ Frete interno: ¥ ${o.freteInterno||'--'}
+▫️ Produto: ${prod}
+▫️ Status: CHEGOU NO GALPÃO
+
+🔜 *Próximo passo:* Inspeção QC com fotos reais 📸
+
+🔗 *Acompanha:*
+${link}
+
+*JAGUARARA IMPORTS*`,
+    qc: `*JAGUARARA IMPORTS PREMIUM* 📸
+
+Fala ${nome}! Seu *${prod}* passou pela *INSPEÇÃO QC* ✅
+
+🔍 *Resultado da inspeção:*
+▫️ ID: ${o.id}
+▫️ Fotos reais: ${o.fotos?.length||0}/10 disponíveis
+▫️ Peso: ${o.peso||'--'}${o.pesoUn||'g'}
+▫️ Autenticidade: Conferida ✅
+▫️ Qualidade: Aprovada ✅
+
+📸 *Veja as fotos reais aqui:*
+${link}
+
+Me confirma com *APROVADO* para embalar e enviar ao Brasil! ✈️
+*JAGUARARA IMPORTS*`,
+    embalado: `*JAGUARARA IMPORTS PREMIUM* 📦✅
+
+Fala ${nome}! Seu *${prod}* foi *EMBALADO*!
+
+📦 *Detalhes da embalagem:*
+▫️ ID: ${o.id}
+▫️ Produto: ${prod}
+▫️ Peso final: ${o.peso||'--'}${o.pesoUn||'g'}
+▫️ Fotos QC: ${o.fotos?.length||0}/10
+▫️ Embalagem: Proteção Premium com plástico bolha + caixa reforçada 🛡️
+▫️ Status: ARMAZENADO NO GALPÃO - Aguardando frete
+
+🔜 *Próximo passo:* Confirmação do frete China-Brasil e envio ✈️
+
+🔗 *Acompanha:*
+${link}
+
+Assim que despachar te aviso com rastreio! 🚀
+*JAGUARARA IMPORTS*`,
+    enviado: `*JAGUARARA IMPORTS PREMIUM* ✈️
+
+Fala ${nome}! Seu *${prod}* foi *ENVIADO AO BRASIL*! 🇨🇳➡️🇧🇷
+
+✈️ *Detalhes do envio:*
+▫️ ID: ${o.id}
+▫️ Produto: ${prod}
+▫️ Peso: ${o.peso||'--'}${o.pesoUn||'g'}
+▫️ Frete China-Brasil: R$ ${o.freteBR||'--'}
+▫️ Rastreio: ${o.rastreio||'Em atualização'}
+▫️ Origem: Shenzhen, China
+▫️ Destino: Curitiba/PR - Galpão Oficial
+
+🔗 *Rastreio em tempo real:*
+${link}
+
+Prazo estimado: 12-20 dias úteis 🗓️
+*JAGUARARA IMPORTS*`,
+    brasil: `*JAGUARARA IMPORTS PREMIUM* 🇧🇷
+
+Fala ${nome}! Seu *${prod}* *CHEGOU NO BRASIL*! 🎉
+
+📍 *Localização atual:* Curitiba/PR - Fiscalização Aduaneira
+
+📦 *Detalhes:*
+▫️ ID: ${o.id}
+▫️ Produto: ${prod}
+▫️ Peso: ${o.peso||'--'}${o.pesoUn||'g'}
+▫️ Status: CHEGOU NO BRASIL - Em fiscalização
+▫️ Rastreio: ${o.rastreio||''}
+
+⏳ *Fiscalização aduaneira:* 2 a 7 dias úteis
+A Receita Federal está conferindo o pacote
+
+🔗 *Acompanha a liberação:*
+${link}
+
+Assim que liberar eu te aviso pra sair pra entrega! 🚚
+*JAGUARARA IMPORTS*`,
+    saiu: `*JAGUARARA IMPORTS PREMIUM* 🚚💨
+
+Fala ${nome}! *LIBERADO DA ALFÂNDEGA!* ✅
+
+Seu *${prod}* *SAIU PARA ENTREGA*! 🇧🇷
+
+🚚 *Detalhes da entrega:*
+▫️ ID: ${o.id}
+▫️ Produto: ${prod}
+▫️ Status: SAIU PARA ENTREGA - Em rota
+▫️ Rastreio: ${o.rastreio||''}
+▫️ Local: Saiu de Curitiba/PR → Seu endereço
+
+⏰ *Entrega estimada:* 1 a 5 dias úteis dependendo da sua região
+
+🔗 *Últimos passos:*
+${link}
+
+Fica de olho no rastreio! Qualquer coisa me chama 👀
+*JAGUARARA IMPORTS*`,
+    entregue: `*JAGUARARA IMPORTS PREMIUM* 🎉✅
+
+Fala ${nome}! Seu *${prod}* foi *ENTREGUE*! 🙏
+
+🎉 *Pedido finalizado com sucesso:*
+▫️ ID: ${o.id}
+▫️ Produto: ${prod}
+▫️ Status: ENTREGUE - Finalizado
+
+Muito obrigado pela confiança na JAGUARARA! 🐆💚
+Foi um prazer atender você!
+
+Se curtir, deixa um feedback pra gente! ⭐
+Precisando de novo, tamo aqui!
+
+*JAGUARARA IMPORTS - Premium Imports*
+Shenzhen → Curitiba → Sua casa 🇨🇳➡️🇧🇷`,
+    link: `*JAGUARARA IMPORTS PREMIUM* 🔗
+
+Fala ${nome}! Aqui seu *link exclusivo* de rastreio:
+
+🔗 ${link}
+
+📦 *Resumo:*
+▫️ ID: ${o.id}
+▫️ Produto: ${prod}
+▫️ Status atual: ${o.status}
+▫️ Rastreio: ${o.rastreio||'--'}
+
+Você acompanha *em tempo real* todas as etapas:
+Shenzhen → Galpão → QC → Brasil → Sua casa 🇨🇳➡️🇧🇷
+
+📌 *Salva esse link nos favoritos!*
+*JAGUARARA IMPORTS*`
   };
   let txt=msgs[tipo]||'';
   navigator.clipboard.writeText(txt).then(()=>{ toast('✅ Mensagem copiada! Cola no WhatsApp'); }).catch(()=>{ toast(txt); });
